@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T05:29:15.515Z",
+  "updatedAt": "2026-09-29T06:38:50.116Z",
   "events": [
     {
       "source": "localist",
@@ -157,7 +157,7 @@
       "locationName": "Building 260, Pigott Hall, Room 252",
       "lat": 37.427405,
       "lng": -122.1697,
-      "hostOrg": "Division of Literatures, Cultures, and Languages, History Department",
+      "hostOrg": "Division of Literatures, Cultures, and Languages, History Department, Program in History and Philosophy of Science and Technology",
       "audience": "unknown",
       "audienceNote": null,
       "cost": null,
@@ -2269,7 +2269,7 @@
       "locationName": "Building 260, Pigott Hall, Room 252",
       "lat": 37.427405,
       "lng": -122.1697,
-      "hostOrg": "Division of Literatures, Cultures, and Languages, History Department",
+      "hostOrg": "Division of Literatures, Cultures, and Languages, History Department, Program in History and Philosophy of Science and Technology",
       "audience": "unknown",
       "audienceNote": null,
       "cost": null,
