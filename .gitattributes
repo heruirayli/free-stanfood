@@ -1,0 +1,4 @@
+# Normalize line endings in the repo and the working tree.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

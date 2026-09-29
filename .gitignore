@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# environment (secrets): copy .env.example to .env
+.env
+.env.*
+!.env.example
+
+# build output
+dist/
+backend/dist/
+frontend/dist/
+*.tsbuildinfo
+
+# pipeline debug dumps of failed source responses
+debug/
+
+# half-written snapshot if a pipeline run dies mid-write (data/events.json itself is committed)
+*.tmp
+
+# test and tool output
+coverage/
+.vite/
+.vitest/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

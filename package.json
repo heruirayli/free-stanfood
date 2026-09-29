@@ -1,0 +1,38 @@
+{
+  "name": "free-stanfood",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unofficial calendar of free food events on the Stanford campus, built from public event listings.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "server": "nodemon --exec tsx backend/server.ts",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "pipeline": "tsx backend/pipeline/run.ts",
+    "build": "tsc -p backend && npm run build --prefix frontend",
+    "start": "node backend/dist/server.js",
+    "typecheck": "tsc -p backend/tsconfig.test.json && npm run typecheck --prefix frontend",
+    "test": "vitest run --root backend && npm test --prefix frontend"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-async-handler": "^1.2.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.3",
+    "concurrently": "^10.0.5",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}
