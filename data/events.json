@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T06:38:50.116Z",
+  "updatedAt": "2026-09-29T20:01:54.018Z",
   "events": [
     {
       "source": "localist",
@@ -301,7 +301,7 @@
       "locationName": "Humanities Center, SHC Board Room",
       "lat": 37.424631,
       "lng": -122.172061,
-      "hostOrg": "Stanford Humanities Center",
+      "hostOrg": "Stanford Humanities Center, African & African American Studies, History Department, Stanford Center for Racial Justice, Stanford Global Studies Division",
       "audience": "rsvp",
       "audienceNote": null,
       "cost": null,
