@@ -1,0 +1,71 @@
+# Scrapes the configured sources and commits the refreshed data/events.json.
+#
+# Setup (once): add a repository secret SCRAPER_CONTACT_EMAIL (Settings >
+# Secrets and variables > Actions). It is sent in the scraper's User-Agent.
+name: Refresh events
+
+on:
+  schedule:
+    # Every 3 hours, at :17 past to avoid the top-of-hour rush on shared runners (UTC).
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # push the updated data file
+
+concurrency:
+  group: refresh-events
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # A failing or unhealthy source makes this step fail, but the data from
+      # healthy sources is still written. Commit it first, then fail the job.
+      - name: Run pipeline
+        id: pipeline
+        continue-on-error: true
+        run: npm run pipeline
+        env:
+          SCRAPER_CONTACT_EMAIL: ${{ secrets.SCRAPER_CONTACT_EMAIL }}
+
+      - name: Commit updated events
+        run: |
+          if [ -z "$(git status --porcelain -- data/events.json)" ]; then
+            echo "No changes to data/events.json"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/events.json
+          git commit -m "Refresh events data"
+          # Someone may have pushed while the pipeline ran; only the bot edits this file.
+          git pull --rebase
+          git push
+
+      - name: Upload debug dumps
+        if: steps.pipeline.outcome == 'failure'
+        uses: actions/upload-artifact@v7
+        with:
+          name: pipeline-debug-${{ github.run_id }}
+          path: debug/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Report pipeline problems
+        if: steps.pipeline.outcome == 'failure'
+        run: |
+          echo "::error::The pipeline reported errors or unhealthy counts. See the 'Run pipeline' step log."
+          exit 1
