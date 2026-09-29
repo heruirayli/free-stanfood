@@ -1,0 +1,146 @@
+import { formatInTimeZone } from "date-fns-tz";
+import { useEffect, useMemo, useState } from "react";
+import { FaBolt, FaRegSun, FaRegMoon, FaRegClock } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import AgendaSection from "../components/AgendaSection";
+import EventFilters from "../components/EventFilters";
+import Spinner from "../components/Spinner";
+import StatusMessage from "../components/StatusMessage";
+import { CAMPUS_TIME_ZONE } from "../constants";
+import { agendaIsEmpty, buildAgenda } from "../features/events/agenda";
+import {
+  getEvents,
+  reset,
+  selectEventState,
+  selectHiddenLowConfidence,
+  selectVisibleEvents,
+  setFilters,
+} from "../features/events/eventSlice";
+import { useNow } from "../hooks/useNow";
+import { hasEnded, startOfCampusDay } from "../utils/time";
+
+const buttonClass =
+  "inline-flex min-h-11 items-center rounded-lg bg-emerald-700 px-4 font-medium text-white hover:bg-emerald-800";
+
+const Today = () => {
+  const dispatch = useAppDispatch();
+  const { isLoading, isError, isSuccess, message } = useAppSelector(selectEventState);
+  const events = useAppSelector(selectVisibleEvents);
+  const hiddenLowConfidence = useAppSelector(selectHiddenLowConfidence);
+  const now = useNow();
+  const [attempt, setAttempt] = useState(0);
+
+  // Load everything from now through the end of tomorrow (campus time).
+  useEffect(() => {
+    const start = new Date();
+    const request = dispatch(
+      getEvents({
+        from: start.toISOString(),
+        to: startOfCampusDay(start, 2).toISOString(),
+        minConfidence: 0,
+      }),
+    );
+    return () => {
+      request.abort();
+      dispatch(reset());
+    };
+  }, [dispatch, attempt]);
+
+  useEffect(() => {
+    if (isError) toast.error(message);
+  }, [isError, message]);
+
+  const agenda = useMemo(() => buildAgenda(events, now), [events, now]);
+  const hiddenCount = hiddenLowConfidence.filter((event) => !hasEnded(event, now)).length;
+
+  let content;
+  if (isError) {
+    content = (
+      <StatusMessage tone="error" title="Couldn’t load events.">
+        <p className="mb-3">{message}</p>
+        <button type="button" onClick={() => setAttempt((n) => n + 1)} className={buttonClass}>
+          Try again
+        </button>
+      </StatusMessage>
+    );
+  } else if (isLoading || !isSuccess) {
+    content = <Spinner />;
+  } else if (agendaIsEmpty(agenda)) {
+    content = (
+      <StatusMessage title="No free food listed for the rest of today or tomorrow.">
+        <p>
+          Try clearing filters, or check the{" "}
+          <Link to="/calendar" className="font-medium text-emerald-800 underline">
+            calendar
+          </Link>{" "}
+          for later this week.
+        </p>
+      </StatusMessage>
+    );
+  } else {
+    content = (
+      <>
+        <AgendaSection
+          id="now"
+          title="Happening now"
+          now={now}
+          events={agenda.happeningNow}
+          icon={<FaBolt aria-hidden="true" className="text-emerald-700" />}
+        />
+        <AgendaSection
+          id="all-day"
+          title="All day today"
+          now={now}
+          events={agenda.allDayToday}
+          icon={<FaRegSun aria-hidden="true" className="text-amber-600" />}
+        />
+        <AgendaSection
+          id="later"
+          title="Later today"
+          now={now}
+          groups={agenda.laterToday}
+          icon={<FaRegClock aria-hidden="true" className="text-emerald-700" />}
+        />
+        {agenda.happeningNow.length + agenda.allDayToday.length + agenda.laterToday.length === 0 && (
+          <div className="mb-8">
+            <StatusMessage title="Nothing else listed for today." />
+          </div>
+        )}
+        <AgendaSection
+          id="tomorrow"
+          title="Tomorrow"
+          now={now}
+          groups={agenda.tomorrow}
+          icon={<FaRegMoon aria-hidden="true" className="text-indigo-700" />}
+        />
+      </>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      <h1 className="text-2xl font-bold text-gray-900">Free food today</h1>
+      <p className="mb-4 text-sm text-gray-700">
+        {formatInTimeZone(now, CAMPUS_TIME_ZONE, "EEEE, MMMM d")} · times in Pacific Time
+      </p>
+      <EventFilters />
+      {content}
+      {isSuccess && hiddenCount > 0 && (
+        <p className="mt-2 text-center text-sm text-gray-700">
+          {hiddenCount} more {hiddenCount === 1 ? "listing has" : "listings have"} only a weak hint of food.{" "}
+          <button
+            type="button"
+            onClick={() => dispatch(setFilters({ showLowConfidence: true }))}
+            className="font-medium text-emerald-800 underline"
+          >
+            Show {hiddenCount === 1 ? "it" : "them"}
+          </button>
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default Today;

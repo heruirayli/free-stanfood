@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+/* FullCalendar theme: neutral green, readable at small sizes. */
+.fc {
+  --fc-button-bg-color: var(--color-emerald-700);
+  --fc-button-border-color: var(--color-emerald-700);
+  --fc-button-hover-bg-color: var(--color-emerald-800);
+  --fc-button-hover-border-color: var(--color-emerald-800);
+  --fc-button-active-bg-color: var(--color-emerald-900);
+  --fc-button-active-border-color: var(--color-emerald-900);
+  --fc-today-bg-color: var(--color-emerald-50);
+  --fc-event-bg-color: var(--color-emerald-700);
+  --fc-event-border-color: var(--color-emerald-700);
+  font-size: 0.875rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.fc .fc-button {
+  min-height: 2.75rem;
+}
+
+.fc .fc-event {
+  cursor: pointer;
+}
+
+/* Event colors by food confidence band. White text passes WCAG AA on each. */
+.fc .food-listed {
+  --fc-event-bg-color: var(--color-emerald-700);
+  --fc-event-border-color: var(--color-emerald-700);
+}
+
+.fc .food-likely {
+  --fc-event-bg-color: var(--color-amber-700);
+  --fc-event-border-color: var(--color-amber-700);
+}
+
+.fc .food-possible {
+  --fc-event-bg-color: var(--color-gray-500);
+  --fc-event-border-color: var(--color-gray-500);
+}
