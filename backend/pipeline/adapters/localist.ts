@@ -25,12 +25,12 @@ import type { HttpClient } from "../http.js";
 import {
   SOURCE_TIME_ZONE,
   cleanInlineText,
-  endOfSourceDay,
   htmlToText,
   logSkip,
   nullIfEmpty,
   parseCoordinate,
   parseSourceTime,
+  resolveEndTime,
   validateNormalized,
 } from "../normalize.js";
 import { SourceFetchError, type RawEvent, type SourceAdapter } from "./types.js";
@@ -225,9 +225,7 @@ export const normalizeLocalistEvent = (raw: RawEvent): NormalizedEvent | null =>
     return null;
   }
   const allDay = instance.all_day ?? false;
-  const parsedEnd = parseSourceTime(instance.end);
-  const endTime =
-    parsedEnd && parsedEnd > startTime ? parsedEnd : allDay ? endOfSourceDay(startTime) : null;
+  const endTime = resolveEndTime(startTime, parseSourceTime(instance.end), allDay);
 
   const description = htmlToText(event.description) || htmlToText(event.description_text);
   const ticketText = [event.ticket_cost, stringField(event.custom_fields, "banner_text")]

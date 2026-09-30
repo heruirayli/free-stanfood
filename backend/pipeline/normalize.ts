@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import * as cheerio from "cheerio";
-import { isValid, parseISO } from "date-fns";
+import { addDays, format, isValid, parseISO } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import { normalizedEventSchema, type NormalizedEvent } from "../types/event.js";
 
@@ -77,7 +77,30 @@ export const parseSourceTime = (
 export const endOfSourceDay = (date: Date, timeZone: string = SOURCE_TIME_ZONE): Date =>
   fromZonedTime(`${formatInTimeZone(date, timeZone, "yyyy-MM-dd")}T23:59:00`, timeZone);
 
-export const parseCoordinate =(value: string | number | null | undefined): number | null => {
+// True when `end` is the same wall-clock time as `start`, one campus day later
+// (e.g. Thu 12:00 PM -> Fri 12:00 PM). Compared in campus time, so it also holds
+// across a DST change, when that span is 23 or 25 hours.
+export const isSameTimeNextDay = (start: Date, end: Date, timeZone: string = SOURCE_TIME_ZONE): boolean => {
+  if (formatInTimeZone(start, timeZone, "HH:mm") !== formatInTimeZone(end, timeZone, "HH:mm")) return false;
+  const nextDay = format(addDays(parseISO(formatInTimeZone(start, timeZone, "yyyy-MM-dd")), 1), "yyyy-MM-dd");
+  return formatInTimeZone(end, timeZone, "yyyy-MM-dd") === nextDay;
+};
+
+// Picks the end time to store for an event:
+// - All-day events without a usable end run to 23:59 on their day.
+// - Timed events whose end isn't after the start have no known end.
+// - Timed events ending at the same clock time the next day are almost always a
+//   host picking the wrong end date (a noon talk listed as noon to noon Friday),
+//   so the end is treated as unknown. Consumers then assume about an hour. A real
+//   24-hour event loses its end time, but its start and source link stay correct.
+export const resolveEndTime = (start: Date, end: Date | null, allDay: boolean): Date | null => {
+  const usable = end && end > start ? end : null;
+  if (allDay) return usable ?? endOfSourceDay(start);
+  if (!usable || isSameTimeNextDay(start, usable)) return null;
+  return usable;
+};
+
+export const parseCoordinate = (value: string | number | null | undefined): number | null => {
   if (value === null || value === undefined || value === "") return null;
   const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : null;

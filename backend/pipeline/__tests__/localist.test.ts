@@ -108,6 +108,24 @@ describe("normalizeLocalistEvent", () => {
     expect(event?.endTime).toBeNull();
   });
 
+  it("drops an end time that is the same clock time the next day", () => {
+    // Several real listings (a Thursday noon seminar series) end "noon Friday".
+    const raw = fixtureEvent(WORSHIP);
+    raw.event.event_instances = [
+      {
+        event_instance: {
+          id: 1,
+          start: "2026-09-27T11:00:00-07:00",
+          end: "2026-09-28T11:00:00-07:00",
+          all_day: false,
+        },
+      },
+    ];
+    const event = normalizeLocalistEvent(raw);
+    expect(event?.startTime.toISOString()).toBe("2026-09-27T18:00:00.000Z");
+    expect(event?.endTime).toBeNull();
+  });
+
   it("marks 'Everyone' events without ticketing as open", () => {
     expect(normalizeLocalistEvent(fixtureEvent(WORSHIP))?.audience).toBe("open");
   });

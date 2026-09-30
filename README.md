@@ -1,4 +1,4 @@
-# Free Stanfood (unofficial)
+# Free Stanfood
 
 A mobile-first calendar of free food at public events on the Stanford campus. It is built from public event listings and refreshed automatically by GitHub Actions. It is an independent project, **unaffiliated with Stanford University**.
 
@@ -87,7 +87,7 @@ Things to know:
 Each run, for every adapter registered in `backend/pipeline/run.ts`:
 
 1. **Fetch** through the polite HTTP client (`pipeline/http.ts`). The client sends a User-Agent with the contact email and makes at most 1 request per second per host. It backs off exponentially on 429/5xx (honoring `Retry-After`), sends conditional requests, and caps pagination.
-2. **Normalize** each record into the shared schema (`backend/types/event.ts`). Invalid records are logged and skipped. Private, cancelled, and already-expired events are dropped.
+2. **Normalize** each record into the shared schema (`backend/types/event.ts`). Invalid records are logged and skipped. Private, cancelled, and already-expired events are dropped. An end time at the same clock time the next day (a noon talk listed as ending at noon the next day) is treated as a typo, so the event is kept with no end time.
 3. **Classify** food with keyword rules (`pipeline/classify/keywords.ts`). This produces `hasFreeFood`, a `foodConfidence` from 0 to 1, and `foodDetails`.
 4. **Build the snapshot** (`pipeline/snapshot.ts`) and write `data/events.json`:
    - Only food events with a public audience are published. Restricted events are never written, because the file is public.

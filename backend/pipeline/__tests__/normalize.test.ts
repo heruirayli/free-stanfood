@@ -4,8 +4,10 @@ import {
   endOfSourceDay,
   eventId,
   htmlToText,
+  isSameTimeNextDay,
   parseCoordinate,
   parseSourceTime,
+  resolveEndTime,
 } from "../normalize.js";
 
 describe("htmlToText", () => {
@@ -71,6 +73,59 @@ describe("endOfSourceDay", () => {
     expect(endOfSourceDay(new Date("2026-11-01T07:00:00Z")).toISOString()).toBe("2026-11-02T07:59:00.000Z");
     // 23:30 PDT is still the same campus day even though it's the next UTC day.
     expect(endOfSourceDay(new Date("2026-09-28T06:30:00Z")).toISOString()).toBe("2026-09-28T06:59:00.000Z");
+  });
+});
+
+describe("resolveEndTime", () => {
+  const at = (iso: string) => new Date(iso);
+
+  it("drops an end that is the same clock time the next day (a mistyped end date)", () => {
+    // Real listing: Thu Nov 5 12:00 PM -> Fri Nov 6 12:00 PM PST.
+    expect(resolveEndTime(at("2026-11-05T12:00:00-08:00"), at("2026-11-06T12:00:00-08:00"), false)).toBeNull();
+  });
+
+  it("catches the same mistake across the DST change (a 25-hour span)", () => {
+    // Sat Oct 31 12:00 PM PDT -> Sun Nov 1 12:00 PM PST.
+    const start = at("2026-10-31T12:00:00-07:00");
+    const end = at("2026-11-01T12:00:00-08:00");
+    expect(end.getTime() - start.getTime()).toBe(25 * 60 * 60 * 1000);
+    expect(resolveEndTime(start, end, false)).toBeNull();
+  });
+
+  it("keeps genuine multi-day and overnight events", () => {
+    const conferenceEnd = at("2026-10-02T17:00:00-07:00");
+    expect(resolveEndTime(at("2026-10-01T09:00:00-07:00"), conferenceEnd, false)).toEqual(conferenceEnd);
+    const overnightEnd = at("2026-10-02T01:00:00-07:00");
+    expect(resolveEndTime(at("2026-10-01T22:00:00-07:00"), overnightEnd, false)).toEqual(overnightEnd);
+    const nextDayLater = at("2026-10-02T13:00:00-07:00");
+    expect(resolveEndTime(at("2026-10-01T12:00:00-07:00"), nextDayLater, false)).toEqual(nextDayLater);
+  });
+
+  it("keeps a normal same-day end", () => {
+    const end = at("2026-10-01T13:00:00-07:00");
+    expect(resolveEndTime(at("2026-10-01T12:00:00-07:00"), end, false)).toEqual(end);
+  });
+
+  it("treats a missing or non-positive end as unknown for timed events", () => {
+    const start = at("2026-10-01T12:00:00-07:00");
+    expect(resolveEndTime(start, null, false)).toBeNull();
+    expect(resolveEndTime(start, start, false)).toBeNull();
+    expect(resolveEndTime(start, at("2026-10-01T11:00:00-07:00"), false)).toBeNull();
+  });
+
+  it("ends all-day events at 23:59 when they have no usable end", () => {
+    const start = at("2026-09-27T00:00:00-07:00");
+    expect(resolveEndTime(start, null, true)?.toISOString()).toBe("2026-09-28T06:59:00.000Z");
+    const listedEnd = at("2026-09-27T23:59:00-07:00");
+    expect(resolveEndTime(start, listedEnd, true)).toEqual(listedEnd);
+  });
+});
+
+describe("isSameTimeNextDay", () => {
+  it("compares wall-clock time in campus time", () => {
+    expect(isSameTimeNextDay(new Date("2026-11-05T20:00:00Z"), new Date("2026-11-06T20:00:00Z"))).toBe(true);
+    expect(isSameTimeNextDay(new Date("2026-11-05T20:00:00Z"), new Date("2026-11-07T20:00:00Z"))).toBe(false);
+    expect(isSameTimeNextDay(new Date("2026-11-05T20:00:00Z"), new Date("2026-11-06T21:00:00Z"))).toBe(false);
   });
 });
 
