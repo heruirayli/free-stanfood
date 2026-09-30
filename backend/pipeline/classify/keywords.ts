@@ -44,6 +44,11 @@ const FOOD_TERMS: FoodTerm[] = [
   { label: "tacos", pattern: "tacos?", weight: 0.5 },
   { label: "sushi", pattern: "sushi", weight: 0.5 },
   { label: "burritos", pattern: "burritos?", weight: 0.5 },
+  { label: "sandwiches", pattern: "sandwich(?:es)?", weight: 0.5 },
+  // Restaurant names hosts use in place of the food itself.
+  { label: "chick-fil-a", pattern: "chick-?fil-?a", weight: 0.5 },
+  { label: "panda express", pattern: "panda express", weight: 0.5 },
+  { label: "in-n-out", pattern: "in-?n-?out", weight: 0.5 },
   { label: "donuts", pattern: "donuts?|doughnuts?", weight: 0.5 },
   { label: "bagels", pattern: "bagels?", weight: 0.5 },
   { label: "snacks", pattern: "snacks?", weight: 0.5 },

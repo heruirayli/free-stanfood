@@ -1,8 +1,9 @@
+import { formatInTimeZone } from "date-fns-tz";
 import { byStartThenId, serializeEvents, type EventSnapshot } from "../models/eventSnapshot.js";
 import type { Classification, Event, NormalizedEvent } from "../types/event.js";
 import { LIKELY_THRESHOLD } from "./classify/keywords.js";
 import { assessCounts } from "./health.js";
-import { eventId } from "./normalize.js";
+import { SOURCE_TIME_ZONE, eventId } from "./normalize.js";
 
 // Turns this run's per-source results plus the previous snapshot into the next
 // published snapshot. Pure: no I/O, so every rule here is unit-tested.
@@ -12,6 +13,8 @@ export type ClassifiedEvent = NormalizedEvent & Classification;
 export interface SourceResult {
   source: string;
   ok: boolean;
+  // See SourceAdapter.allowEmpty.
+  allowEmpty?: boolean;
   fetched: number;
   normalized: number;
   events: ClassifiedEvent[];
@@ -21,6 +24,8 @@ export interface SourceReport {
   source: string;
   published: number;
   keptFromPrevious: number;
+  // Events dropped because an earlier source already listed the same event.
+  duplicates: number;
   warnings: string[];
 }
 
@@ -55,6 +60,30 @@ export const dropWeakDailySeries = (events: ClassifiedEvent[]): ClassifiedEvent[
   );
 };
 
+// The same talk often appears on Stanford Events and on a center's own calendar.
+// Match on the campus day plus the first six words of the title (sources differ
+// in trailing punctuation, emoji, and suffixes like "| Stanford").
+export const duplicateKey = (event: Pick<Event, "title" | "startTime">): string => {
+  const words = event.title.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(Boolean);
+  return `${formatInTimeZone(event.startTime, SOURCE_TIME_ZONE, "yyyy-MM-dd")}|${words.slice(0, 6).join(" ")}`;
+};
+
+// Keeps the first copy by source order (Stanford Events comes first and carries the
+// richest audience and cost data). Events from the same source are never merged.
+export const dropCrossSourceDuplicates = (events: Event[]): { kept: Event[]; dropped: Event[] } => {
+  const firstSource = new Map<string, string>();
+  const kept: Event[] = [];
+  const dropped: Event[] = [];
+  for (const event of events) {
+    const key = duplicateKey(event);
+    const owner = firstSource.get(key);
+    if (owner === undefined) firstSource.set(key, event.source);
+    if (owner !== undefined && owner !== event.source) dropped.push(event);
+    else kept.push(event);
+  }
+  return { kept, dropped };
+};
+
 const toPublished = (event: ClassifiedEvent, previous: Map<string, Event>, now: Date): Event => {
   const id = eventId(event.source, event.sourceEventId);
   return { ...event, id, firstSeenAt: previous.get(id)?.firstSeenAt ?? now };
@@ -66,7 +95,7 @@ export const buildSnapshot = (
   now: Date,
 ): { snapshot: EventSnapshot; reports: SourceReport[]; changed: boolean } => {
   const previousById = new Map(previous.events.map((event) => [event.id, event]));
-  const events: Event[] = [];
+  const collected: Event[] = [];
   const reports: SourceReport[] = [];
 
   // Sources no longer in the adapter list are dropped with their events.
@@ -88,6 +117,7 @@ export const buildSnapshot = (
         result.source,
         { fetched: result.fetched, normalized: result.normalized, published: fresh.length },
         previousForSource.length > 0 ? previousForSource.length : null,
+        { allowEmpty: result.allowEmpty },
       );
       if (warnings.length > 0) {
         // Suspicious counts: add what's new but don't drop anything we had.
@@ -99,16 +129,24 @@ export const buildSnapshot = (
       }
     }
 
-    events.push(...published);
+    collected.push(...published);
     reports.push({
       source: result.source,
       published: published.length,
       keptFromPrevious: published.filter((event) => !fresh.includes(event)).length,
+      duplicates: 0,
       warnings,
     });
   }
 
-  events.sort(byStartThenId);
+  // Results arrive in adapter order, so the first copy of a duplicate wins.
+  const { kept, dropped } = dropCrossSourceDuplicates(collected);
+  for (const report of reports) {
+    report.duplicates = dropped.filter((event) => event.source === report.source).length;
+    report.published -= report.duplicates;
+  }
+
+  const events = kept.sort(byStartThenId);
   const changed = serializeEvents(events) !== serializeEvents(previous.events);
   return {
     snapshot: { updatedAt: changed || !previous.updatedAt ? now : previous.updatedAt, events },

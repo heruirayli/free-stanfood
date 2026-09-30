@@ -36,6 +36,7 @@ const About = () => (
           </a>
           , through its public events API.
         </li>
+        <li>Public calendar feeds from campus groups, such as Stanford centers’ Luma calendars.</li>
       </ul>
       <p>
         Only public, event-level information is collected: no attendee names, emails, or RSVP lists. Private

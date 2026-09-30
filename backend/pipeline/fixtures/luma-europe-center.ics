@@ -1,0 +1,57 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Luma//The Europe Center//EN
+X-WR-CALNAME:The Europe Center
+X-WR-CALDESC:Luma Calendar
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART:20261022T190000Z
+DTEND:20261022T201500Z
+DTSTAMP:20260930T091538Z
+ORGANIZER;CN="The Europe Center":MAILTO:calendar-invite@lu.ma
+UID:evt-rC7PJEN5yPsInwl@events.lu.ma
+SUMMARY:Milada Vachudova | REDS Seminar: Europe in the Face of War
+DESCRIPTION:Get up-to-date information at: https://luma.com/63p6t1ul\n\nAd
+ dress:\nEncina Hall\nPhilippines Conference Rm, Floor 3\nStanford, CA\nUni
+ ted States\n\nHosted by The Europe Center
+LOCATION:Encina Hall, 616 Jane Stanford Way C100, Stanford, CA 94305, USA
+GEO:37.4273185;-122.16462449999999
+SEQUENCE:212922938
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261119T200000Z
+DTEND:20261119T210000Z
+DTSTAMP:20260930T091538Z
+ORGANIZER;CN="The Europe Center":MAILTO:calendar-invite@lu.ma
+UID:evt-is1sz5wp73xdTCk@events.lu.ma
+SUMMARY:Jannis Panagiotidis | Racism against East Europeans in Germany: Hi
+ story and Present
+DESCRIPTION:Get up-to-date information at: https://luma.com/3d1y7ndc\n\nAd
+ dress:\nEncina Hall\nStanford, CA\nUnited States\n\nHosted by The Europe C
+ enter
+LOCATION:Encina Hall, 616 Jane Stanford Way C100, Stanford, CA 94305, USA
+GEO:37.4273185;-122.16462449999999
+SEQUENCE:212922938
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261203T200000Z
+DTEND:20261203T210000Z
+DTSTAMP:20260930T091538Z
+ORGANIZER;CN="The Europe Center":MAILTO:calendar-invite@lu.ma
+UID:evt-aDp15I4KmrhrmkQ@events.lu.ma
+SUMMARY:Jana Hunter | The Child of Freedom: Temporal Sovereignty in Habsbu
+ rg Bohemia
+DESCRIPTION:Get up-to-date information at: https://luma.com/pd3ig2ef\n\nAd
+ dress:\nEncina Hall\nWilliam J Perry Conference Room, 2nd Floor\nStanford,
+  CA\nUnited States\n\nHosted by The Europe Center
+LOCATION:Encina Hall, 616 Jane Stanford Way C100, Stanford, CA 94305, USA
+GEO:37.4273185;-122.16462449999999
+SEQUENCE:212922938
+STATUS:TENTATIVE
+END:VEVENT
+END:VCALENDAR

@@ -4,6 +4,7 @@ import { EMPTY_SNAPSHOT, type EventSnapshot } from "../../models/eventSnapshot.j
 import {
   buildSnapshot,
   dropWeakDailySeries,
+  duplicateKey,
   expiresAtFor,
   isPublishable,
   type SourceResult,
@@ -100,6 +101,46 @@ describe("buildSnapshot", () => {
     const second = buildSnapshot(first.snapshot, [okResult([makeClassified("b"), makeClassified("a")])], NOW);
     expect(second.changed).toBe(false);
     expect(second.snapshot.updatedAt).toEqual(EARLIER);
+  });
+});
+
+describe("cross-source duplicates", () => {
+  const seminar = { title: "Milada Vachudova | REDS Seminar: Europe in the Face of War", startTime: new Date("2026-10-22T19:00:00Z") };
+
+  it("keeps the Stanford Events copy and drops the calendar-feed copy", () => {
+    const { snapshot, reports } = buildSnapshot(
+      EMPTY_SNAPSHOT,
+      [
+        okResult([makeClassified("s1", seminar)]),
+        { ...okResult([makeClassified("evt-1", { ...seminar, source: "ical:luma-europe-center", title: `${seminar.title}!` })], "ical:luma-europe-center"), allowEmpty: true },
+      ],
+      NOW,
+    );
+    expect(snapshot.events.map((e) => e.source)).toEqual(["localist"]);
+    expect(reports.find((r) => r.source === "ical:luma-europe-center")).toMatchObject({ published: 0, duplicates: 1 });
+    expect(reports.find((r) => r.source === "localist")).toMatchObject({ published: 1, duplicates: 0 });
+  });
+
+  it("keeps same-titled events on different days, and same-source repeats", () => {
+    const { snapshot } = buildSnapshot(
+      EMPTY_SNAPSHOT,
+      [
+        okResult([
+          makeClassified("a", { title: "OMAC Coffee & Donuts", startTime: new Date("2026-10-02T16:00:00Z") }),
+          makeClassified("b", { title: "OMAC Coffee & Donuts", startTime: new Date("2026-10-02T23:00:00Z") }),
+        ]),
+        okResult([makeClassified("c", { source: "ical:x", title: "OMAC Coffee & Donuts", startTime: new Date("2026-10-09T16:00:00Z") })], "ical:x"),
+      ],
+      NOW,
+    );
+    expect(snapshot.events.map((e) => e.sourceEventId)).toEqual(["a", "b", "c"]);
+  });
+
+  it("matches on the campus day, not the UTC day", () => {
+    // 5 PM PDT Oct 22 is Oct 23 in UTC; 11 AM PDT Oct 22 is Oct 22 in UTC.
+    expect(duplicateKey({ title: "Talk", startTime: new Date("2026-10-23T00:00:00Z") })).toBe(
+      duplicateKey({ title: "Talk", startTime: new Date("2026-10-22T18:00:00Z") }),
+    );
   });
 });
 

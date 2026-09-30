@@ -6,6 +6,9 @@ export type RawEvent = unknown;
 
 export interface SourceAdapter {
   name: string;
+  // Small calendars are often legitimately empty. When true, zero events is not
+  // treated as a failure (errors and big drops are still reported).
+  allowEmpty?: boolean;
   fetch(): Promise<RawEvent[]>;
   // Returns null (and logs why) for records that are invalid or must not be shown,
   // such as private or cancelled events.

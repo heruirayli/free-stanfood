@@ -8,6 +8,8 @@ import { normalizedEventSchema, type NormalizedEvent } from "../types/event.js";
 
 export const SOURCE_TIME_ZONE = "America/Los_Angeles";
 export const MAX_DESCRIPTION_LENGTH = 5000;
+// How far ahead every source looks: 8 weeks, plus today.
+export const DAYS_AHEAD = 56;
 
 const BLOCK_ELEMENTS = "p, div, li, h1, h2, h3, h4, h5, h6, tr, blockquote, section, article";
 const INVISIBLE_CHARS = /[​-‍⁠﻿]/g;

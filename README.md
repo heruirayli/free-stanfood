@@ -11,7 +11,7 @@ The app has three layers that stay separate:
 There is no database. The pipeline writes the published events to **`data/events.json`**, and a scheduled GitHub Actions workflow commits that file back to the repo. The Express server only reads it.
 
 ```
-GitHub Actions (every 3h) ── npm run pipeline ──> data/events.json ── git commit/push
+GitHub Actions (every 12h) ─ npm run pipeline ──> data/events.json ── git commit/push
                                                           │
                                    Express reads it ──────┘ ──> /api/events ──> React app
 ```
@@ -62,7 +62,7 @@ Open http://localhost:5173. The repo already contains a `data/events.json`, so t
 
 ## Scheduled scraping with GitHub Actions
 
-`.github/workflows/refresh-events.yml` runs the pipeline every 3 hours (at :17 past, UTC) and whenever you trigger it by hand. If `data/events.json` changed, it commits and pushes the file as `github-actions[bot]`. The file is written deterministically, so a run that finds nothing new makes no commit.
+`.github/workflows/refresh-events.yml` runs the pipeline twice a day (00:17 and 12:17 UTC) and whenever you trigger it by hand. If `data/events.json` changed, it commits and pushes the file as `github-actions[bot]`. The file is written deterministically, so a run that finds nothing new makes no commit.
 
 One-time setup after pushing the repo to GitHub:
 
@@ -95,14 +95,28 @@ Each run, for every adapter registered in `backend/pipeline/run.ts`:
    - Events that vanish from a healthy source are dropped. A failed or unhealthy source keeps its previous events.
    - Events expire 24 hours after they end.
    - Weak matches ("Food possible") on listings that repeat more often than weekly are skipped. These are usually daily exhibitions whose description mentions one dated reception.
+   - The same event listed by two sources is published once. Events match when they fall on the same campus day and share the first six title words, and the earlier source in `run.ts` wins (Stanford Events comes first).
 
 ### Sources
 
 | Source | Method | Notes |
 |---|---|---|
 | Stanford Events (`events.stanford.edu`) | Public Localist JSON API, `/api/2/events` | Verified 2026-09-28. robots.txt allows `/api/` (`Crawl-Delay: 1`). See the header of `adapters/localist.ts`. |
+| Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | Currently three Luma calendars of Stanford centers, found through Luma links in Stanford Events listings. `api.luma.com` allows `/ics/get` in robots.txt (checked 2026-09-30). Most of their events are already on Stanford Events, so today they add few or none. |
 
 New sources should prefer, in order: an official API, a discovered JSON endpoint, iCal/RSS, schema.org JSON-LD, and HTML parsing only as a last resort. Never add a source that requires a login.
+
+#### Adding a calendar feed
+
+Club events that never reach Stanford Events often live on a public Google Calendar or a Luma calendar. Both publish an iCal feed you can add in one line:
+
+1. Find the feed.
+   - **Luma:** on the calendar's page, the RSS-shaped **Add iCal Subscription** button offers `webcal://api.luma.com/ics/get?entity=calendar&id=cal-…`. Use it with `https://` instead of `webcal://`.
+   - **Google Calendar:** in the calendar's settings, **Public address in iCal format**, which ends in `/public/basic.ics`. It only works if the calendar is public.
+2. Check that the feed needs no login and that the site's robots.txt and terms allow automated access.
+3. Add an entry to `ICAL_FEEDS` in `backend/pipeline/adapters/icalFeeds.ts` with an `id`, the host `name`, the feed `url`, and a public `homepage`. Note where you found it and when you checked it.
+
+Each feed runs as its own source (`ical:<id>`), so a broken feed only affects itself, and a calendar with nothing coming up isn't treated as a failure. One limitation: Luma feeds carry only the title, address, and host, not the event's full description, so food detection there mostly relies on the title.
 
 ### Audience policy
 

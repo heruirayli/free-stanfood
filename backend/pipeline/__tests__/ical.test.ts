@@ -1,0 +1,195 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { createIcalAdapter, normalizeIcalEvent, parseIcalFeed, type IcalFeed } from "../adapters/ical.js";
+import { SourceFetchError } from "../adapters/types.js";
+import type { HttpClient } from "../http.js";
+import { processSource } from "../processSource.js";
+import type { NormalizedEvent } from "../../types/event.js";
+import { readFixture } from "./helpers.js";
+
+const FEED: IcalFeed = {
+  id: "edge-club",
+  name: "Edge Case Club",
+  url: "https://calendar.example.edu/edge.ics",
+  homepage: "https://example.edu/edge-club",
+};
+
+// Window runs from Oct 19 to Dec 16, 2026.
+const NOW = new Date("2026-10-20T19:00:00Z");
+const now = () => NOW;
+
+const fakeHttp = (body: string, requested: string[] = []): HttpClient => ({
+  async getText(url) {
+    requested.push(url);
+    return { url, status: 200, body, notModified: false };
+  },
+});
+
+const normalizeAll = async (feed: IcalFeed, body: string, at = now) => {
+  const adapter = createIcalAdapter({ http: fakeHttp(body), feed, now: at });
+  const raw = await adapter.fetch();
+  return { raw, events: raw.map((item) => adapter.normalize(item)).filter((e): e is NormalizedEvent => e !== null) };
+};
+
+const byTitle = (events: NormalizedEvent[], title: string) => events.filter((e) => e.title.startsWith(title));
+
+beforeEach(() => {
+  vi.spyOn(console, "warn").mockImplementation(() => undefined);
+});
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe("ical adapter: edge cases", () => {
+  it("expands a weekly series across DST, skipping EXDATEs and applying overrides", async () => {
+    const { events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+    const weekly = byTitle(events, "Weekly club lunch");
+    expect(weekly.map((e) => e.startTime.toISOString())).toEqual([
+      "2026-10-26T19:00:00.000Z", // 12:00 PDT
+      "2026-11-02T20:00:00.000Z", // 12:00 PST, after the Nov 1 change
+      // Nov 9 is an EXDATE
+      "2026-11-16T21:00:00.000Z", // moved to 13:00 PST by a RECURRENCE-ID override
+      "2026-11-23T20:00:00.000Z",
+    ]);
+    expect(weekly[2]?.title).toBe("Weekly club lunch (moved to 1pm)");
+    // The moved occurrence keeps the id of the slot it replaced.
+    expect(weekly[2]?.sourceEventId).toBe("weekly-lunch@example.edu@2026-11-16T20:00:00.000Z");
+    expect(new Set(weekly.map((e) => e.sourceEventId)).size).toBe(4);
+  });
+
+  it("maps fields and falls back to the feed for host, audience, and link", async () => {
+    const { events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+    const lunch = byTitle(events, "Weekly club lunch")[0];
+    expect(lunch).toMatchObject({
+      source: "ical:edge-club",
+      sourceUrl: "https://example.edu/edge-club",
+      description: "Free pizza provided every week.",
+      locationName: "Old Union Room 200",
+      hostOrg: "Edge Case Club",
+      audience: "unknown",
+      isVirtual: false,
+      endTime: new Date("2026-10-26T20:00:00.000Z"),
+    });
+  });
+
+  it("uses the event's own URL and strips HTML from descriptions", async () => {
+    const { events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+    const boba = byTitle(events, "Boba giveaway day")[0];
+    expect(boba?.sourceUrl).toBe("https://example.edu/events/boba-day");
+    expect(boba?.description).toBe("Free boba all day at White Plaza.");
+  });
+
+  it("marks events with an online location as virtual", async () => {
+    const { events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+    const online = byTitle(events, "Online speaker series")[0];
+    expect(online).toMatchObject({ isVirtual: true, locationName: null });
+  });
+
+  it("skips private, cancelled, untitled, and out-of-window events", async () => {
+    const { raw, events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+    const titles = events.map((e) => e.title);
+    expect(titles).not.toContain("Board meeting (dinner provided)");
+    expect(titles).not.toContain("Cancelled donut social");
+    expect(titles).not.toContain("Winter social from last year");
+    expect(events.every((e) => e.title.length > 0)).toBe(true);
+    // 4 weekly + boba + retreat + private + cancelled + untitled + online = 10 in the window.
+    expect(raw).toHaveLength(10);
+    expect(events).toHaveLength(7);
+  });
+
+  describe.each(["UTC", "Asia/Tokyo", "America/Los_Angeles"])("all-day events with TZ=%s", (tz) => {
+    let original: string | undefined;
+    beforeAll(() => {
+      original = process.env.TZ;
+      process.env.TZ = tz;
+    });
+    afterAll(() => {
+      if (original === undefined) delete process.env.TZ;
+      else process.env.TZ = original;
+    });
+
+    it("keeps the listed calendar dates in campus time", async () => {
+      const { events } = await normalizeAll(FEED, readFixture("ical-edge-cases.ics"));
+      const boba = byTitle(events, "Boba giveaway day")[0];
+      expect(boba?.allDay).toBe(true);
+      expect(boba?.startTime.toISOString()).toBe("2026-10-28T07:00:00.000Z"); // midnight PDT
+      expect(boba?.endTime?.toISOString()).toBe("2026-10-29T06:59:00.000Z"); // 23:59 the same day
+
+      // DTEND 2026-11-01 is exclusive, so the retreat ends Oct 31 at 23:59 PDT.
+      const retreat = byTitle(events, "Officer retreat")[0];
+      expect(retreat?.startTime.toISOString()).toBe("2026-10-30T07:00:00.000Z");
+      expect(retreat?.endTime?.toISOString()).toBe("2026-11-01T06:59:00.000Z");
+    });
+  });
+});
+
+describe("ical adapter: real Luma feed", () => {
+  const LUMA: IcalFeed = {
+    id: "luma-europe-center",
+    name: "The Europe Center",
+    url: "https://api.luma.com/ics/get?entity=calendar&id=cal-Lmfg1IJGEOc4oZE",
+    homepage: "https://luma.com/The_Europe_Center",
+    audience: "rsvp",
+  };
+  // The fixture was saved on this day.
+  const SAVED = () => new Date("2026-09-30T12:00:00Z");
+
+  it("normalizes Luma events with their own links, coordinates, and addresses", async () => {
+    const { events } = await normalizeAll(LUMA, readFixture("luma-europe-center.ics"), SAVED);
+    const seminar = byTitle(events, "Milada Vachudova")[0];
+    expect(seminar).toMatchObject({
+      source: "ical:luma-europe-center",
+      sourceUrl: "https://luma.com/63p6t1ul",
+      startTime: new Date("2026-10-22T19:00:00.000Z"),
+      endTime: new Date("2026-10-22T20:15:00.000Z"),
+      locationName: "Encina Hall, 616 Jane Stanford Way C100, Stanford, CA 94305, USA",
+      lat: 37.4273185,
+      hostOrg: "The Europe Center",
+      audience: "rsvp",
+      isVirtual: false,
+    });
+    // The "Get up-to-date information at: <link>" line becomes the link, not description.
+    expect(seminar?.description.startsWith("Address:")).toBe(true);
+    expect(events.every((e) => e.sourceUrl.startsWith("https://luma.com/"))).toBe(true);
+  });
+
+  it("keeps TENTATIVE events (Luma marks everything tentative)", async () => {
+    const { events } = await normalizeAll(LUMA, readFixture("luma-europe-center.ics"), SAVED);
+    expect(events.length).toBeGreaterThan(0);
+  });
+});
+
+describe("ical adapter: fetching", () => {
+  it("requests the feed URL and rejects responses that aren't calendars", async () => {
+    const requested: string[] = [];
+    const ok = createIcalAdapter({ http: fakeHttp(readFixture("ical-edge-cases.ics"), requested), feed: FEED, now });
+    await ok.fetch();
+    expect(requested).toEqual([FEED.url]);
+
+    const bad = createIcalAdapter({ http: fakeHttp("<html>Sign in</html>"), feed: FEED, now });
+    const error = await bad.fetch().catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(SourceFetchError);
+    expect((error as SourceFetchError).rawBody).toBe("<html>Sign in</html>");
+  });
+
+  it("treats an empty calendar as quiet, not broken", async () => {
+    const empty = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//test//EN\r\nEND:VCALENDAR\r\n";
+    const adapter = createIcalAdapter({ http: fakeHttp(empty), feed: FEED, now });
+    expect(adapter.allowEmpty).toBe(true);
+    const run = await processSource(adapter, { now });
+    expect(run).toMatchObject({ ok: true, fetched: 0, normalized: 0, allowEmpty: true });
+  });
+
+  it("rejects raw entries that don't match the expected shape", () => {
+    expect(normalizeIcalEvent(FEED, { summary: "no uid or times" })).toBeNull();
+  });
+
+  it("parses without network access", () => {
+    const raw = parseIcalFeed(readFixture("ical-edge-cases.ics"), {
+      from: new Date("2026-10-19T00:00:00Z"),
+      to: new Date("2026-10-27T00:00:00Z"),
+    });
+    expect(raw.map((r) => (r as { occurrenceKey: string }).occurrenceKey)).toContain(
+      "weekly-lunch@example.edu@2026-10-26T19:00:00.000Z",
+    );
+  });
+});

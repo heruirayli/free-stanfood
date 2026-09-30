@@ -32,6 +32,13 @@ describe("assessCounts", () => {
     expect(assessCounts("localist", counts(1400, 1390, 30), 100)).toEqual([]);
   });
 
+  it("lets sources that may be empty report zero events", () => {
+    expect(assessCounts("ical:club", counts(0, 0, 0), null, { allowEmpty: true })).toEqual([]);
+    expect(assessCounts("ical:club", counts(4, 0, 0), null, { allowEmpty: true })).toEqual([]);
+    // A big drop is still reported.
+    expect(assessCounts("ical:club", counts(2, 2, 2), 20, { allowEmpty: true })[0]).toMatch(/dropped 90%/);
+  });
+
   it("ignores swings in small sources", () => {
     expect(assessCounts("club-ical", counts(12, 12, 0), 3)).toEqual([]);
   });

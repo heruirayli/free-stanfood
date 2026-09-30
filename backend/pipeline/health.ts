@@ -16,9 +16,12 @@ export const assessCounts = (
   source: string,
   counts: RunCounts,
   previousPublished: number | null,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
 ): string[] => {
-  if (counts.fetched === 0) return [`${source}: source returned 0 events.`];
-  if (counts.normalized === 0) return [`${source}: fetched ${counts.fetched} events but none normalized.`];
+  if (!allowEmpty && counts.fetched === 0) return [`${source}: source returned 0 events.`];
+  if (!allowEmpty && counts.normalized === 0) {
+    return [`${source}: fetched ${counts.fetched} events but none normalized.`];
+  }
 
   if (previousPublished !== null && previousPublished >= MIN_PREVIOUS_FOR_DROP_CHECK) {
     const drop = 1 - counts.published / previousPublished;

@@ -39,6 +39,15 @@ describe("processSource", () => {
     expect(lunch?.foodDetails).toBe("lunch");
   });
 
+  it("flags the sandwiches listing from the fixture as food", async () => {
+    const run = await processSource(fixtureAdapter(), { now });
+    const talk = run.events.find((event) => event.title.startsWith("UCLA’s Randall Kuhn"));
+    expect(talk).toMatchObject({ hasFreeFood: true, foodDetails: "sandwiches" });
+    expect(talk?.foodConfidence).toBeGreaterThanOrEqual(0.75);
+    // Public listing, so it gets published (the audience is "rsvp").
+    expect(talk?.audience).not.toBe("restricted");
+  });
+
   it("records a failure, saves the raw body, and does not throw", async () => {
     const saveDebug = vi.fn(async () => "debug/localist.txt");
     const adapter: SourceAdapter = {

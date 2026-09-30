@@ -1,0 +1,59 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Luma//Precourt Institute for Energy//EN
+X-WR-CALNAME:Precourt Institute for Energy
+X-WR-CALDESC:Luma Calendar
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART:20260505T230000Z
+DTEND:20260506T000000Z
+DTSTAMP:20260930T091539Z
+ORGANIZER;CN="Luma Event":MAILTO:calendar-invite@lu.ma
+UID:evt-g6jfdKxTa2bGgbk@events.lu.ma
+SUMMARY:EIA Annual Energy Outlook 2026
+DESCRIPTION:Get up-to-date information at: https://luma.com/jlk6j9vf\n\nAd
+ dress:\nPaul G. Allen Building\nStanford, California\nUnited States
+LOCATION:Paul G. Allen Building, 330 Jane Stanford Way, Stanford, CA 94305
+ , USA
+GEO:37.4298898;-122.17483739999999
+SEQUENCE:212922939
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260526T210000Z
+DTEND:20260526T223000Z
+DTSTAMP:20260930T091539Z
+ORGANIZER;CN="Béline Falzon":MAILTO:calendar-invite@lu.ma
+UID:evt-X7u6u2HiR7ZMoIE@events.lu.ma
+SUMMARY:Energy Transition Leadership Seminar - Rob Hanson, Co-founder and 
+ Senior Advisor, Monolith
+DESCRIPTION:Get up-to-date information at: https://luma.com/lqmxwngd\n\nAd
+ dress:\nChEM-H / Neuro research complex\nJohn A. and Cynthia Fry Gunn Rotu
+ nda, Second Floor\nStanford, CA\nUnited States\n\nHosted by Béline Falzon
+  & Cindy Williams
+LOCATION:ChEM-H / Neuro research complex, 290 Jane Stanford Way, Stanford,
+  CA 94305, USA
+GEO:37.4301776;-122.1764784
+SEQUENCE:212922939
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261012T190000Z
+DTEND:20261012T200000Z
+DTSTAMP:20260930T091539Z
+ORGANIZER;CN="Arpita Kalra":MAILTO:calendar-invite@lu.ma
+UID:evt-2qm8YFHRV8y286O@events.lu.ma
+SUMMARY:Space-Based Data Centers: A Special Seminar by David Sandalow, Rog
+ er Aines and Julio Friedmann
+DESCRIPTION:Get up-to-date information at: https://luma.com/97zxk2yw\n\nAd
+ dress:\nCheck event page for more details.\n\nHosted by Arpita Kalra & Mik
+ i Yu
+LOCATION:https://luma.com/event/evt-2qm8YFHRV8y286O
+GEO:37.425863837744984;-122.17051344041803
+SEQUENCE:212922939
+STATUS:TENTATIVE
+END:VEVENT
+END:VCALENDAR

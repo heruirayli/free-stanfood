@@ -23,6 +23,7 @@ import { z } from "zod";
 import type { Audience, NormalizedEvent } from "../../types/event.js";
 import type { HttpClient } from "../http.js";
 import {
+  DAYS_AHEAD,
   SOURCE_TIME_ZONE,
   cleanInlineText,
   htmlToText,
@@ -41,7 +42,6 @@ const PAGE_SIZE = 100;
 // About 3x the ~15 pages an 8-week window currently needs. Exceeding it fails the
 // run loudly instead of silently storing a partial (and misleading) snapshot.
 export const MAX_PAGES = 40;
-export const DAYS_AHEAD = 56;
 
 const OPEN_AUDIENCE_GROUPS = new Set(["everyone", "general public"]);
 

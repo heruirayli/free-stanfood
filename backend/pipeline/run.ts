@@ -7,6 +7,8 @@ import {
   writeSnapshotFile,
   type EventSnapshot,
 } from "../models/eventSnapshot.js";
+import { createIcalAdapter } from "./adapters/ical.js";
+import { ICAL_FEEDS } from "./adapters/icalFeeds.js";
 import { createLocalistAdapter } from "./adapters/localist.js";
 import type { SourceAdapter } from "./adapters/types.js";
 import { createHttpClient, MemoryResponseCache } from "./http.js";
@@ -20,7 +22,8 @@ dotenv.config({ quiet: true });
 
 const buildAdapters = (contactEmail: string): SourceAdapter[] => {
   const http = createHttpClient({ contactEmail, cache: new MemoryResponseCache() });
-  return [createLocalistAdapter({ http })];
+  // Stanford Events first: when two sources list the same event, the first one wins.
+  return [createLocalistAdapter({ http }), ...ICAL_FEEDS.map((feed) => createIcalAdapter({ http, feed }))];
 };
 
 // In GitHub Actions these lines become annotations on the workflow run.
@@ -51,6 +54,7 @@ const printSummary = (runs: SourceRun[], reports: SourceReport[]): void => {
         skipped: run.skipped,
         food: run.foodEvents,
         published: sourceReport?.published ?? 0,
+        duplicates: sourceReport?.duplicates ?? 0,
         keptFromPrevious: sourceReport?.keptFromPrevious ?? 0,
         seconds: Math.round((run.finishedAt.getTime() - run.startedAt.getTime()) / 100) / 10,
       };

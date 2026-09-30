@@ -44,6 +44,9 @@ const positives: Case[] = [
   { name: "a $0 cost is free", input: { description: "Lunch will be provided.", cost: "$0" }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
   { name: "reception is a weak signal", input: { description: "Reception to follow." }, hasFreeFood: true, maxConfidence: LIKELY_THRESHOLD - 0.01, details: "reception" },
   { name: "a reception in the title", input: { title: "SDSS Alumni Awards Reception" }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD, details: "reception" },
+  { name: "real listing: sandwiches available", input: { description: "Sandwiches will be available on a first-come, first-serve basis." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "sandwiches" },
+  { name: "restaurant name instead of a food", input: { description: "Chick-fil-A for the first 50 attendees!" }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD, details: "chick-fil-a" },
+  { name: "In-N-Out after the meeting", input: { title: "Fall kickoff + In-N-Out" }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD, details: "in-n-out" },
 ];
 
 const negatives: Case[] = [
@@ -68,6 +71,7 @@ const negatives: Case[] = [
   { name: "lunch not provided", input: { description: "Please note lunch will not be provided." }, hasFreeFood: false },
   { name: "unrelated event", input: { title: "Autumn Quarter: Add/Drop Deadline", description: "Last day to add or drop courses." }, hasFreeFood: false },
   { name: "reception history is scholarship", input: { description: "A study of the reception history of Coptic art." }, hasFreeFood: false },
+  { name: "sandwiches for sale", input: { description: "Sandwiches available for purchase at the cafe." }, hasFreeFood: false },
   { name: "exhibition day mentioning a dated opening reception", input: { title: "Touch Me Not: Undergraduate Juried Exhibition", description: "Opening Reception: Thursday, Oct. 8, 4–6pm" }, hasFreeFood: false },
   { name: "food not allowed on trails", input: { description: "Food is not allowed on Jasper Ridge trails." }, hasFreeFood: false },
 ];

@@ -1,0 +1,76 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Luma//Stanford University Center for East Asian Studies//EN
+X-WR-CALNAME:Stanford University Center for East Asian Studies
+X-WR-CALDESC:Luma Calendar
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART:20260930T233000Z
+DTEND:20261001T010000Z
+DTSTAMP:20260930T091537Z
+ORGANIZER;CN="Stanford Center for East Asian Studies":MAILTO:calendar-invite@lu.ma
+UID:evt-RyMlJp6fPEzw86Z@events.lu.ma
+SUMMARY:Conversations on Korean Modern and Contemporary Art
+DESCRIPTION:Get up-to-date information at: https://luma.com/15mk1564\n\nAd
+ dress:\nEast Asia Library\nRoom 224\nStanford, CA\nUnited States\n\nHosted
+  by Stanford Center for East Asian Studies
+LOCATION:East Asia Library, Lathrop Library, 518 Memorial Way 2nd Floor, S
+ tanford, CA 94305, USA
+GEO:37.4294684;-122.1672722
+SEQUENCE:212922937
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261009T210000Z
+DTEND:20261009T223000Z
+DTSTAMP:20260930T091537Z
+ORGANIZER;CN="Stanford Center for East Asian Studies":MAILTO:calendar-invite@lu.ma
+UID:evt-R5Pkyq3bTserXvy@events.lu.ma
+SUMMARY:Best Friend or Cyber Mother? A Confucian Reflection on AI Companio
+ nship
+DESCRIPTION:Get up-to-date information at: https://luma.com/l02kdi2y\n\nAd
+ dress:\nEast Asia Library\nRoom 224\nStanford, CA\nUnited States\n\nHosted
+  by Stanford Center for East Asian Studies
+LOCATION:East Asia Library, Lathrop Library, 518 Memorial Way 2nd Floor, S
+ tanford, CA 94305, USA
+GEO:37.4294684;-122.1672722
+SEQUENCE:212922937
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261022T233000Z
+DTEND:20261023T010000Z
+DTSTAMP:20260930T091537Z
+ORGANIZER;CN="Stanford Center for East Asian Studies":MAILTO:calendar-invite@lu.ma
+UID:evt-tQsVTdxxXqbSZVJ@events.lu.ma
+SUMMARY:The Human Factor: Work as Science in Modern China
+DESCRIPTION:Get up-to-date information at: https://luma.com/ywk68j4r\n\nAd
+ dress:\nEast Asia Library\nRoom 224\nStanford, CA\nUnited States\n\nHosted
+  by Stanford Center for East Asian Studies
+LOCATION:East Asia Library, Lathrop Library, 518 Memorial Way 2nd Floor, S
+ tanford, CA 94305, USA
+GEO:37.4294684;-122.1672722
+SEQUENCE:212922937
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261106T003000Z
+DTEND:20261106T020000Z
+DTSTAMP:20260930T091537Z
+ORGANIZER;CN="Stanford Center for East Asian Studies":MAILTO:calendar-invite@lu.ma
+UID:evt-6femH9fu0MMMg2W@events.lu.ma
+SUMMARY:The Fate of the Social in Modern Life: American Social Scientists 
+ and Japan as Archive
+DESCRIPTION:Get up-to-date information at: https://luma.com/5ach1gu9\n\nAd
+ dress:\nEast Asia Library\nRoom 224\nStanford, CA\nUnited States\n\nHosted
+  by Stanford Center for East Asian Studies
+LOCATION:East Asia Library, Lathrop Library, 518 Memorial Way 2nd Floor, S
+ tanford, CA 94305, USA
+GEO:37.4294684;-122.1672722
+SEQUENCE:212922937
+STATUS:TENTATIVE
+END:VEVENT
+END:VCALENDAR

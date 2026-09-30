@@ -36,6 +36,7 @@ export const processSource = async (
 ): Promise<SourceRun> => {
   const run: SourceRun = {
     source: adapter.name,
+    allowEmpty: adapter.allowEmpty ?? false,
     startedAt: now(),
     finishedAt: now(),
     ok: false,

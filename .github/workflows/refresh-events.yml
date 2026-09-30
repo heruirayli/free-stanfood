@@ -6,8 +6,9 @@ name: Refresh events
 
 on:
   schedule:
-    # Every 3 hours, at :17 past to avoid the top-of-hour rush on shared runners (UTC).
-    - cron: "17 */3 * * *"
+    # Twice a day, at 00:17 and 12:17 UTC (late afternoon and early morning Pacific).
+    # :17 past avoids the top-of-hour rush on shared runners.
+    - cron: "17 */12 * * *"
   workflow_dispatch:
 
 permissions:
