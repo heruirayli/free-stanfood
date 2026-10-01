@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import AgendaSection from "../components/AgendaSection";
 import EventFilters from "../components/EventFilters";
+import Page from "../components/Page";
 import Spinner from "../components/Spinner";
 import StatusMessage from "../components/StatusMessage";
 import { CAMPUS_TIME_ZONE } from "../constants";
@@ -22,7 +23,7 @@ import { useNow } from "../hooks/useNow";
 import { hasEnded, startOfCampusDay } from "../utils/time";
 
 const buttonClass =
-  "inline-flex min-h-11 items-center rounded-lg bg-emerald-700 px-4 font-medium text-white hover:bg-emerald-800";
+  "inline-flex min-h-11 items-center rounded-full bg-stone-900 px-5 text-sm font-medium text-white transition-colors hover:bg-stone-700";
 
 const Today = () => {
   const dispatch = useAppDispatch();
@@ -72,7 +73,7 @@ const Today = () => {
       <StatusMessage title="No free food listed for the rest of today or tomorrow.">
         <p>
           Try clearing filters, or check the{" "}
-          <Link to="/calendar" className="font-medium text-emerald-800 underline">
+          <Link to="/calendar" className="font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:decoration-stone-900">
             calendar
           </Link>{" "}
           for later this week.
@@ -84,27 +85,28 @@ const Today = () => {
       <>
         <AgendaSection
           id="now"
-          title="Happening now"
+          title="Happening Now"
           now={now}
           events={agenda.happeningNow}
           icon={<FaBolt aria-hidden="true" className="text-emerald-700" />}
         />
         <AgendaSection
           id="all-day"
-          title="All day today"
+          title="All Day Today"
           now={now}
           events={agenda.allDayToday}
           icon={<FaRegSun aria-hidden="true" className="text-amber-600" />}
         />
         <AgendaSection
           id="later"
-          title="Later today"
+          title="Later Today"
+          subtitle={formatInTimeZone(now, CAMPUS_TIME_ZONE, "EEEE, MMMM d")}
           now={now}
           groups={agenda.laterToday}
-          icon={<FaRegClock aria-hidden="true" className="text-emerald-700" />}
+          icon={<FaRegClock aria-hidden="true" className="text-stone-600" />}
         />
         {agenda.happeningNow.length + agenda.allDayToday.length + agenda.laterToday.length === 0 && (
-          <div className="mb-8">
+          <div className="mb-10">
             <StatusMessage title="Nothing else listed for today." />
           </div>
         )}
@@ -113,33 +115,29 @@ const Today = () => {
           title="Tomorrow"
           now={now}
           groups={agenda.tomorrow}
-          icon={<FaRegMoon aria-hidden="true" className="text-indigo-700" />}
+          icon={<FaRegMoon aria-hidden="true" className="text-indigo-600" />}
         />
       </>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold text-gray-900">Free food today</h1>
-      <p className="mb-4 text-sm text-gray-700">
-        {formatInTimeZone(now, CAMPUS_TIME_ZONE, "EEEE, MMMM d")} · times in Pacific Time
-      </p>
+    <Page title="Free Food Today">
       <EventFilters />
       {content}
       {isSuccess && hiddenCount > 0 && (
-        <p className="mt-2 text-center text-sm text-gray-700">
+        <p className="mt-2 text-center text-sm text-stone-600">
           {hiddenCount} more {hiddenCount === 1 ? "listing has" : "listings have"} only a weak hint of food.{" "}
           <button
             type="button"
             onClick={() => dispatch(setFilters({ showLowConfidence: true }))}
-            className="font-medium text-emerald-800 underline"
+            className="ml-1 rounded-full bg-white px-3 py-1 font-medium text-stone-900 ring-1 ring-stone-200 transition-colors hover:bg-stone-100"
           >
             Show {hiddenCount === 1 ? "it" : "them"}
           </button>
         </p>
       )}
-    </div>
+    </Page>
   );
 };
 

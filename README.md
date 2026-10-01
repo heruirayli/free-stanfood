@@ -1,6 +1,6 @@
 # Free Stanfood
 
-A mobile-first calendar of free food at public events on the Stanford campus. It is built from public event listings and refreshed automatically by GitHub Actions. It is an independent project, **unaffiliated with Stanford University**.
+A mobile-first calendar of free food at public events on the Stanford campus. It is built from public event listings and refreshed automatically by GitHub Actions.
 
 The app has three layers that stay separate:
 

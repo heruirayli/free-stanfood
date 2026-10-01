@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import EventDialog from "../components/EventDialog";
 import EventFilters from "../components/EventFilters";
+import Page from "../components/Page";
 import { foodBand } from "../components/FoodBadge";
 import Spinner from "../components/Spinner";
 import StatusMessage from "../components/StatusMessage";
@@ -15,6 +16,18 @@ import { getEvents, reset, selectEventState, selectVisibleEvents } from "../feat
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useNow } from "../hooks/useNow";
 import type { FoodEvent } from "../types/event";
+
+const LEGEND = [
+  { label: "Food listed", dot: "bg-emerald-700" },
+  { label: "Food likely", dot: "bg-amber-700" },
+  { label: "Food possible", dot: "bg-stone-500" },
+];
+
+const VIEWS = [
+  { type: "dayGridMonth", label: "Month" },
+  { type: "timeGridWeek", label: "Week" },
+  { type: "listWeek", label: "List" },
+];
 
 const toCalendarEvent = (event: FoodEvent): EventInput => ({
   id: event.id,
@@ -33,6 +46,8 @@ const CalendarPage = () => {
   const isNarrow = useMediaQuery("(max-width: 639px)");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const request = useRef<{ abort: () => void } | null>(null);
+  const calendar = useRef<FullCalendar>(null);
+  const [view, setView] = useState(isNarrow ? "listWeek" : "dayGridMonth");
 
   useEffect(
     () => () => {
@@ -49,6 +64,7 @@ const CalendarPage = () => {
   // FullCalendar reports the visible range whenever the view or dates change.
   const onDatesSet = useCallback(
     (range: DatesSetArg) => {
+      setView(range.view.type);
       request.current?.abort();
       request.current = dispatch(
         getEvents({ from: range.start.toISOString(), to: range.end.toISOString(), minConfidence: 0 }),
@@ -66,8 +82,7 @@ const CalendarPage = () => {
   const selected = events.find((event) => event.id === selectedId) ?? null;
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">Calendar</h1>
+    <Page title="Calendar" wide>
       <EventFilters />
       {isSuccess && !isLoading && events.length === 0 && (
         <div className="mb-4">
@@ -81,22 +96,36 @@ const CalendarPage = () => {
           </StatusMessage>
         </div>
       )}
-      <div className="relative rounded-xl border border-gray-200 bg-white p-2 shadow-sm sm:p-4">
+      <div className="relative rounded-3xl border border-stone-200/80 bg-white p-2 shadow-[0_1px_2px_rgba(28,25,23,0.04)] sm:p-5">
         {isLoading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/70">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-white/70 backdrop-blur-[1px]">
             <Spinner />
           </div>
         )}
+        {/* View switcher sits above the date, so it lives outside FullCalendar's one-row toolbar. */}
+        <div role="group" aria-label="Calendar view" className="mb-3 flex justify-center gap-1">
+          {VIEWS.map(({ type, label }) => (
+            <button
+              key={type}
+              type="button"
+              aria-pressed={view === type}
+              onClick={() => calendar.current?.getApi().changeView(type)}
+              className={`min-h-10 rounded-full border px-4 text-sm font-medium transition-colors ${
+                view === type
+                  ? "border-stone-900 bg-stone-900 text-white"
+                  : "border-stone-200 bg-white text-stone-800 hover:border-stone-300 hover:bg-stone-100"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <FullCalendar
+          ref={calendar}
           plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
           initialView={isNarrow ? "listWeek" : "dayGridMonth"}
-          headerToolbar={
-            isNarrow
-              ? { left: "prev,next", center: "title", right: "today" }
-              : { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,listWeek" }
-          }
-          footerToolbar={isNarrow ? { center: "dayGridMonth,timeGridWeek,listWeek" } : undefined}
-          buttonText={{ today: "Today", month: "Month", week: "Week", list: "List" }}
+          headerToolbar={{ left: "prev,next", center: "title", right: "today" }}
+          buttonText={{ today: "Today" }}
           events={calendarEvents}
           datesSet={onDatesSet}
           eventClick={onEventClick}
@@ -107,11 +136,16 @@ const CalendarPage = () => {
           eventTimeFormat={{ hour: "numeric", minute: "2-digit", meridiem: "short" }}
         />
       </div>
-      <p className="mt-2 text-xs text-gray-600">
-        Colors: green = food listed, amber = food likely, gray = food possible.
-      </p>
+      <ul aria-label="Calendar colors" className="mt-3 flex flex-wrap gap-x-5 gap-y-1 px-1 text-xs text-stone-600">
+        {LEGEND.map(({ label, dot }) => (
+          <li key={label} className="flex items-center gap-1.5">
+            <span aria-hidden="true" className={`size-2 rounded-full ${dot}`} />
+            {label}
+          </li>
+        ))}
+      </ul>
       <EventDialog event={selected} now={now} onClose={() => setSelectedId(null)} />
-    </div>
+    </Page>
   );
 };
 
