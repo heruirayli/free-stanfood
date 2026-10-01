@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01T05:51:20.766Z",
+  "updatedAt": "2026-10-01T18:26:28.293Z",
   "events": [
     {
       "source": "localist",
@@ -2571,6 +2571,30 @@
     },
     {
       "source": "localist",
+      "sourceEventId": "54124995976202",
+      "sourceUrl": "https://events.stanford.edu/event/maria-mavroudi-the-greek-and-arabic-reception-of-ptolemys-almagest",
+      "title": "The Greek and Arabic Reception of Ptolemy's Almagest between the Seventh and the Ninth Centuries",
+      "description": "The period between the seventh and the ninth centuries has frequently been portrayed in scholarship as “dark”, especially because its intellectual production appears low. Overall, it is deemed as an empty interval between the end of the intellectual efflorescence of antiquity and the presumed renaissance of philosophy and the sciences in the Arab world enabled by the Greek-to-Arabic translation movement in ninth- and tenth-century Baghdad. The paper will re-examine these scholarly assessments by using the reception of Ptolemy’s Almagest as an example.\n\nMaria Mavroudi was born in Thessaloniki, Greece and studied Philology at the University of her native city before earning a Ph.D. in Byzantine studies at Harvard. Her scholarly work begun by focusing on a tenth-century Byzantine book on dream interpretation that had been widely received in Latin and the European vernaculars and counted as the Christian dreambook of the Middle Ages. While generally viewed as a Byzantine invention partly based on the second-century manual of Artemidorus, she showed that it was a Christian adaptation of Arabic Islamic material and one among a larger group of texts originally written in Arabic or Persian and received into Greek between the ninth and the fifteenth centuries. During the next two decades, she worked on identifying the place of these translations within Byzantine literary culture and its reception in “East” and “West’ during the medieval and early modern period. This begs reconsidering the position of the ancient Greek classics within the Byzantine, Arabic, and Latin intellectual traditions, as well as the supposed marginality of Byzantium within a broader medieval intellectual universe. Her work was recognized with a MacArthur fellowship in 2002. Mavroudi is Professor of Byzantine History at the University of California, Berkeley, with additional appointments at the departments of Ancient Greek and Roman Studies and Middle Eastern Languages and Cultures.",
+      "startTime": "2026-11-18T20:00:00.000Z",
+      "endTime": "2026-11-18T21:30:00.000Z",
+      "allDay": false,
+      "locationName": "Encina Commons, Room 123",
+      "lat": 37.426792,
+      "lng": -122.164842,
+      "hostOrg": "Abbasi Program in Islamic Studies",
+      "audience": "rsvp",
+      "audienceNote": null,
+      "cost": null,
+      "isVirtual": false,
+      "id": "5f7d949a6e75a4af7df832cb",
+      "hasFreeFood": true,
+      "foodConfidence": 0.45,
+      "foodDetails": "reception",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-10-01T18:26:28.293Z"
+    },
+    {
+      "source": "localist",
       "sourceEventId": "54095555997025",
       "sourceUrl": "https://events.stanford.edu/event/cmems-esther-von-stosch-presents-humans-plants-landscapes",
       "title": "CMEMS: Esther von Stosch presents, \"Humans – Plants – Landscapes\"",
@@ -2688,6 +2712,30 @@
       "foodDetails": "coffee, cookies",
       "classifiedBy": "keywords",
       "firstSeenAt": "2026-09-30T18:01:46.167Z"
+    },
+    {
+      "source": "localist",
+      "sourceEventId": "54004270300364",
+      "sourceUrl": "https://events.stanford.edu/event/bring-your-own-peer-alcohol-101-training-boba-jellycat-raffle",
+      "title": "Bring Your Own PEER (Alcohol 101 training): Boba + Jellycat Raffle!",
+      "description": "Sign-Up for our FREE alcohol 101 workshop facilitated by PEERs and in collaboration with the Well House!\n\nWhat is Bring Your Own PEER? (Alcohol 101)?\n\nWant to learn more about alcohol, understand its effects on the body, learn how to help a friend in an emergency, or simply understand how to have fun while staying safe? This workshop is designed to open up honest, thoughtful conversations about alcohol, and creates an opportunity to talk about personal experiences, ask questions, and understand how alcohol affects us individually and as a community.\n\nYou can find our list of training dates below:\n\nMonday October 26, 2026 (7-8pm)\n\nMonday, November 9, 2026 (7-8pm)\n\nIf you want to request another time and location for my group/organization please fill out this interest form.\n\nRSVP HERE Drop-ins are also welcome but RSVP helps us know how much Naloxone to bring.\n\nRSVP HERE!!\n\nDrop-ins are also welcome\n\nRSVPs help us know how much boba to bring\n\nFREE Jellycat raffle\n\nIf you have any questions about this event please email peerprogram@stanford.edu",
+      "startTime": "2026-11-27T03:00:00.000Z",
+      "endTime": "2026-11-27T04:00:00.000Z",
+      "allDay": false,
+      "locationName": "The Well House Lobby",
+      "lat": 37.418792,
+      "lng": -122.165172,
+      "hostOrg": "Office of Substance Use Programs Education & Resources (SUPER)",
+      "audience": "rsvp",
+      "audienceNote": "Students - Undergraduates",
+      "cost": "free",
+      "isVirtual": false,
+      "id": "9561dee9a518f282f8df05e3",
+      "hasFreeFood": true,
+      "foodConfidence": 0.65,
+      "foodDetails": "boba",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-10-01T18:26:28.293Z"
     }
   ]
 }
