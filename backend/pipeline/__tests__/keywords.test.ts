@@ -47,6 +47,24 @@ const positives: Case[] = [
   { name: "real listing: sandwiches available", input: { description: "Sandwiches will be available on a first-come, first-serve basis." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "sandwiches" },
   { name: "restaurant name instead of a food", input: { description: "Chick-fil-A for the first 50 attendees!" }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD, details: "chick-fil-a" },
   { name: "In-N-Out after the meeting", input: { title: "Fall kickoff + In-N-Out" }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD, details: "in-n-out" },
+  // Real listings that say food is provided without the word "provided".
+  { name: "invitation to lunch with an a.m. time", input: { description: "Stanford affiliates are invited to join us at 11:40 a.m. for lunch, prior to the seminar." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "lunch" },
+  { name: "sessions include lunch", input: { description: "Quick Bytes sessions cover a variety of topics and include lunch." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "lunch" },
+  { name: "caterer and limited quantity", input: { description: "Dinner from Lotus Thai Bistro for the first 50 RSVPs." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "dinner" },
+  { name: "the program concludes with a snack", input: { description: "The morning concludes with a light snack and time to connect." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "snacks" },
+  { name: "provision verb further along a list", input: { description: "Light bites, fruit, and sparkling cider will be served." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "the hosts bring the food", input: { description: "Come hang out with the club, we'll bring pizza!" }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "pizza" },
+  { name: "food arriving on the schedule", input: { description: "Meet your team. Food arrives at 6:15 and presentations start at 6:30." }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD },
+  { name: "food and refreshments keeps its label", input: { description: "Food and refreshments will be served." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "refreshments" },
+  // A cancel cue in one clause or sentence leaves the food in another alone.
+  { name: "the dinner is on your own, the lunch isn't", input: { description: "Lunch provided, dinner on your own." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD, details: "lunch" },
+  { name: "a price for something else", input: { description: "Lunch is free, parking is $5." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "a gift card is not a price", input: { description: "Participants receive a $25 gift card and a catered lunch." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "no food in the galleries, a reception elsewhere", input: { description: "No food or drink is allowed in the galleries. A reception with light refreshments will follow in the lobby." }, hasFreeFood: true, minConfidence: LIKELY_THRESHOLD },
+  { name: "brown bag seminar that provides lunch", input: { title: "Europe Center Brown Bag Seminar", description: "Lunch will be provided." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "not a potluck", input: { title: "Grad Thanksgiving (Not a Potluck!)", description: "Dinner will be provided." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "free lunch at a food drive", input: { description: "Free lunch provided! Please bring a canned food item for the food drive." }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
+  { name: "a $0 tier in the cost", input: { description: "Lunch will be provided.", cost: "Students $0, general $10" }, hasFreeFood: true, minConfidence: LISTED_THRESHOLD },
 ];
 
 const negatives: Case[] = [
@@ -74,6 +92,32 @@ const negatives: Case[] = [
   { name: "sandwiches for sale", input: { description: "Sandwiches available for purchase at the cafe." }, hasFreeFood: false },
   { name: "exhibition day mentioning a dated opening reception", input: { title: "Touch Me Not: Undergraduate Juried Exhibition", description: "Opening Reception: Thursday, Oct. 8, 4–6pm" }, hasFreeFood: false },
   { name: "food not allowed on trails", input: { description: "Food is not allowed on Jasper Ridge trails." }, hasFreeFood: false },
+  // Negations, including contractions and curly apostrophes.
+  { name: "curly won’t", input: { description: "Pizza won’t be provided this week." }, hasFreeFood: false },
+  { name: "isn't provided", input: { description: "Lunch isn't provided, so please eat beforehand." }, hasFreeFood: false },
+  { name: "cannot be provided", input: { description: "Unfortunately lunch cannot be provided this time." }, hasFreeFood: false },
+  { name: "negated offer before the food", input: { description: "Please note we will not be serving dinner." }, hasFreeFood: false },
+  { name: "no free pizza", input: { description: "There will be no free pizza this week." }, hasFreeFood: false },
+  { name: "no meal in parentheses", input: { description: "A break from noon to 1 for lunch on your own (no meal provided)." }, hasFreeFood: false },
+  { name: "your own lunch after another item", input: { description: "Wear closed-toe shoes and bring water and your own lunch." }, hasFreeFood: false },
+  { name: "bring a small snack", input: { description: "Please bring a small snack you enjoy." }, hasFreeFood: false },
+  { name: "eat beforehand", input: { title: "Blood drive", description: "Eat a full breakfast before your appointment." }, hasFreeFood: false },
+  // Prices: in the same sentence, in the cost field, or in decimals.
+  { name: "registration price covers the lunch", input: { description: "Registration is $25 and includes a catered lunch." }, hasFreeFood: false },
+  { name: "the fee includes meals", input: { description: "Registration fee: $350. The fee includes breakfast and lunch on both days." }, hasFreeFood: false },
+  { name: "a price with cents", input: { description: "Tickets are $12.50 and include dinner." }, hasFreeFood: false },
+  { name: "provided food at a paid event stays unpublished", input: { description: "Breakfast, lunch, snacks, and refreshments provided both days.", cost: "$350" }, hasFreeFood: false },
+  { name: "food truck prices", input: { title: "Food Truck Friday", description: "Lunch is served! Prices vary by vendor." }, hasFreeFood: false },
+  // Food words that aren't food: compounds, titles of works, idioms, formats.
+  { name: "gluten-free is not free", input: { description: "Learn how to cook gluten-free food on a budget." }, hasFreeFood: false },
+  { name: "hyphenated lunch-time", input: { title: "Lunch-time curator talk" }, hasFreeFood: false },
+  { name: "options at nearby cafes", input: { description: "Lunch options are available at nearby cafes." }, hasFreeFood: false },
+  { name: "coffee and lunch breaks", input: { description: "A full-day format with scheduled coffee and lunch breaks." }, hasFreeFood: false },
+  { name: "a quoted film title", input: { title: "Japanese Film Club: 'Jiro Dreams of Sushi'", description: "Screening and discussion." }, hasFreeFood: false },
+  { name: "the free lunch idiom", input: { title: "Public Lecture: There Ain't No Such Thing as a Free Lunch" }, hasFreeFood: false },
+  { name: "a seminar title about snacks", input: { title: "Seminar: Ultra-Processed Snacks and the Adolescent Brain" }, hasFreeFood: false },
+  { name: "food heading a topic noun", input: { description: "What the findings mean for federal school lunch standards." }, hasFreeFood: false },
+  { name: "a painting, not a meal", input: { description: "We will discuss Leonardo’s Last Supper and Coppola’s The Godfather." }, hasFreeFood: false },
 ];
 
 const classify = (input: Partial<ClassifierInput>) =>
@@ -117,6 +161,14 @@ describe("classifyByKeywords", () => {
   it("returns no details when there is no free food", () => {
     expect(classify({ title: "Panel on food insecurity" }).foodDetails).toBeNull();
   });
+
+  it("doesn't read 'provided' about something else as a food cue", () => {
+    expect(classify({ description: "Lunch with the speaker, parking provided." }).foodConfidence).toBeLessThan(LISTED_THRESHOLD);
+  });
+
+  it("drops a negated food from the details but keeps the rest", () => {
+    expect(classify({ description: "Snacks provided (no pizza this time)." }).foodDetails).toBe("snacks");
+  });
 });
 
 describe("isPaidCost", () => {
@@ -130,6 +182,12 @@ describe("isPaidCost", () => {
     ["Free-$300", false],
     ["Free to Current Students — Register", false],
     ["Sold out! Please sign up for the waitlist", false],
+    ["RSVP by 10/15", false],
+    ["Limited to 40 seats", false],
+    ["$0 - $25", false],
+    ["Students $0, general $10", false],
+    ["$1095 per person, group discount available", true],
+    ["20 dollars", true],
     [null, false],
   ])("%s -> %s", (cost, expected) => {
     expect(isPaidCost(cost)).toBe(expected);

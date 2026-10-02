@@ -88,7 +88,7 @@ Each run, for every adapter registered in `backend/pipeline/run.ts`:
 
 1. **Fetch** through the polite HTTP client (`pipeline/http.ts`). The client sends a User-Agent with the contact email and makes at most 1 request per second per host. It backs off exponentially on 429/5xx (honoring `Retry-After`), sends conditional requests, and caps pagination.
 2. **Normalize** each record into the shared schema (`backend/types/event.ts`). Invalid records are logged and skipped. Private, cancelled, and already-expired events are dropped. An end time at the same clock time the next day (a noon talk listed as ending at noon the next day) is treated as a typo, so the event is kept with no end time.
-3. **Classify** food with keyword rules (`pipeline/classify/keywords.ts`). This produces `hasFreeFood`, a `foodConfidence` from 0 to 1, and `foodDetails`.
+3. **Classify** food with keyword rules (`pipeline/classify/keywords.ts`). This produces `hasFreeFood`, a `foodConfidence` from 0 to 1, and `foodDetails`. Each food word is judged by the words around it in its own sentence: offers and invitations raise it ("lunch will be provided", "join us at noon for lunch", "dinner from Lotus Thai for the first 50 RSVPs"), while negations, prices, bring-your-own requests, and topic uses cancel it ("pizza won't be provided", "the $25 fee includes lunch", "bring your own lunch", "school lunch standards"). Food at a paid event (a price in the cost field) is not published. `__tests__/keywords.gold.test.ts` checks accuracy floors against 240 real listings in `fixtures/classifier-gold.json`, each labeled by two independent AI annotators with disagreements adjudicated.
 4. **Build the snapshot** (`pipeline/snapshot.ts`) and write `data/events.json`:
    - Only food events with a public audience are published. Restricted events are never written, because the file is public.
    - `firstSeenAt` carries over from the previous snapshot.
@@ -129,8 +129,8 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 
 | Band | Confidence | Meaning |
 |---|---|---|
-| Food listed | ≥ 0.75 | Explicit wording, e.g. "lunch will be provided", "free pizza" |
-| Food likely | 0.45 – 0.75 | A food word without "provided", e.g. "Boba social" |
+| Food listed | ≥ 0.75 | The listing offers the food, e.g. "lunch will be provided", "free pizza", "sessions include lunch", "enjoy some boba" |
+| Food likely | 0.45 – 0.75 | A food word without an offer, e.g. "Boba social" |
 | Food possible | 0.25 – 0.45 | Weak hints like coffee or "reception to follow". Hidden in the UI by default. |
 
 ## API
