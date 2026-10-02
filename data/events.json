@@ -1,30 +1,6 @@
 {
-  "updatedAt": "2026-10-02T05:35:41.573Z",
+  "updatedAt": "2026-10-02T17:53:28.953Z",
   "events": [
-    {
-      "source": "localist",
-      "sourceEventId": "54054764795771",
-      "sourceUrl": "https://events.stanford.edu/event/climber-coffee",
-      "title": "Climber Coffee",
-      "description": "Join us for our monthly climber coffee meet-up at the Outdoor Center! Meet fellow climbers, enjoy free coffee, and talk about current events in the climbing world. This event is open to all, regardless of experience, on the first Thursday of every month. Bring your own mug!",
-      "startTime": "2026-10-01T15:00:00.000Z",
-      "endTime": "2026-10-01T17:00:00.000Z",
-      "allDay": false,
-      "locationName": "Arrillaga Outdoor Education & Recreation Center",
-      "lat": 37.426776,
-      "lng": -122.177532,
-      "hostOrg": "Stanford Recreation and Wellness",
-      "audience": "unknown",
-      "audienceNote": "Affiliates",
-      "cost": null,
-      "isVirtual": false,
-      "id": "614fe71d08c0c64e2fa06db1",
-      "hasFreeFood": true,
-      "foodConfidence": 0.45,
-      "foodDetails": "coffee",
-      "classifiedBy": "keywords",
-      "firstSeenAt": "2026-09-29T05:25:01.401Z"
-    },
     {
       "source": "localist",
       "sourceEventId": "53754729403278",
@@ -2664,6 +2640,30 @@
       "foodDetails": "boba",
       "classifiedBy": "keywords",
       "firstSeenAt": "2026-10-01T18:26:28.293Z"
+    },
+    {
+      "source": "localist",
+      "sourceEventId": "53898018035593",
+      "sourceUrl": "https://events.stanford.edu/event/office-for-military-affiliated-communities-coffee-donuts",
+      "title": "OMAC Coffee & Donuts",
+      "description": "Grab a donut and meet the folks from the Office for Military-Affiliated Communities - no agendas, just conversation. This casual coffee hour is for veterans, active-duty service members, reservists, and military-linked students to swap stories, discover campus resources, and build community. Stop by between classes, bring a friend, or stay and chat - staff can point you toward counseling, academic support, or student groups if you want help getting plugged in.",
+      "startTime": "2026-11-27T17:00:00.000Z",
+      "endTime": null,
+      "allDay": false,
+      "locationName": "Old Union, 2nd Floor",
+      "lat": 37.425173,
+      "lng": -122.170403,
+      "hostOrg": "Office for Military-Affiliated Communities",
+      "audience": "unknown",
+      "audienceNote": null,
+      "cost": null,
+      "isVirtual": false,
+      "id": "1878c17d8250101d64bf58e3",
+      "hasFreeFood": true,
+      "foodConfidence": 0.75,
+      "foodDetails": "coffee, donuts",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-10-02T17:53:28.953Z"
     }
   ]
 }
