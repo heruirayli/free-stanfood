@@ -122,6 +122,81 @@ describe("ical adapter: edge cases", () => {
   });
 });
 
+describe("ical adapter: zones, cancellations, and locations", () => {
+  const vevent = (fields: string[]) => ["BEGIN:VEVENT", ...fields, "END:VEVENT"];
+  const FEED_BODY = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    ...vevent(["UID:floating", "DTSTART:20261028T120000", "DTEND:20261028T130000", "SUMMARY:Floating lunch"]),
+    ...vevent(["UID:bogus-zone", "DTSTART;TZID=Campus Standard Time:20261028T120000", "SUMMARY:Unknown zone lunch"]),
+    ...vevent(["UID:cancelled-title", "DTSTART:20261028T190000Z", "SUMMARY:CANCELLED: Pizza night"]),
+    ...vevent(["UID:confidential", "DTSTART:20261028T190000Z", "CLASS:CONFIDENTIAL", "SUMMARY:Staff lunch"]),
+    ...vevent(["UID:hybrid", "DTSTART:20261028T190000Z", "LOCATION:Encina Hall 101, https://stanford.zoom.us/j/123", "SUMMARY:Hybrid talk with lunch"]),
+    ...vevent(["UID:zoom-only", "DTSTART:20261028T190000Z", "LOCATION:Zoom: https://stanford.zoom.us/j/456", "SUMMARY:Webinar"]),
+    ...vevent(["UID:orphan", "RECURRENCE-ID:20261104T190000Z", "DTSTART:20261104T200000Z", "SUMMARY:Moved coffee hour"]),
+    ...vevent(["UID:plain", "DTSTART:20261028T190000Z", "SUMMARY:Tacos <3", "DESCRIPTION:Snacks if 3 < 4 people RSVP > 2 days ahead."]),
+    ...vevent(["UID:daily-boba", "DTSTART;VALUE=DATE:20261027", "RRULE:FREQ=DAILY;COUNT=2", "SUMMARY:Boba week"]),
+    ...vevent(["UID:open-weekly", "DTSTART:20261021T190000Z", "RRULE:FREQ=WEEKLY", "SUMMARY:Endless weekly pizza"]),
+    ...vevent(["UID:far-future", "DTSTART:20270115T190000Z", "SUMMARY:Next year's pizza"]),
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  describe.each(["UTC", "America/Los_Angeles"])("with TZ=%s", (tz) => {
+    let original: string | undefined;
+    beforeAll(() => {
+      original = process.env.TZ;
+      process.env.TZ = tz;
+    });
+    afterAll(() => {
+      if (original === undefined) delete process.env.TZ;
+      else process.env.TZ = original;
+    });
+
+    it("reads floating times and unknown zones as campus time", async () => {
+      const { events } = await normalizeAll(FEED, FEED_BODY);
+      expect(byTitle(events, "Floating lunch")[0]?.startTime.toISOString()).toBe("2026-10-28T19:00:00.000Z");
+      expect(byTitle(events, "Unknown zone lunch")[0]?.startTime.toISOString()).toBe("2026-10-28T19:00:00.000Z");
+    });
+
+    it("keys all-day occurrences by their calendar date", async () => {
+      const { events } = await normalizeAll(FEED, FEED_BODY);
+      expect(byTitle(events, "Boba week").map((e) => e.sourceEventId)).toEqual(["daily-boba@2026-10-27", "daily-boba@2026-10-28"]);
+    });
+  });
+
+  it("skips titles marked cancelled and CLASS:CONFIDENTIAL events", async () => {
+    const titles = (await normalizeAll(FEED, FEED_BODY)).events.map((e) => e.title);
+    expect(titles).not.toContain("CANCELLED: Pizza night");
+    expect(titles).not.toContain("Staff lunch");
+  });
+
+  it("keeps hybrid events in person and shows the room, not the link", async () => {
+    const { events } = await normalizeAll(FEED, FEED_BODY);
+    expect(byTitle(events, "Hybrid talk")[0]).toMatchObject({ isVirtual: false, locationName: "Encina Hall 101" });
+    expect(byTitle(events, "Webinar")[0]).toMatchObject({ isVirtual: true, locationName: null });
+  });
+
+  it("keeps an override whose series isn't in the feed", async () => {
+    const moved = byTitle((await normalizeAll(FEED, FEED_BODY)).events, "Moved coffee hour");
+    expect(moved.map((e) => e.sourceEventId)).toEqual(["orphan@2026-11-04T19:00:00.000Z"]);
+  });
+
+  it("stops at the 8-week window, even for series with no end", async () => {
+    const { events } = await normalizeAll(FEED, FEED_BODY);
+    const windowEnd = new Date("2026-12-17T00:00:00Z");
+    const weekly = byTitle(events, "Endless weekly pizza");
+    expect(weekly.length).toBeGreaterThanOrEqual(8);
+    expect(weekly.every((e) => e.startTime < windowEnd)).toBe(true);
+    expect(byTitle(events, "Next year's pizza")).toEqual([]);
+  });
+
+  it("keeps plain-text angle brackets", async () => {
+    const plain = byTitle((await normalizeAll(FEED, FEED_BODY)).events, "Tacos")[0];
+    expect(plain?.title).toBe("Tacos <3");
+    expect(plain?.description).toBe("Snacks if 3 < 4 people RSVP > 2 days ahead.");
+  });
+});
+
 describe("ical adapter: real Luma feed", () => {
   const LUMA: IcalFeed = {
     id: "luma-europe-center",

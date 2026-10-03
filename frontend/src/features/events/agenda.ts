@@ -1,6 +1,13 @@
 import { parseISO } from "date-fns";
 import type { FoodEvent } from "../../types/event";
-import { campusDateKey, formatTime, hasEnded, isHappeningNow, startOfCampusDay } from "../../utils/time";
+import {
+  addDaysToKey,
+  campusDateKey,
+  formatTime,
+  hasEnded,
+  isHappeningNow,
+  lastCampusDateKey,
+} from "../../utils/time";
 
 export interface TimeGroup {
   label: string; // e.g. "12:00 PM"
@@ -32,7 +39,7 @@ const groupByStartTime = (events: FoodEvent[]): TimeGroup[] => {
 // Splits events into the Today view's sections relative to `now` (campus time).
 export const buildAgenda = (events: FoodEvent[], now: Date): Agenda => {
   const today = campusDateKey(now);
-  const tomorrow = campusDateKey(startOfCampusDay(now, 1));
+  const tomorrow = addDaysToKey(today, 1);
   const agenda: Agenda = { happeningNow: [], allDayToday: [], laterToday: [], tomorrow: [] };
   const later: FoodEvent[] = [];
   const next: FoodEvent[] = [];
@@ -42,8 +49,10 @@ export const buildAgenda = (events: FoodEvent[], now: Date): Agenda => {
     const day = campusDateKey(event.startTime);
 
     if (event.allDay) {
-      if (day === today) agenda.allDayToday.push(event);
-      else if (day === tomorrow) next.push(event);
+      // Multi-day all-day events count for every day they cover, not just the first.
+      const last = lastCampusDateKey(event);
+      if (day <= today && today <= last) agenda.allDayToday.push(event);
+      else if (day <= tomorrow && tomorrow <= last) next.push(event);
     } else if (isHappeningNow(event, now)) {
       agenda.happeningNow.push(event);
     } else if (day === today) {

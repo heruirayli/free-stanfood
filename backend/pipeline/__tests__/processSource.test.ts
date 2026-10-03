@@ -30,7 +30,8 @@ describe("processSource", () => {
     expect(run.events.every((event) => event.classifiedBy === "keywords")).toBe(true);
     expect(run.foodEvents).toBeGreaterThan(0);
     expect(run.foodEvents).toBeLessThan(100);
-  });
+    // Parses 100 real HTML descriptions, which can pass 5 s on a busy machine.
+  }, 20_000);
 
   it("flags the lunch listing from the fixture as food", async () => {
     const run = await processSource(fixtureAdapter(), { now });

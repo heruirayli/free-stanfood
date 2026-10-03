@@ -9,7 +9,9 @@ export const saveDebugDump = async (
 ): Promise<string> => {
   await mkdir(directory, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const file = path.join(directory, `${source}-${stamp}.txt`);
+  // Source names like "ical:luma-ceas" contain characters Windows and artifact uploads reject.
+  const name = source.replace(/[^\w.-]+/g, "_");
+  const file = path.join(directory, `${name}-${stamp}.txt`);
   await writeFile(file, body, "utf8");
   return file;
 };

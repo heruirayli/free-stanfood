@@ -5,7 +5,7 @@
   "description": "Unofficial calendar of free food events on the Stanford campus, built from public event listings.",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   },
   "scripts": {
     "server": "nodemon --exec tsx backend/server.ts",

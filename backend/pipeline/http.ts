@@ -1,10 +1,14 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { z } from "zod";
 
 // Polite HTTP client for source adapters:
 // - descriptive User-Agent with a contact email (from SCRAPER_CONTACT_EMAIL)
 // - at most one request per `minIntervalMs` per host (default 1 req/s)
-// - exponential backoff on 429 / 5xx / network errors, honoring Retry-After
-// - conditional requests (If-None-Match / If-Modified-Since) via a response cache
+// - exponential backoff on 429 / 5xx / network errors, honoring Retry-After for
+//   every request to that host, not just the one that got it
+// - conditional requests (If-None-Match / If-Modified-Since) via a response cache,
+//   kept on disk between runs (FileResponseCache)
 
 export const USER_AGENT_PRODUCT = "free-stanfood/0.1";
 
@@ -20,7 +24,7 @@ export interface ResponseCache {
 }
 
 export class MemoryResponseCache implements ResponseCache {
-  private readonly entries = new Map<string, CachedResponse>();
+  protected readonly entries = new Map<string, CachedResponse>();
 
   get(url: string): CachedResponse | undefined {
     return this.entries.get(url);
@@ -28,6 +32,52 @@ export class MemoryResponseCache implements ResponseCache {
 
   set(url: string, entry: CachedResponse): void {
     this.entries.set(url, entry);
+  }
+}
+
+const cacheFileSchema = z.record(
+  z.string(),
+  z.object({ etag: z.string().nullable(), lastModified: z.string().nullable(), body: z.string() }),
+);
+
+// Validators only help if they outlive the process: each run requests every URL
+// once. Saves only the URLs this run used, so dated URLs don't pile up.
+export class FileResponseCache extends MemoryResponseCache {
+  private readonly used = new Set<string>();
+
+  private constructor(private readonly file: string) {
+    super();
+  }
+
+  // A missing or unreadable cache file just means starting cold.
+  static async load(file: string): Promise<FileResponseCache> {
+    const cache = new FileResponseCache(file);
+    try {
+      const parsed = cacheFileSchema.safeParse(JSON.parse(await readFile(file, "utf8")));
+      if (parsed.success) for (const [url, entry] of Object.entries(parsed.data)) cache.entries.set(url, entry);
+    } catch {
+      // Cold start.
+    }
+    return cache;
+  }
+
+  override get(url: string): CachedResponse | undefined {
+    this.used.add(url);
+    return super.get(url);
+  }
+
+  override set(url: string, entry: CachedResponse): void {
+    this.used.add(url);
+    super.set(url, entry);
+  }
+
+  async save(): Promise<void> {
+    const kept = Object.fromEntries([...this.used].flatMap((url) => {
+      const entry = this.entries.get(url);
+      return entry && (entry.etag || entry.lastModified) ? [[url, entry]] : [];
+    }));
+    await mkdir(path.dirname(this.file), { recursive: true });
+    await writeFile(this.file, JSON.stringify(kept), "utf8");
   }
 }
 
@@ -95,6 +145,11 @@ export class HostRateLimiter {
       await this.sleep(slot - now);
     }
   }
+
+  // Holds every later request to the host back by `ms` (a Retry-After or backoff).
+  defer(host: string, ms: number): void {
+    this.nextSlot.set(host, Math.max(this.nextSlot.get(host) ?? 0, this.now() + ms));
+  }
 }
 
 const isRetryableStatus = (status: number): boolean => status === 429 || status >= 500;
@@ -120,6 +175,8 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
   const now = options.now ?? Date.now;
   const cache = options.cache;
   const limiter = new HostRateLimiter(options.minIntervalMs ?? 1000, now, sleep);
+  // Hosts that asked us to stay away longer than one run will wait: skipped until the next run.
+  const blockedHosts = new Set<string>();
 
   const backoff = (attempt: number): number =>
     Math.min(maxBackoffMs, baseBackoffMs * 2 ** attempt);
@@ -132,15 +189,22 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
     const cached = cache?.get(url);
 
     for (let attempt = 0; ; attempt++) {
+      if (blockedHosts.has(host)) throw new Error(`${host} asked us to retry later; skipping ${url} this run`);
       await limiter.wait(host);
 
       const headers: Record<string, string> = { "User-Agent": userAgent, Accept: accept };
       if (cached?.etag) headers["If-None-Match"] = cached.etag;
       if (cached?.lastModified) headers["If-Modified-Since"] = cached.lastModified;
 
+      // A dropped connection or timeout, while connecting or mid-body, is retried.
       let response: Response;
+      let body: string;
       try {
         response = await fetchImpl(url, { headers, signal: AbortSignal.timeout(timeoutMs) });
+        if (response.status === 304 && cached) {
+          return { url, status: 304, body: cached.body, notModified: true };
+        }
+        body = await response.text();
       } catch (error) {
         if (attempt >= maxRetries) {
           throw new Error(`Request to ${url} failed after ${attempt + 1} attempts`, {
@@ -151,12 +215,6 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
         continue;
       }
 
-      if (response.status === 304 && cached) {
-        return { url, status: 304, body: cached.body, notModified: true };
-      }
-
-      const body = await response.text();
-
       if (response.ok) {
         cache?.set(url, {
           etag: response.headers.get("etag"),
@@ -166,17 +224,21 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
         return { url, status: response.status, body, notModified: false };
       }
 
-      if (!isRetryableStatus(response.status) || attempt >= maxRetries) {
+      if (!isRetryableStatus(response.status)) {
         throw new HttpError(response.status, url, body);
       }
 
       const retryAfter = parseRetryAfter(response.headers.get("retry-after"), now());
       if (retryAfter !== null && retryAfter > maxBackoffMs) {
         // The server asked us to stay away longer than we are willing to wait
-        // inside one run. Give up rather than retry early.
+        // inside one run. Give up on the host rather than retry early.
+        blockedHosts.add(host);
         throw new HttpError(response.status, url, body);
       }
-      await sleep(retryAfter ?? backoff(attempt));
+      // The next attempt, and any other URL on this host, waits out the delay,
+      // even when this request has used up its retries.
+      limiter.defer(host, retryAfter ?? backoff(attempt));
+      if (attempt >= maxRetries) throw new HttpError(response.status, url, body);
     }
   };
 

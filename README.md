@@ -18,7 +18,7 @@ GitHub Actions (every 12h) ─ npm run pipeline ──> data/events.json ── 
 
 ## Requirements
 
-- Node 20 or newer (the workflow uses Node 24)
+- Node 22.12 or newer (the workflow uses Node 24)
 
 ## Setup
 
@@ -80,22 +80,35 @@ Things to know:
 
 - GitHub pauses scheduled workflows in public repos after 60 days without activity. The bot's own data commits count as activity.
 - Scheduled runs can start a few minutes late when GitHub is busy.
-- Anything committed stays in git history. A host removal request means removing the event going forward, and rewriting history if you need it gone entirely. The data is event-level public information only: no attendee names, emails, or RSVP lists.
+- Anything committed stays in git history. The data is event-level public information only: no attendee names, emails, or RSVP lists.
+
+### Removing a listing
+
+When a host asks for a listing to come down, add its source URL (the "View original listing" link) to `data/removed.json` and commit it:
+
+```json
+{
+  "removed": [{ "url": "https://events.stanford.edu/event/example", "note": "Host request, 2026-10-01" }]
+}
+```
+
+The next pipeline run drops it, every date of a recurring series included, and keeps it out on later runs. To take it down right away, run the pipeline workflow by hand. Removing it from git history as well needs a history rewrite.
 
 ## The pipeline
 
 Each run, for every adapter registered in `backend/pipeline/run.ts`:
 
-1. **Fetch** through the polite HTTP client (`pipeline/http.ts`). The client sends a User-Agent with the contact email and makes at most 1 request per second per host. It backs off exponentially on 429/5xx (honoring `Retry-After`), sends conditional requests, and caps pagination.
+1. **Fetch** through the polite HTTP client (`pipeline/http.ts`). The client sends a User-Agent with the contact email and makes at most 1 request per second per host. It backs off exponentially on 429/5xx (honoring `Retry-After` for every request to that host), and caps pagination. It sends conditional requests (`If-None-Match`/`If-Modified-Since`) using validators kept in `.cache/http-cache.json`, which GitHub Actions carries between runs.
 2. **Normalize** each record into the shared schema (`backend/types/event.ts`). Invalid records are logged and skipped. Private, cancelled, and already-expired events are dropped. An end time at the same clock time the next day (a noon talk listed as ending at noon the next day) is treated as a typo, so the event is kept with no end time.
 3. **Classify** food with keyword rules (`pipeline/classify/keywords.ts`). This produces `hasFreeFood`, a `foodConfidence` from 0 to 1, and `foodDetails`. Each food word is judged by the words around it in its own sentence: offers and invitations raise it ("lunch will be provided", "join us at noon for lunch", "dinner from Lotus Thai for the first 50 RSVPs"), while negations, prices, bring-your-own requests, and topic uses cancel it ("pizza won't be provided", "the $25 fee includes lunch", "bring your own lunch", "school lunch standards"). Food at a paid event (a price in the cost field) is not published. `__tests__/keywords.gold.test.ts` checks accuracy floors against 240 real listings in `fixtures/classifier-gold.json`, each labeled by two independent AI annotators with disagreements adjudicated.
 4. **Build the snapshot** (`pipeline/snapshot.ts`) and write `data/events.json`:
    - Only food events with a public audience are published. Restricted events are never written, because the file is public.
+   - Listings in `data/removed.json` are never published (see [Removing a listing](#removing-a-listing)).
    - `firstSeenAt` carries over from the previous snapshot.
    - Events that vanish from a healthy source are dropped. A failed or unhealthy source keeps its previous events.
    - Events expire 24 hours after they end.
-   - Weak matches ("Food possible") on listings that repeat more often than weekly are skipped. These are usually daily exhibitions whose description mentions one dated reception.
-   - The same event listed by two sources is published once. Events match when they fall on the same campus day and share the first six title words, and the earlier source in `run.ts` wins (Stanford Events comes first).
+   - Listings that repeat more often than weekly (instances on different days less than a week apart) are skipped unless they explicitly offer food ("Food listed"). These are usually daily exhibitions whose description mentions one dated reception.
+   - The same event listed by two sources is published once. Events match when they fall on the same campus day and share the first six title words (titles of one or two words must also start at the same time), and the earlier source in `run.ts` wins (Stanford Events comes first). It wins even when its copy isn't published, so a restricted or no-food Stanford Events listing also keeps its calendar-feed copy off the site.
 
 ### Sources
 
@@ -123,7 +136,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 - `open`: listed for "Everyone" or "General Public".
 - `rsvp`: has a registration link or asks for an RSVP.
 - `unknown`: no clear signal. The UI shows any targeted groups the host listed (e.g. "Intended for: Students").
-- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"). These are **never published**.
+- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"), or the title or description limits attendance to Stanford groups ("exclusively for Stanford community members", "Open to all Stanford undergraduates", "STANFORD AFFILIATES ONLY") without also welcoming the public. These are **never published**.
 
 ### Food confidence
 
@@ -148,11 +161,12 @@ Invalid query parameters return `400` with `{ message }`.
 data/events.json       published snapshot (written by the pipeline, committed by Actions)
 .github/workflows/     refresh-events.yml: scheduled scrape + commit
 backend/
-  server.ts            Express entrypoint
-  config/paths.ts      location of data/events.json
+  server.ts            Express entrypoint (listens)
+  app.ts               builds the Express app (used by server.ts and the API tests)
+  config/paths.ts      locations of data/events.json, data/removed.json and the HTTP cache
   controllers/         route handlers (asyncHandler)
   middleware/          error and 404 handlers
-  models/              snapshot file format (eventSnapshot.ts) and the server's cached reader (eventStore.ts)
+  models/              snapshot file format (eventSnapshot.ts), the server's cached reader (eventStore.ts), and the removal list (removalList.ts)
   routes/              routers
   types/event.ts       Zod schemas, the source of truth for the event shape
   utils/eventFilter.ts filtering for GET /api/events
@@ -161,7 +175,7 @@ frontend/
   src/app/             Redux store and typed hooks
   src/features/events/ slice, axios service, filtering, agenda grouping
   src/components/      cards, badges, filters, header/footer
-  src/pages/           Today (default), Calendar, About
+  src/pages/           Today (default), Calendar, About, Contact (request removal), NotFound
   src/types/event.ts   mirrors backend/types/event.ts
 ```
 
@@ -169,5 +183,5 @@ frontend/
 
 - **Phase 1** (backend and data foundation): done.
 - **Phase 2** (keyword classifier and basic UI): done.
-- **Phase 3** (scheduled refresh): the workflow is ready and needs the one-time setup above. Deploy and a second source are still to do.
+- **Phase 3** (scheduled refresh): the workflow is ready and needs the one-time setup above. The second source (public iCal feeds, currently Luma calendars) is done; deploy is still to do.
 - **Phase 4** (LLM classification for borderline events, `.ics` feed): later.

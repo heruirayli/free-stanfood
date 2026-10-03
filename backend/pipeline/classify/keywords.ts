@@ -134,7 +134,8 @@ const FOOD_TERMS: FoodTerm[] = [
     weight: 0.3,
     format: true,
   },
-  { label: "reception", pattern: "receptions?", weight: 0.3, titleOnly: true, format: true },
+  // Not scholarship: "The Greek and Arabic Reception of Ptolemy's Almagest".
+  { label: "reception", pattern: "receptions?(?! (?:of|history|theory|studies)\\b)", weight: 0.3, titleOnly: true, format: true },
   { label: "happy hour", pattern: "happy hour", weight: 0.3, format: true },
 ];
 

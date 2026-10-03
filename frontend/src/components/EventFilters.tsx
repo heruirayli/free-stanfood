@@ -9,7 +9,7 @@ import { TIME_OF_DAY_LABELS, type TimeOfDay } from "../utils/time";
 const isTimeOfDay = (value: string): value is TimeOfDay => value in TIME_OF_DAY_LABELS;
 
 const fieldClass =
-  "h-11 w-full rounded-full border border-transparent bg-stone-100 text-[0.9375rem] text-stone-900 transition-colors placeholder:text-stone-500 hover:bg-stone-200/60 focus:border-stone-300 focus:bg-white";
+  "h-11 w-full rounded-full border border-transparent bg-stone-100 text-[0.9375rem] text-stone-900 transition-colors placeholder:text-stone-600 hover:bg-stone-200/60 focus:border-stone-300 focus:bg-white";
 
 // Native select, restyled: keeps keyboard and screen-reader behavior for free.
 const Select = ({ id, label, children, ...props }: { id: string; label: string; children: ReactNode } & SelectHTMLAttributes<HTMLSelectElement>) => (
@@ -96,7 +96,7 @@ const EventFilters = () => {
           {/* Switch track and knob; the real checkbox above keeps it keyboard- and screen-reader-accessible. */}
           <span
             aria-hidden="true"
-            className="relative h-5 w-9 shrink-0 rounded-full bg-stone-300 transition-colors peer-checked:bg-stone-900 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-stone-900 peer-checked:[&>span]:translate-x-4"
+            className="relative h-5 w-9 shrink-0 rounded-full bg-stone-500 transition-colors peer-checked:bg-stone-900 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-stone-900 peer-checked:[&>span]:translate-x-4"
           >
             <span className="absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow transition-transform duration-200" />
           </span>

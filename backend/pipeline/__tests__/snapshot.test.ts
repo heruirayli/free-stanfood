@@ -138,34 +138,107 @@ describe("cross-source duplicates", () => {
 
   it("matches on the campus day, not the UTC day", () => {
     // 5 PM PDT Oct 22 is Oct 23 in UTC; 11 AM PDT Oct 22 is Oct 22 in UTC.
-    expect(duplicateKey({ title: "Talk", startTime: new Date("2026-10-23T00:00:00Z") })).toBe(
-      duplicateKey({ title: "Talk", startTime: new Date("2026-10-22T18:00:00Z") }),
+    expect(duplicateKey({ title: "REDS Seminar on Europe", startTime: new Date("2026-10-23T00:00:00Z") })).toBe(
+      duplicateKey({ title: "REDS Seminar on Europe", startTime: new Date("2026-10-22T18:00:00Z") }),
     );
+  });
+
+  it("needs the same start time for one- or two-word titles", () => {
+    const at = (iso: string) => duplicateKey({ title: "Office Hours", startTime: new Date(iso) });
+    expect(at("2026-10-22T17:00:00Z")).not.toBe(at("2026-10-22T21:00:00Z"));
+    expect(at("2026-10-22T17:00:00Z")).toBe(at("2026-10-22T17:00:00Z"));
+  });
+
+  it("compares non-Latin titles, and never merges titles without words", () => {
+    const day = new Date("2026-10-22T19:00:00Z");
+    expect(duplicateKey({ title: "韩国研究讲座 第一讲", startTime: day })).not.toBe(duplicateKey({ title: "日本研究讲座 第二讲", startTime: day }));
+    expect(duplicateKey({ title: "🍕🍕🍕", startTime: day })).toBeNull();
+  });
+
+  it("drops a calendar-feed copy of a listing Stanford Events marks restricted", () => {
+    const { snapshot, reports } = buildSnapshot(
+      EMPTY_SNAPSHOT,
+      [
+        okResult([makeClassified("s1", { ...seminar, audience: "restricted" })]),
+        { ...okResult([makeClassified("evt-1", { ...seminar, source: "ical:luma-europe-center", audience: "rsvp" })], "ical:luma-europe-center"), allowEmpty: true },
+      ],
+      NOW,
+    );
+    expect(snapshot.events).toEqual([]);
+    expect(reports.find((r) => r.source === "ical:luma-europe-center")).toMatchObject({ published: 0, duplicates: 1 });
+  });
+
+  it("drops a calendar-feed copy of a listing Stanford Events says has no free food", () => {
+    const { snapshot } = buildSnapshot(
+      EMPTY_SNAPSHOT,
+      [
+        okResult([makeClassified("s1", { ...seminar, hasFreeFood: false, foodConfidence: 0, description: "Bring your own lunch." })]),
+        { ...okResult([makeClassified("evt-1", { ...seminar, source: "ical:luma-europe-center" })], "ical:luma-europe-center"), allowEmpty: true },
+      ],
+      NOW,
+    );
+    expect(snapshot.events).toEqual([]);
+  });
+});
+
+describe("removed listings", () => {
+  it("never publishes a listing on the removal list, from a healthy or failed source", () => {
+    const removed = new Set(["https://events.example.edu/event/gone"]);
+    const healthy = buildSnapshot(EMPTY_SNAPSHOT, [okResult([makeClassified("gone"), makeClassified("kept")])], NOW, removed);
+    expect(healthy.snapshot.events.map((e) => e.sourceEventId)).toEqual(["kept"]);
+
+    const failed = buildSnapshot(previousWith(makePublished("gone"), makePublished("kept")), [{ ...okResult([]), ok: false }], NOW, removed);
+    expect(failed.snapshot.events.map((e) => e.sourceEventId)).toEqual(["kept"]);
+  });
+});
+
+describe("unhealthy counts", () => {
+  it("doesn't keep a previous event that this run saw as restricted", () => {
+    const previous = previousWith(...Array.from({ length: 20 }, (_, i) => makePublished(`e${i}`)));
+    const { snapshot, reports } = buildSnapshot(
+      previous,
+      [okResult([makeClassified("e0", { audience: "restricted" }), makeClassified("e1")])],
+      NOW,
+    );
+    expect(reports[0]!.warnings.join(" ")).toMatch(/kept previously published/);
+    const ids = snapshot.events.map((e) => e.sourceEventId);
+    expect(ids).not.toContain("e0");
+    expect(ids).toContain("e1");
+    expect(ids).toContain("e19");
   });
 });
 
 describe("dropWeakDailySeries", () => {
-  const daily = (count: number, confidence: number, title: string) =>
+  const series = (count: number, confidence: number, title: string, everyDays = 1) =>
     Array.from({ length: count }, (_, i) =>
       makeClassified(`${title}-${i}`, {
         title,
-        description: "Reception to follow: Oct 1, 5:30pm.",
+        description: "Opening reception Oct 1, 5:30pm, with light refreshments.",
         foodConfidence: confidence,
-        startTime: new Date(Date.UTC(2026, 9, 1 + i, 17)),
+        startTime: new Date(Date.UTC(2026, 9, 1 + i * everyDays, 17)),
       }),
     );
 
-  it("drops weak matches that repeat more often than weekly", () => {
-    expect(dropWeakDailySeries(daily(10, 0.3, "Exhibition"))).toEqual([]);
+  it("drops matches without an explicit offer that repeat more often than weekly", () => {
+    expect(dropWeakDailySeries(series(10, 0.3, "Exhibition"))).toEqual([]);
+    expect(dropWeakDailySeries(series(10, 0.6, "Exhibition"))).toEqual([]);
   });
 
-  it("keeps weekly series and strong daily series", () => {
-    expect(dropWeakDailySeries(daily(9, 0.3, "Weekly talk"))).toHaveLength(9);
-    expect(dropWeakDailySeries(daily(20, 0.9, "Daily breakfast"))).toHaveLength(20);
+  it("also drops a daily series' last few days", () => {
+    expect(dropWeakDailySeries(series(3, 0.6, "Exhibition"))).toEqual([]);
+  });
+
+  it("keeps weekly series, strong daily series, and same-day sessions", () => {
+    expect(dropWeakDailySeries(series(9, 0.3, "Weekly talk", 7))).toHaveLength(9);
+    expect(dropWeakDailySeries(series(20, 0.9, "Daily breakfast"))).toHaveLength(20);
+    const sessions = [0, 4].map((hour) =>
+      makeClassified(`workshop-${hour}`, { title: "Workshop", foodConfidence: 0.5, startTime: new Date(Date.UTC(2026, 9, 1, 17 + hour)) }),
+    );
+    expect(dropWeakDailySeries(sessions)).toHaveLength(2);
   });
 
   it("is applied when building the snapshot", () => {
-    const { snapshot } = buildSnapshot(EMPTY_SNAPSHOT, [okResult([...daily(12, 0.3, "Exhibition"), makeClassified("a")])], NOW);
+    const { snapshot } = buildSnapshot(EMPTY_SNAPSHOT, [okResult([...series(12, 0.3, "Exhibition"), makeClassified("a")])], NOW);
     expect(snapshot.events.map((e) => e.sourceEventId)).toEqual(["a"]);
   });
 });

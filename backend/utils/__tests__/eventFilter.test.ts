@@ -75,8 +75,17 @@ describe("eventQuerySchema", () => {
     expect(parse({})).toEqual({});
   });
 
+  it("reads a plain date as campus midnight and keeps explicit offsets", () => {
+    expect(parse({ from: "2026-10-01", to: "2026-10-02T12:00:00-07:00" })).toEqual({
+      from: new Date("2026-10-01T07:00:00Z"),
+      to: new Date("2026-10-02T19:00:00Z"),
+    });
+  });
+
   it.each([
     [{ from: "not a date" }],
+    [{ from: "October 1, 2026" }],
+    [{ from: "2026-10-01T12:00:00" }],
     [{ minConfidence: "2" }],
     [{ audience: "restricted" }],
     [{ from: "2026-10-02T00:00:00Z", to: "2026-10-01T00:00:00Z" }],

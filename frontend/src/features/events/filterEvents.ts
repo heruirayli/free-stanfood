@@ -30,14 +30,22 @@ export const foodTypesIn = (events: FoodEvent[]): string[] => {
     .map(([label]) => label);
 };
 
+// Lowercases, folds curly apostrophes (iOS smart punctuation) into straight ones,
+// and drops accents, so "dean's" matches "Dean’s" and "cafe" matches "Café".
+const normalizeText = (text: string): string =>
+  text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u2018\u2019\u02bc\u2032]/g, "'");
+
 const searchableText = (event: FoodEvent): string =>
-  [event.title, event.description, event.hostOrg, event.locationName, event.foodDetails]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
+  normalizeText(
+    [event.title, event.description, event.hostOrg, event.locationName, event.foodDetails].filter(Boolean).join(" "),
+  );
 
 const matchesQuery = (event: FoodEvent, query: string): boolean => {
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const words = normalizeText(query).split(/\s+/).filter(Boolean);
   if (words.length === 0) return true;
   const text = searchableText(event);
   return words.every((word) => text.includes(word));

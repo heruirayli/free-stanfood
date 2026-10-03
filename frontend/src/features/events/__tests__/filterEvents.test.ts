@@ -43,6 +43,17 @@ describe("applyFilters", () => {
     expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, query: "y2e2" }))).toEqual(["pizza", "boba"]);
     expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, query: "sushi" }))).toEqual([]);
   });
+
+  it("matches curly and straight apostrophes, and ignores accents", () => {
+    const list = [
+      makeEvent({ id: "curly", title: "Dean’s Lecture Series", description: "" }),
+      makeEvent({ id: "straight", title: "Women's Center open house", description: "" }),
+      makeEvent({ id: "cafe", title: "Café night", description: "" }),
+    ];
+    expect(ids(applyFilters(list, { ...DEFAULT_FILTERS, query: "dean's" }))).toEqual(["curly"]);
+    expect(ids(applyFilters(list, { ...DEFAULT_FILTERS, query: "women’s" }))).toEqual(["straight"]);
+    expect(ids(applyFilters(list, { ...DEFAULT_FILTERS, query: "cafe" }))).toEqual(["cafe"]);
+  });
 });
 
 describe("foodTypesIn", () => {

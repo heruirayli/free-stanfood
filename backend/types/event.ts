@@ -1,3 +1,4 @@
+import { fromZonedTime } from "date-fns-tz";
 import { z } from "zod";
 
 // Single source of truth for the event shape. The snapshot file format
@@ -57,12 +58,23 @@ export const eventSchema = normalizedEventSchema.extend({
 });
 export type Event = z.infer<typeof eventSchema>;
 
+// Campus time, for date-only query params. (The pipeline has its own copy; the
+// server never imports pipeline code.)
+const CAMPUS_TIME_ZONE = "America/Los_Angeles";
+
+// An ISO 8601 date-time with an offset ("2026-10-01T07:00:00Z"), or a plain date
+// ("2026-10-01") meaning midnight on campus. Anything else is a 400, rather than
+// whatever `new Date()` would make of it.
+const queryDate = z
+  .union([z.iso.datetime({ offset: true }), z.iso.date()], { error: "must be an ISO 8601 date" })
+  .transform((value) => (value.length === 10 ? fromZonedTime(`${value}T00:00:00`, CAMPUS_TIME_ZONE) : new Date(value)));
+
 // Query params for GET /api/events. Express hands us strings, so coerce.
 // Every published event has free food, so there is no food on/off param.
 export const eventQuerySchema = z
   .object({
-    from: z.coerce.date({ error: "must be an ISO 8601 date" }).optional(),
-    to: z.coerce.date({ error: "must be an ISO 8601 date" }).optional(),
+    from: queryDate.optional(),
+    to: queryDate.optional(),
     q: z.string().trim().max(100).optional(),
     minConfidence: z.coerce.number().min(0).max(1).optional(),
     audience: publicAudienceSchema.optional(),

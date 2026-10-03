@@ -13,7 +13,7 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
 );
 
 const About = () => (
-  <Page title={`About ${APP_NAME}`}>
+  <Page title={`About ${APP_NAME}`} documentTitle="About">
     <Section title="What This Is">
       <p>
         {APP_NAME} collects public event listings from around campus and highlights the ones that mention free

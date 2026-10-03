@@ -1,5 +1,9 @@
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  FileResponseCache,
   HostRateLimiter,
   HttpError,
   MemoryResponseCache,
@@ -112,6 +116,37 @@ describe("createHttpClient", () => {
     expect(calls).toHaveLength(1);
   });
 
+  it("stops asking a host that wants a longer wait for the rest of the run", async () => {
+    const { http, calls } = client([{ status: 429, headers: { "Retry-After": "3600" } }, { status: 200 }], {
+      minIntervalMs: 0,
+    });
+    await expect(http.getText("https://a.example/x")).rejects.toBeInstanceOf(HttpError);
+    await expect(http.getText("https://a.example/y")).rejects.toThrow(/asked us to retry later/);
+    expect(calls).toHaveLength(1);
+  });
+
+  it("makes the next URL on the host wait out a Retry-After too", async () => {
+    const { http, clock } = client([{ status: 429, headers: { "Retry-After": "7" } }, { status: 200, body: "ok" }], {
+      minIntervalMs: 0,
+      maxRetries: 0,
+    });
+    await expect(http.getText("https://a.example/x")).rejects.toMatchObject({ status: 429 });
+    expect((await http.getText("https://a.example/y")).body).toBe("ok");
+    expect(clock.sleeps).toEqual([7000]);
+  });
+
+  it("retries a response whose body fails mid-read", async () => {
+    let attempts = 0;
+    const fetchImpl = (async () => {
+      attempts++;
+      if (attempts === 1) return { status: 200, ok: true, headers: new Headers(), text: () => Promise.reject(new TypeError("terminated")) };
+      return new Response("ok");
+    }) as unknown as typeof fetch;
+    const { http } = client([], { fetchImpl, minIntervalMs: 0, baseBackoffMs: 1 });
+    expect((await http.getText("https://a.example/x")).body).toBe("ok");
+    expect(attempts).toBe(2);
+  });
+
   it("stops after maxRetries", async () => {
     const { http, calls } = client([{ status: 500 }, { status: 500 }, { status: 500 }], {
       minIntervalMs: 0,
@@ -154,6 +189,27 @@ describe("createHttpClient", () => {
     expect(calls[1]?.headers["If-None-Match"]).toBe('W/"abc"');
     expect(calls[1]?.headers["If-Modified-Since"]).toBe("Mon, 28 Sep 2026 10:00:00 GMT");
     expect(second).toMatchObject({ status: 304, body: "fresh", notModified: true });
+  });
+});
+
+describe("FileResponseCache", () => {
+  it("keeps the validators of URLs used this run across processes", async () => {
+    const file = path.join(await mkdtemp(path.join(tmpdir(), "http-cache-")), "cache.json");
+    const first = await FileResponseCache.load(file);
+    first.set("https://a.example/feed", { etag: '"v1"', lastModified: null, body: "cal" });
+    first.set("https://a.example/no-validators", { etag: null, lastModified: null, body: "x" });
+    await first.save();
+
+    const second = await FileResponseCache.load(file);
+    expect(second.get("https://a.example/feed")).toEqual({ etag: '"v1"', lastModified: null, body: "cal" });
+    expect(second.get("https://a.example/no-validators")).toBeUndefined();
+    await second.save();
+    // Unused entries are pruned; a corrupt file starts cold.
+    const third = await FileResponseCache.load(file);
+    await third.save();
+    expect(JSON.parse(await readFile(file, "utf8"))).toEqual({});
+    await writeFile(file, "{not json", "utf8");
+    expect((await FileResponseCache.load(file)).get("https://a.example/feed")).toBeUndefined();
   });
 });
 

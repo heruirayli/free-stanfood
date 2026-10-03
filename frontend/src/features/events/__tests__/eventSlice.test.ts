@@ -35,3 +35,24 @@ describe("eventSlice", () => {
     expect(state.filters.query).toBe("pizza");
   });
 });
+
+describe("eventSlice reset during navigation", () => {
+  it("keeps a request the next page already started", () => {
+    // The incoming calendar's request starts before the outgoing page resets.
+    let state = reducer(initial, getEvents.fulfilled([makeEvent({ id: "today" })], "today", {}));
+    state = reducer(state, getEvents.pending("calendar", {}));
+    state = reducer(state, reset());
+    expect(state).toMatchObject({ events: [], isSuccess: false, isLoading: true });
+    state = reducer(state, getEvents.fulfilled([makeEvent({ id: "calendar" })], "calendar", {}));
+    expect(state).toMatchObject({ isLoading: false, isSuccess: true });
+    expect(state.events.map((e) => e.id)).toEqual(["calendar"]);
+  });
+
+  it("stops loading without an error when the current request is aborted", () => {
+    let state = reducer(initial, getEvents.pending("req-1", {}));
+    state = reducer(state, reset());
+    const aborted = getEvents.rejected(new DOMException("Aborted", "AbortError"), "req-1", {});
+    state = reducer(state, { ...aborted, meta: { ...aborted.meta, aborted: true } });
+    expect(state).toMatchObject({ isLoading: false, isError: false, message: "", currentRequestId: null });
+  });
+});

@@ -144,20 +144,50 @@ const RSVP_IN_DESCRIPTION =
   /\brsvp\b|\bregistration (?:is )?(?:required|mandatory)\b|\bmust register\b|\bregister (?:here|now|online|to attend|in advance|by)\b/i;
 const RSVP_NOT_NEEDED = /\bno rsvp\b|\brsvp (?:is )?not (?:required|needed|necessary)\b|\bno registration\b/i;
 
+// Hosts often state a restriction only in the text, not in "restricted to". Same
+// policy as that field: limited to Stanford groups means restricted.
+const STANFORD_GROUP = String.raw`(?:(?:current|enrolled|active) )?(?:stanford(?: university)? )?(?:community(?: members)?|affiliates|students|undergraduates|undergrads|graduate students|grad students|ph\.?d\.? students|postdocs|faculty|staff|employees)`;
+const LIMITED_TO_STANFORD = new RegExp(
+  [
+    // "exclusively for Stanford community members", "limited to current Stanford students"
+    String.raw`\b(?:only|exclusively) (?:for|open to|available to)(?: all)? (?:current |enrolled )?stanford\b`,
+    String.raw`\b(?:limited|restricted) to(?: all)? (?:current |enrolled )?stanford\b`,
+    // "for Stanford community members only", "STANFORD AFFILIATES ONLY"
+    String.raw`\bstanford(?: [\w-]+){0,3} only\b`,
+    // "Open to all Stanford Undergraduates", "open to all enrolled graduate students"
+    String.raw`\bopen (?:only )?to (?:all )?(?:stanford|current|enrolled)\b(?: [\w-]+){0,2}? ${STANFORD_GROUP}\b`,
+  ].join("|"),
+  "i",
+);
+// "Open to Stanford affiliates and the public" is an open event.
+const PUBLIC_WELCOME = /\b(?:and|&|or) (?:the )?(?:general )?public\b|\bpublic (?:is |are )?(?:also )?welcome\b|\bopen to (?:the )?(?:general )?public\b|\beveryone\b/i;
+
+// The sentence that limits attendance, if any.
+export const restrictionInText = (text: string): string | null => {
+  for (const sentence of text.split(/(?<=[.!?])\s+|\n+|\s+\|\s+/)) {
+    if (LIMITED_TO_STANFORD.test(sentence) && !PUBLIC_WELCOME.test(sentence)) {
+      return sentence.trim().slice(0, 200);
+    }
+  }
+  return null;
+};
+
 export interface AudienceInput {
   restrictedTo: string | null;
   audienceGroups: string[];
   hasRegister: boolean;
   ticketUrl: string | null;
   ticketText: string;
+  title: string;
   description: string;
 }
 
 export const deriveAudience = (
   input: AudienceInput,
 ): { audience: Audience; audienceNote: string | null } => {
-  if (input.restrictedTo) {
-    return { audience: "restricted", audienceNote: input.restrictedTo };
+  const restriction = input.restrictedTo ?? restrictionInText(`${input.title}\n${input.description}`);
+  if (restriction) {
+    return { audience: "restricted", audienceNote: restriction };
   }
 
   const groups = collapseAudienceGroups(input.audienceGroups);
@@ -238,6 +268,7 @@ export const normalizeLocalistEvent = (raw: RawEvent): NormalizedEvent | null =>
     hasRegister: event.has_register ?? false,
     ticketUrl: nullIfEmpty(event.ticket_url),
     ticketText,
+    title,
     description,
   });
 

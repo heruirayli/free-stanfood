@@ -12,14 +12,18 @@ export interface RunCounts {
   published: number;
 }
 
+// `previousPublished` counts the source's previously published events that are still current.
 export const assessCounts = (
   source: string,
   counts: RunCounts,
   previousPublished: number | null,
   { allowEmpty = false }: { allowEmpty?: boolean } = {},
 ): string[] => {
-  if (!allowEmpty && counts.fetched === 0) return [`${source}: source returned 0 events.`];
-  if (!allowEmpty && counts.normalized === 0) {
+  // A small calendar may have nothing coming up, but not while events it listed
+  // before are still upcoming: then the feed broke or was emptied.
+  const mayBeEmpty = allowEmpty && (previousPublished ?? 0) === 0;
+  if (!mayBeEmpty && counts.fetched === 0) return [`${source}: source returned 0 events.`];
+  if (!mayBeEmpty && counts.normalized === 0) {
     return [`${source}: fetched ${counts.fetched} events but none normalized.`];
   }
 

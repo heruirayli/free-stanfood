@@ -89,6 +89,7 @@ const negatives: Case[] = [
   { name: "lunch not provided", input: { description: "Please note lunch will not be provided." }, hasFreeFood: false },
   { name: "unrelated event", input: { title: "Autumn Quarter: Add/Drop Deadline", description: "Last day to add or drop courses." }, hasFreeFood: false },
   { name: "reception history is scholarship", input: { description: "A study of the reception history of Coptic art." }, hasFreeFood: false },
+  { name: "a title about the reception of a text", input: { title: "The Greek and Arabic Reception of Ptolemy's Almagest" }, hasFreeFood: false },
   { name: "sandwiches for sale", input: { description: "Sandwiches available for purchase at the cafe." }, hasFreeFood: false },
   { name: "exhibition day mentioning a dated opening reception", input: { title: "Touch Me Not: Undergraduate Juried Exhibition", description: "Opening Reception: Thursday, Oct. 8, 4–6pm" }, hasFreeFood: false },
   { name: "food not allowed on trails", input: { description: "Food is not allowed on Jasper Ridge trails." }, hasFreeFood: false },

@@ -52,4 +52,18 @@ describe("buildAgenda", () => {
     expect(agendaIsEmpty(buildAgenda([], NOW))).toBe(true);
     expect(agendaIsEmpty(agenda)).toBe(false);
   });
+
+  it("keeps multi-day all-day events on every day they cover", () => {
+    const multi = [
+      // Sep 30 – Oct 2: mid-run today.
+      makeEvent({ id: "mid-run", startTime: "2026-09-30T07:00:00Z", endTime: "2026-10-03T06:59:00Z", allDay: true }),
+      // Oct 2 – Oct 3: starts tomorrow.
+      makeEvent({ id: "from-tomorrow", startTime: "2026-10-02T07:00:00Z", endTime: "2026-10-04T06:59:00Z", allDay: true }),
+      // Sep 29 – Sep 30: over.
+      makeEvent({ id: "over", startTime: "2026-09-29T07:00:00Z", endTime: "2026-10-01T06:59:00Z", allDay: true }),
+    ];
+    const result = buildAgenda(multi, NOW);
+    expect(result.allDayToday.map((e) => e.id)).toEqual(["mid-run"]);
+    expect(result.tomorrow.flatMap((g) => g.events.map((e) => e.id))).toEqual(["from-tomorrow"]);
+  });
 });

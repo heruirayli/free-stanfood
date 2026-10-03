@@ -9,7 +9,7 @@ import {
 } from "../adapters/localist.js";
 import { SourceFetchError } from "../adapters/types.js";
 import type { HttpClient } from "../http.js";
-import { allFixtureEvents, fixtureEvent, loadLocalistPage } from "./helpers.js";
+import { allFixtureEvents, fixtureEvent, loadLocalistPage, type LocalistPage } from "./helpers.js";
 
 // Localist event ids of representative fixture entries.
 const LUNCH_AND_LEARN = 53361362013832; // entity-encoded title, ticket_url, no audience tags
@@ -148,6 +148,12 @@ describe("normalizeLocalistEvent", () => {
     expect(normalizeLocalistEvent(raw)).toBeNull();
   });
 
+  it("skips events whose status says cancelled, whatever the title", () => {
+    const raw = fixtureEvent(WORSHIP);
+    raw.event.status = "canceled";
+    expect(normalizeLocalistEvent(raw)).toBeNull();
+  });
+
   it("skips records with a missing title or unparseable start time", () => {
     const noTitle = fixtureEvent(WORSHIP);
     delete noTitle.event.title;
@@ -188,8 +194,29 @@ describe("deriveAudience", () => {
     hasRegister: false,
     ticketUrl: null,
     ticketText: "",
+    title: "",
     description: "",
   };
+
+  it("treats a restriction stated only in the text like a 'restricted to' note", () => {
+    const cases = [
+      { description: "Lunch will be provided. This event is exclusively for Stanford community members." },
+      { description: "Open to all Stanford Undergraduates" },
+      { description: "This event is open to all enrolled graduate students and requires advanced registration." },
+      { title: "Art & Boba Talk | STANFORD AFFILIATES ONLY" },
+    ];
+    for (const fields of cases) {
+      expect(deriveAudience({ ...base, ticketUrl: "https://example.edu/rsvp", ...fields }).audience).toBe("restricted");
+    }
+    expect(deriveAudience({ ...base, description: "Open to all Stanford affiliates." }).audienceNote).toBe(
+      "Open to all Stanford affiliates.",
+    );
+  });
+
+  it("doesn't restrict events that also welcome the public", () => {
+    expect(deriveAudience({ ...base, description: "Open to Stanford affiliates and the general public." }).audience).toBe("unknown");
+    expect(deriveAudience({ ...base, description: "Free and open to the public." }).audience).toBe("unknown");
+  });
 
   it("returns unknown when there are no signals", () => {
     expect(deriveAudience(base)).toEqual({ audience: "unknown", audienceNote: null });
@@ -258,6 +285,16 @@ describe("createLocalistAdapter().fetch", () => {
       "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2026-11-24&pp=100&page=1",
       "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2026-11-24&pp=100&page=2",
     ]);
+  });
+
+  it("stops at the reported last page even if next_page is still set", async () => {
+    const pages = twoPages();
+    const last = JSON.parse(pages[2]!) as LocalistPage;
+    last.page = { ...last.page, next_page: 3 };
+    const requested: string[] = [];
+    const adapter = createLocalistAdapter({ http: fakeHttp({ ...pages, 2: JSON.stringify(last) }, requested) });
+    await adapter.fetch();
+    expect(requested).toHaveLength(2);
   });
 
   it("fails loudly instead of fetching past the page cap", async () => {

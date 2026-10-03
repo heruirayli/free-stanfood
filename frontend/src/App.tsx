@@ -1,7 +1,8 @@
 import { MotionConfig } from "motion/react";
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Spinner from "./components/Spinner";
@@ -12,6 +13,28 @@ import Today from "./pages/Today";
 
 // FullCalendar is most of the bundle, so load it only when the calendar opens.
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+
+const AppRoutes = () => {
+  const { pathname } = useLocation();
+  return (
+    <ErrorBoundary resetKey={pathname}>
+      <Routes>
+        <Route path="/" element={<Today />} />
+        <Route
+          path="/calendar"
+          element={
+            <Suspense fallback={<Spinner label="Loading calendar…" />}>
+              <CalendarPage />
+            </Suspense>
+          }
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </ErrorBoundary>
+  );
+};
 
 const App = () => (
   // Honors the OS "reduce motion" setting: movement is turned off, fades remain.
@@ -26,20 +49,7 @@ const App = () => (
       <div className="flex min-h-screen flex-col">
         <Header />
         <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 pt-8 pb-6 sm:pt-12">
-          <Routes>
-            <Route path="/" element={<Today />} />
-            <Route
-              path="/calendar"
-              element={
-                <Suspense fallback={<Spinner label="Loading calendar…" />}>
-                  <CalendarPage />
-                </Suspense>
-              }
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppRoutes />
         </main>
         <Footer />
       </div>

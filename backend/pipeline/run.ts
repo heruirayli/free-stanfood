@@ -1,6 +1,7 @@
 import path from "node:path";
 import dotenv from "dotenv";
-import { EVENTS_FILE } from "../config/paths.js";
+import { EVENTS_FILE, HTTP_CACHE_FILE, REMOVED_FILE } from "../config/paths.js";
+import { readRemovalList } from "../models/removalList.js";
 import {
   EMPTY_SNAPSHOT,
   readSnapshotFile,
@@ -11,7 +12,7 @@ import { createIcalAdapter } from "./adapters/ical.js";
 import { ICAL_FEEDS } from "./adapters/icalFeeds.js";
 import { createLocalistAdapter } from "./adapters/localist.js";
 import type { SourceAdapter } from "./adapters/types.js";
-import { createHttpClient, MemoryResponseCache } from "./http.js";
+import { createHttpClient, FileResponseCache, type ResponseCache } from "./http.js";
 import { processSource, type SourceRun } from "./processSource.js";
 import { buildSnapshot, type SourceReport } from "./snapshot.js";
 
@@ -20,8 +21,8 @@ import { buildSnapshot, type SourceReport } from "./snapshot.js";
 
 dotenv.config({ quiet: true });
 
-const buildAdapters = (contactEmail: string): SourceAdapter[] => {
-  const http = createHttpClient({ contactEmail, cache: new MemoryResponseCache() });
+const buildAdapters = (contactEmail: string, cache: ResponseCache): SourceAdapter[] => {
+  const http = createHttpClient({ contactEmail, cache });
   // Stanford Events first: when two sources list the same event, the first one wins.
   return [createLocalistAdapter({ http }), ...ICAL_FEEDS.map((feed) => createIcalAdapter({ http, feed }))];
 };
@@ -72,7 +73,11 @@ const main = async (): Promise<void> => {
     report("warning", "SCRAPER_CONTACT_EMAIL is still the example address. Set a real one so sources can reach you.");
   }
 
-  const adapters = buildAdapters(contactEmail);
+  // Read before fetching: an invalid removal list stops the run instead of
+  // republishing listings a host asked us to remove.
+  const removedUrls = await readRemovalList(REMOVED_FILE);
+  const cache = await FileResponseCache.load(HTTP_CACHE_FILE);
+  const adapters = buildAdapters(contactEmail, cache);
   const previous = await loadPrevious();
 
   const runs: SourceRun[] = [];
@@ -80,8 +85,9 @@ const main = async (): Promise<void> => {
     console.log(`[${adapter.name}] starting`);
     runs.push(await processSource(adapter));
   }
+  await cache.save();
 
-  const { snapshot, reports, changed } = buildSnapshot(previous, runs, new Date());
+  const { snapshot, reports, changed } = buildSnapshot(previous, runs, new Date(), removedUrls);
   const relativeFile = path.relative(process.cwd(), EVENTS_FILE);
   if (changed) {
     await writeSnapshotFile(EVENTS_FILE, snapshot);

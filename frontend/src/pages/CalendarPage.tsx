@@ -1,4 +1,4 @@
-import type { DatesSetArg, EventClickArg, EventInput } from "@fullcalendar/core";
+import type { DatesSetArg, EventClickArg, MoreLinkContentArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import FullCalendar from "@fullcalendar/react";
@@ -9,13 +9,13 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import EventDialog from "../components/EventDialog";
 import EventFilters from "../components/EventFilters";
 import Page from "../components/Page";
-import { foodBand } from "../components/FoodBadge";
 import Spinner from "../components/Spinner";
 import StatusMessage from "../components/StatusMessage";
+import { campusNow, toCalendarEvent } from "../features/events/calendarEvents";
 import { getEvents, reset, selectEventState, selectVisibleEvents } from "../features/events/eventSlice";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useNow } from "../hooks/useNow";
-import type { FoodEvent } from "../types/event";
+import { fromCampusWallClock } from "../utils/time";
 
 const LEGEND = [
   { label: "Food listed", dot: "bg-emerald-700" },
@@ -29,14 +29,8 @@ const VIEWS = [
   { type: "listWeek", label: "List" },
 ];
 
-const toCalendarEvent = (event: FoodEvent): EventInput => ({
-  id: event.id,
-  title: event.title,
-  start: event.startTime,
-  end: event.endTime ?? undefined,
-  allDay: event.allDay,
-  classNames: [`food-${foodBand(event.foodConfidence)}`],
-});
+// Short "+3" link on phones, where "+3 more" doesn't fit a day cell.
+const shortMoreLink = ({ num }: MoreLinkContentArg) => `+${num}`;
 
 const CalendarPage = () => {
   const dispatch = useAppDispatch();
@@ -61,13 +55,18 @@ const CalendarPage = () => {
     if (isError) toast.error(message);
   }, [isError, message]);
 
-  // FullCalendar reports the visible range whenever the view or dates change.
+  // FullCalendar reports the visible range whenever the view or dates change. The
+  // range is in campus wall-clock form (see calendarEvents.ts), so convert it back.
   const onDatesSet = useCallback(
     (range: DatesSetArg) => {
       setView(range.view.type);
       request.current?.abort();
       request.current = dispatch(
-        getEvents({ from: range.start.toISOString(), to: range.end.toISOString(), minConfidence: 0 }),
+        getEvents({
+          from: fromCampusWallClock(range.start).toISOString(),
+          to: fromCampusWallClock(range.end).toISOString(),
+          minConfidence: 0,
+        }),
       );
     },
     [dispatch],
@@ -123,6 +122,8 @@ const CalendarPage = () => {
         <FullCalendar
           ref={calendar}
           plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
+          timeZone="UTC"
+          now={campusNow}
           initialView={isNarrow ? "listWeek" : "dayGridMonth"}
           headerToolbar={{ left: "prev,next", center: "title", right: "today" }}
           buttonText={{ today: "Today" }}
@@ -131,6 +132,10 @@ const CalendarPage = () => {
           eventClick={onEventClick}
           height="auto"
           dayMaxEvents={3}
+          // Phones: month cells are ~46px wide, so drop the event times (they spill
+          // into the next day) and leave the room for the colored dot and title.
+          views={{ dayGridMonth: { displayEventTime: !isNarrow } }}
+          moreLinkContent={isNarrow ? shortMoreLink : undefined}
           nowIndicator
           noEventsContent="No food events listed"
           eventTimeFormat={{ hour: "numeric", minute: "2-digit", meridiem: "short" }}

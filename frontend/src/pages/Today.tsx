@@ -20,7 +20,7 @@ import {
   setFilters,
 } from "../features/events/eventSlice";
 import { useNow } from "../hooks/useNow";
-import { hasEnded, startOfCampusDay } from "../utils/time";
+import { campusDateKey, hasEnded, startOfCampusDay } from "../utils/time";
 
 const buttonClass =
   "inline-flex min-h-11 items-center rounded-full bg-stone-900 px-5 text-sm font-medium text-white transition-colors hover:bg-stone-700";
@@ -32,8 +32,10 @@ const Today = () => {
   const hiddenLowConfidence = useAppSelector(selectHiddenLowConfidence);
   const now = useNow();
   const [attempt, setAttempt] = useState(0);
+  const campusDay = campusDateKey(now);
 
-  // Load everything from now through the end of tomorrow (campus time).
+  // Load everything from now through the end of tomorrow (campus time). Reloads
+  // when the campus day rolls over, so a tab left open overnight gets the new tomorrow.
   useEffect(() => {
     const start = new Date();
     const request = dispatch(
@@ -47,7 +49,7 @@ const Today = () => {
       request.abort();
       dispatch(reset());
     };
-  }, [dispatch, attempt]);
+  }, [dispatch, attempt, campusDay]);
 
   useEffect(() => {
     if (isError) toast.error(message);
@@ -122,7 +124,7 @@ const Today = () => {
   }
 
   return (
-    <Page title="Free Food Today">
+    <Page title="Free Food Today" documentTitle="Today">
       <EventFilters />
       {content}
       {isSuccess && hiddenCount > 0 && (

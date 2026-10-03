@@ -39,6 +39,11 @@ describe("assessCounts", () => {
     expect(assessCounts("ical:club", counts(2, 2, 2), 20, { allowEmpty: true })[0]).toMatch(/dropped 90%/);
   });
 
+  it("warns when a may-be-empty source empties while its published events are upcoming", () => {
+    expect(assessCounts("ical:club", counts(0, 0, 0), 2, { allowEmpty: true })[0]).toMatch(/returned 0 events/);
+    expect(assessCounts("ical:club", counts(3, 0, 0), 2, { allowEmpty: true })[0]).toMatch(/none normalized/);
+  });
+
   it("ignores swings in small sources", () => {
     expect(assessCounts("club-ical", counts(12, 12, 0), 3)).toEqual([]);
   });

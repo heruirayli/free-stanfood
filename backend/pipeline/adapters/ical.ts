@@ -23,11 +23,11 @@ import type { Audience, NormalizedEvent } from "../../types/event.js";
 import type { HttpClient } from "../http.js";
 import {
   DAYS_AHEAD,
+  MAX_DESCRIPTION_LENGTH,
   SOURCE_TIME_ZONE,
   cleanInlineText,
   htmlToText,
   logSkip,
-  nullIfEmpty,
   resolveEndTime,
   validateNormalized,
 } from "../normalize.js";
@@ -73,9 +73,29 @@ const textOf = (value: ParameterValue | undefined): string | null => {
   return typeof text === "string" && text.trim() ? text : null;
 };
 
+const pad = (value: number): string => String(value).padStart(2, "0");
+
 // node-ical builds date-only values at local midnight, so local getters give the calendar date.
-const localDateKey = (date: Date): string =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+const localDateKey = (date: Date): string => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+const isKnownZone = (zone: string): boolean => {
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: zone });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// node-ical tags times that carry a zone (TZID or a trailing Z) with `tz`. Floating
+// times and unknown TZIDs are built on the runner's own clock (UTC in GitHub
+// Actions); they mean campus wall-clock time, so read them that way.
+const toInstant = (date: Date): Date => {
+  const zone = (date as Date & { tz?: unknown }).tz;
+  if (typeof zone === "string" && isKnownZone(zone)) return date;
+  const wallClock = `${localDateKey(date)}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  return fromZonedTime(wallClock, SOURCE_TIME_ZONE);
+};
 
 const isVEvent = (component: unknown): component is VEvent =>
   typeof component === "object" && component !== null && (component as { type?: unknown }).type === "VEVENT";
@@ -91,15 +111,17 @@ const toRaw = (instance: EventInstance): IcalRaw => {
   const event = instance.event;
   const allDay = instance.isFullDay;
   // Overrides keep the id of the occurrence they replace, so moving an event
-  // doesn't make it look like a new one (firstSeenAt survives).
-  const originalStart = instance.isOverride && event.recurrenceid ? event.recurrenceid : instance.start;
-  const occurrenceKey = instance.isRecurring ? `${event.uid}@${originalStart.toISOString()}` : event.uid;
+  // doesn't make it look like a new one (firstSeenAt survives). All-day keys use
+  // the calendar date, so they don't depend on the runner's time zone.
+  const originalStart = event.recurrenceid ?? instance.start;
+  const occurrence = allDay ? localDateKey(originalStart) : toInstant(originalStart).toISOString();
+  const occurrenceKey = instance.isRecurring || event.recurrenceid ? `${event.uid}@${occurrence}` : event.uid;
   return {
     uid: event.uid,
     occurrenceKey,
     allDay,
-    start: allDay ? localDateKey(instance.start) : instance.start.toISOString(),
-    end: instance.end ? (allDay ? localDateKey(instance.end) : instance.end.toISOString()) : null,
+    start: allDay ? localDateKey(instance.start) : toInstant(instance.start).toISOString(),
+    end: instance.end ? (allDay ? localDateKey(instance.end) : toInstant(instance.end).toISOString()) : null,
     summary: textOf(instance.summary) ?? textOf(event.summary),
     description: textOf(event.description),
     location: textOf(event.location as ParameterValue | undefined),
@@ -113,11 +135,13 @@ const toRaw = (instance: EventInstance): IcalRaw => {
 // Parses a feed body into raw entries for the window [from, to].
 export const parseIcalFeed = (body: string, window: { from: Date; to: Date }): IcalRaw[] => {
   const parsed = ical.sync.parseICS(body);
+  const events = Object.values(parsed).filter(isVEvent);
+  const seriesUids = new Set(events.filter((event) => !event.recurrenceid).map((event) => event.uid));
   const out: IcalRaw[] = [];
-  for (const component of Object.values(parsed)) {
-    if (!isVEvent(component)) continue;
-    // RECURRENCE-ID overrides are folded into their series by node-ical.
-    if (component.recurrenceid) continue;
+  for (const component of events) {
+    // node-ical folds RECURRENCE-ID overrides into their series. An override
+    // whose series isn't in the feed stands alone.
+    if (component.recurrenceid && seriesUids.has(component.uid)) continue;
     for (const instance of ical.expandRecurringEvent(component, { ...window, expandOngoing: true })) {
       out.push(toRaw(instance));
     }
@@ -132,8 +156,35 @@ export const fetchWindowFor = (now: Date): { from: Date; to: Date } => ({
 
 // Luma descriptions open with "Get up-to-date information at: <event link>".
 const LUMA_LINK_LINE = /^Get up-to-date information at:\s*(https:\/\/\S+)\s*/i;
-const ONLINE_LOCATION = /^https?:\/\/|\b(?:zoom\.us|meet\.google\.com|teams\.microsoft\.com|webex\.com)\b/i;
+const URL_IN_TEXT = /https?:\/\/\S+/gi;
+// What's left of a location once links are removed, when the event is online only.
+const ONLINE_ONLY_WORDS = /^(?:zoom|online|virtual|webinar|google meet|microsoft teams|teams|webex|link)?$/i;
 const HIDDEN_CLASSES = new Set(["PRIVATE", "CONFIDENTIAL"]);
+const CANCELLED_TITLE = /^\W*(?:cancel{1,2}ed|postponed)\b/i;
+
+// iCal text is plain, so "<3" or "a < b" must survive. Some calendars (Google)
+// put HTML in descriptions anyway; only those go through the HTML parser.
+const LOOKS_LIKE_HTML = /<\/?[a-z][^>]*>|&(?:[a-z]+|#\d+);/i;
+
+const plainText = (value: string): string =>
+  value
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/[ \t\f\v]+/g, " ").trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+    .slice(0, MAX_DESCRIPTION_LENGTH);
+
+const descriptionText = (value: string): string => (LOOKS_LIKE_HTML.test(value) ? htmlToText(value) : plainText(value));
+
+const titleText = (value: string | null): string =>
+  value && !LOOKS_LIKE_HTML.test(value) ? value.replace(/\s+/g, " ").trim() : cleanInlineText(value);
+
+// Online-only when the location is just a link or a word like "Zoom". A room plus
+// a Zoom link is a hybrid event, which can still serve food.
+const onlineOnly = (location: string): boolean =>
+  ONLINE_ONLY_WORDS.test(location.replace(URL_IN_TEXT, " ").replace(/[\s,;:|/()-]+/g, " ").trim());
 
 const campusMidnight = (dateKey: string): Date => fromZonedTime(`${dateKey}T00:00:00`, SOURCE_TIME_ZONE);
 
@@ -150,8 +201,8 @@ export const normalizeIcalEvent = (feed: IcalFeed, raw: RawEvent): NormalizedEve
     logSkip(source, rawId, "private event");
     return null;
   }
-  if (item.status?.toUpperCase() === "CANCELLED") {
-    logSkip(source, rawId, "cancelled");
+  if (item.status?.toUpperCase() === "CANCELLED" || CANCELLED_TITLE.test(item.summary ?? "")) {
+    logSkip(source, rawId, "cancelled or postponed");
     return null;
   }
 
@@ -174,19 +225,21 @@ export const normalizeIcalEvent = (feed: IcalFeed, raw: RawEvent): NormalizedEve
   const lumaLink = description.match(LUMA_LINK_LINE)?.[1] ?? null;
   if (lumaLink) description = description.replace(LUMA_LINK_LINE, "");
 
-  const location = nullIfEmpty(item.location);
-  const isVirtual = location !== null && ONLINE_LOCATION.test(location);
+  const location = item.location ? titleText(item.location) || null : null;
+  const isVirtual = location !== null && onlineOnly(location);
+  // Hybrid events show the room, not the meeting link.
+  const place = location?.replace(URL_IN_TEXT, " ").replace(/\s+/g, " ").replace(/^[\s,;:|/-]+|[\s,;:|/-]+$/g, "");
 
   return validateNormalized(source, rawId, {
     source,
     sourceEventId: item.occurrenceKey,
     sourceUrl: item.url ?? lumaLink ?? feed.homepage,
-    title: cleanInlineText(item.summary),
-    description: htmlToText(description),
+    title: titleText(item.summary),
+    description: descriptionText(description),
     startTime,
     endTime: resolveEndTime(startTime, listedEnd, item.allDay),
     allDay: item.allDay,
-    locationName: isVirtual ? null : location,
+    locationName: isVirtual || !place ? null : place,
     lat: item.lat,
     lng: item.lng,
     hostOrg: feed.name,

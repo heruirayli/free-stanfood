@@ -8,6 +8,12 @@ import { selectEvents } from "../utils/eventFilter.js";
 const describeZodError = (error: ZodError): string =>
   error.issues.map((issue) => `${issue.path.join(".") || "query"}: ${issue.message}`).join("; ");
 
+// The snapshot this app serves (set by createApp).
+const snapshotFor = (req: Request) => {
+  const file: unknown = req.app.locals.eventsFile;
+  return loadSnapshot(typeof file === "string" ? file : undefined);
+};
+
 // @desc    Get events
 // @route   GET /api/events
 // @access  Public
@@ -18,7 +24,7 @@ export const getEvents = asyncHandler(async (req: Request, res: Response) => {
     throw new Error(describeZodError(query.error));
   }
 
-  const { events } = await loadSnapshot();
+  const { events } = await snapshotFor(req);
   res.status(200).json(selectEvents(events, query.data, new Date()));
 });
 
@@ -32,7 +38,7 @@ export const getEvent = asyncHandler(async (req: Request, res: Response) => {
     throw new Error("Invalid event id");
   }
 
-  const { events } = await loadSnapshot();
+  const { events } = await snapshotFor(req);
   const event = events.find(
     (candidate) =>
       candidate.id === id.data && (PUBLIC_AUDIENCES as readonly Audience[]).includes(candidate.audience),

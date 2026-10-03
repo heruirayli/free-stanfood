@@ -15,6 +15,9 @@ frontend/dist/
 # pipeline debug dumps of failed source responses
 debug/
 
+# HTTP validators kept between pipeline runs (conditional requests)
+.cache/
+
 # half-written snapshot if a pipeline run dies mid-write (data/events.json itself is committed)
 *.tmp
 

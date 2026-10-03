@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # ETags and Last-Modified dates from the last run, so sources can answer 304.
+      - name: Restore HTTP cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache
+          key: http-cache-${{ github.run_id }}
+          restore-keys: http-cache-
+
       # A failing or unhealthy source makes this step fail, but the data from
       # healthy sources is still written. Commit it first, then fail the job.
       - name: Run pipeline
@@ -41,6 +49,13 @@ jobs:
         run: npm run pipeline
         env:
           SCRAPER_CONTACT_EMAIL: ${{ secrets.SCRAPER_CONTACT_EMAIL }}
+
+      - name: Save HTTP cache
+        if: always()
+        uses: actions/cache/save@v6
+        with:
+          path: .cache
+          key: http-cache-${{ github.run_id }}
 
       - name: Commit updated events
         run: |

@@ -7,6 +7,17 @@
   color-scheme: light;
 }
 
+/* Keep focused controls clear of the sticky header (two rows on phones, one from sm up). */
+html {
+  scroll-padding-top: 8rem;
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
+}
+
 body {
   @apply bg-stone-50 text-stone-900 antialiased;
   font-feature-settings: "cv11", "ss01";
@@ -51,6 +62,13 @@ body {
   box-shadow: none !important;
 }
 
+/* FullCalendar's ".fc .fc-button:focus { outline: 0 }" beats the global focus
+   style, and its box-shadow ring is removed above, so restore the outline here. */
+.fc .fc-toolbar .fc-button:focus-visible {
+  outline: 2px solid var(--color-stone-900);
+  outline-offset: 2px;
+}
+
 /* Phones: keep the toolbar title on one line. */
 @media (max-width: 639px) {
   .fc .fc-toolbar-title {
@@ -89,6 +107,16 @@ body {
 .fc .fc-daygrid-day-number {
   font-size: 0.8125rem;
   color: var(--color-stone-600);
+}
+
+/* Days from the next or previous month: lighter than the current month's, but
+   still readable (FullCalendar's default opacity of .3 fails contrast). */
+.fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+
+.fc .fc-day-other .fc-daygrid-day-number {
+  color: var(--color-stone-500);
 }
 
 .fc .fc-event {

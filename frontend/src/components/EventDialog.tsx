@@ -30,7 +30,10 @@ const EventDialog = ({ event, now, onClose }: EventDialogProps) => {
         if (e.target === ref.current) onClose(); // backdrop click
       }}
       aria-label={event?.title ?? "Event details"}
-      className="m-auto w-[min(36rem,calc(100%-2rem))] overflow-visible bg-transparent p-0 backdrop:bg-stone-900/40 backdrop:backdrop-blur-sm"
+      // Scrolls itself: a modal dialog is fixed in place, so long details would
+      // otherwise run off-screen with the source link. The padding keeps the close
+      // button's ring and focus outline inside the scroll area.
+      className="m-auto max-h-[calc(100dvh-2rem)] w-[min(36rem,calc(100%-2rem))] overflow-y-auto overscroll-contain bg-transparent p-1 backdrop:bg-stone-900/40 backdrop:backdrop-blur-sm"
     >
       {event && (
         <motion.div
@@ -39,7 +42,8 @@ const EventDialog = ({ event, now, onClose }: EventDialogProps) => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: "spring", stiffness: 380, damping: 32 }}
         >
-          <div className="mb-2 flex justify-end">
+          {/* Sticky, so Close stays in reach while scrolling a long description. */}
+          <div className="sticky top-0 z-10 mb-2 flex justify-end">
             <button
               type="button"
               onClick={onClose}

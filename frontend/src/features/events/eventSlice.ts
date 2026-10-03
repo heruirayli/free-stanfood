@@ -55,8 +55,15 @@ export const eventSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
-    // Clears loaded events and status, but keeps the user's filters.
-    reset: (state) => ({ ...initialState, filters: state.filters }),
+    // Clears loaded events and status, but keeps the user's filters. An in-flight
+    // request survives: FullCalendar starts the incoming page's fetch (in the layout
+    // phase) before the outgoing page's cleanup resets, and that fetch must still land.
+    reset: (state) => ({
+      ...initialState,
+      filters: state.filters,
+      isLoading: state.isLoading,
+      currentRequestId: state.currentRequestId,
+    }),
     setFilters: (state, action: PayloadAction<Partial<EventFilters>>) => {
       state.filters = { ...state.filters, ...action.payload };
     },
@@ -80,11 +87,13 @@ export const eventSlice = createSlice({
         state.currentRequestId = null;
       })
       .addCase(getEvents.rejected, (state, action) => {
-        if (state.currentRequestId !== action.meta.requestId || action.meta.aborted) return;
+        if (state.currentRequestId !== action.meta.requestId) return;
         state.isLoading = false;
+        state.currentRequestId = null;
+        // An abort is a page leaving, not a failure: stop loading but show no error.
+        if (action.meta.aborted) return;
         state.isError = true;
         state.message = action.payload ?? action.error.message ?? "Could not load events";
-        state.currentRequestId = null;
       });
   },
 });
