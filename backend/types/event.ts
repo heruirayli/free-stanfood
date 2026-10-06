@@ -90,3 +90,16 @@ export const eventQuerySchema = z
 export type EventQuery = z.infer<typeof eventQuerySchema>;
 
 export const eventIdSchema = z.string().regex(/^[a-f0-9]{24}$/, "Invalid event id");
+
+// Extra params for GET /api/events/calendar.ics: export only `ids`, or everything
+// except `exclude` (comma-separated event ids). The app sends whichever is shorter.
+const idList = z
+  .string()
+  .transform((value) => value.split(",").filter(Boolean))
+  .pipe(z.array(eventIdSchema).max(500, "too many ids"));
+
+export const calendarSelectionSchema = z.object({
+  ids: idList.optional(),
+  exclude: idList.optional(),
+});
+export type CalendarSelection = z.infer<typeof calendarSelectionSchema>;

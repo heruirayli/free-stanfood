@@ -59,7 +59,9 @@ describe("Today -> Calendar navigation", () => {
     await act(async () => {
       fireEvent.click(screen.getByRole("link", { name: "Calendar" }));
     });
-    await waitFor(() => expect(eventService.getEvents).toHaveBeenCalledTimes(2), SLOW);
+    // Today's range and the calendar's range (the export list makes its own, undated request).
+    const rangeRequests = () => vi.mocked(eventService.getEvents).mock.calls.filter(([query]) => query.from !== undefined);
+    await waitFor(() => expect(rangeRequests()).toHaveLength(2), SLOW);
     await waitFor(() => expect(store.getState().events).toMatchObject({ isLoading: false, isSuccess: true }), SLOW);
     expect(store.getState().events.events).toHaveLength(1);
   }, 20_000);

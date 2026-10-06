@@ -6,11 +6,13 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import CalendarExport from "../components/CalendarExport";
 import EventDialog from "../components/EventDialog";
 import EventFilters from "../components/EventFilters";
 import Page from "../components/Page";
 import Spinner from "../components/Spinner";
 import StatusMessage from "../components/StatusMessage";
+import { useCalendarExport } from "../features/events/calendarExport";
 import { campusNow, toCalendarEvent } from "../features/events/calendarEvents";
 import { getEvents, reset, selectEventState, selectVisibleEvents } from "../features/events/eventSlice";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -42,6 +44,8 @@ const CalendarPage = () => {
   const request = useRef<{ abort: () => void } | null>(null);
   const calendar = useRef<FullCalendar>(null);
   const [view, setView] = useState(isNarrow ? "listWeek" : "dayGridMonth");
+  // Shared by the export section and the event dialog, so both edit the same choices.
+  const calendarExport = useCalendarExport();
 
   useEffect(
     () => () => {
@@ -149,7 +153,8 @@ const CalendarPage = () => {
           </li>
         ))}
       </ul>
-      <EventDialog event={selected} now={now} onClose={() => setSelectedId(null)} />
+      <CalendarExport state={calendarExport} />
+      <EventDialog event={selected} now={now} onClose={() => setSelectedId(null)} exportState={calendarExport} />
     </Page>
   );
 };

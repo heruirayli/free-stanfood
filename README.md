@@ -151,6 +151,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 | Method | Route | Purpose |
 |---|---|---|
 | GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to 8 weeks out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
+| GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The Calendar page has a download button with every event selected; people can uncheck the ones they don't want. |
 | GET | `/api/events/:id` | A single event |
 
 Invalid query parameters return `400` with `{ message }`.
@@ -184,4 +185,4 @@ frontend/
 - **Phase 1** (backend and data foundation): done.
 - **Phase 2** (keyword classifier and basic UI): done.
 - **Phase 3** (scheduled refresh): the workflow is ready and needs the one-time setup above. The second source (public iCal feeds, currently Luma calendars) is done; deploy is still to do.
-- **Phase 4** (`.ics` feed): later. Classification stays rule-based: there is no LLM step.
+- **Phase 4** (`.ics` feed): done. Classification stays rule-based: there is no LLM step.

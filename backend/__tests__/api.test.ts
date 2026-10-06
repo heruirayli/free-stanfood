@@ -65,6 +65,39 @@ describe("GET /api/events/:id", () => {
   });
 });
 
+describe("GET /api/events/calendar.ics", () => {
+  it("downloads an iCalendar file of public events", async () => {
+    const response = await fetch(`${base}/api/events/calendar.ics?from=2099-09-30&to=2099-10-03`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toMatch(/^text\/calendar/);
+    expect(response.headers.get("content-disposition")).toMatch(/attachment; filename="free-stanfood.ics"/);
+    const text = await response.text();
+    expect(text).toContain(`UID:${open.id}@free-stanfood`);
+    expect(text).not.toContain(restricted.id);
+  });
+
+  it("leaves out 'Food possible' matches unless asked", async () => {
+    const weak = await fetch(`${base}/api/events/calendar.ics?from=2099-09-30&to=2099-10-03&minConfidence=0.95`);
+    expect(await weak.text()).not.toContain("BEGIN:VEVENT");
+  });
+
+  it("exports only the chosen events, or all but the excluded ones", async () => {
+    const range = "from=2099-09-30&to=2099-10-03";
+    const only = await (await fetch(`${base}/api/events/calendar.ics?${range}&ids=${open.id}`)).text();
+    expect(only).toContain(`UID:${open.id}@free-stanfood`);
+    const none = await (await fetch(`${base}/api/events/calendar.ics?${range}&exclude=${open.id}`)).text();
+    expect(none).not.toContain("BEGIN:VEVENT");
+    // Asking for a restricted event by id still never exports it.
+    const sneaky = await (await fetch(`${base}/api/events/calendar.ics?${range}&ids=${restricted.id}`)).text();
+    expect(sneaky).not.toContain("BEGIN:VEVENT");
+  });
+
+  it("rejects bad query params with a JSON 400", async () => {
+    expect((await fetch(`${base}/api/events/calendar.ics?from=soon`)).status).toBe(400);
+    expect((await fetch(`${base}/api/events/calendar.ics?ids=not-an-id`)).status).toBe(400);
+  });
+});
+
 describe("unknown API routes", () => {
   it("get a JSON 404", async () => {
     const { status, body } = await get("/api/nope");
