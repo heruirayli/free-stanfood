@@ -167,6 +167,14 @@ describe("classifyByKeywords", () => {
     expect(classify({ description: "Lunch with the speaker, parking provided." }).foodConfidence).toBeLessThan(LISTED_THRESHOLD);
   });
 
+  it("trusts a host's 'food provided' checkbox, except online or at paid events", () => {
+    const listing = { title: "Club kickoff", description: "Meet the new board." };
+    expect(classifyByKeywords(listing).hasFreeFood).toBe(false);
+    expect(classifyByKeywords({ ...listing, foodProvided: true }).foodConfidence).toBeGreaterThanOrEqual(LISTED_THRESHOLD);
+    expect(classifyByKeywords({ ...listing, foodProvided: true, isVirtual: true }).hasFreeFood).toBe(false);
+    expect(classifyByKeywords({ ...listing, foodProvided: true, cost: "$20" }).hasFreeFood).toBe(false);
+  });
+
   it("drops a negated food from the details but keeps the rest", () => {
     expect(classify({ description: "Snacks provided (no pizza this time)." }).foodDetails).toBe("snacks");
   });

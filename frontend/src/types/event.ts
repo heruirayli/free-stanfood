@@ -3,7 +3,7 @@
 
 export type Audience = "open" | "rsvp" | "restricted" | "unknown";
 export type PublicAudience = Exclude<Audience, "restricted">;
-export type ClassifiedBy = "keywords" | "llm";
+export type ClassifiedBy = "keywords";
 
 export interface FoodEvent {
   id: string;

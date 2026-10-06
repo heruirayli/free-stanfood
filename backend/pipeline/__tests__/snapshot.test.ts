@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeClassified, makePublished } from "../../__tests__/factories.js";
-import { EMPTY_SNAPSHOT, type EventSnapshot } from "../../models/eventSnapshot.js";
+import { EMPTY_SNAPSHOT, serializeSnapshot, type EventSnapshot } from "../../models/eventSnapshot.js";
 import {
   buildSnapshot,
   dropWeakDailySeries,
@@ -178,6 +178,13 @@ describe("cross-source duplicates", () => {
       NOW,
     );
     expect(snapshot.events).toEqual([]);
+  });
+});
+
+describe("pipeline-only fields", () => {
+  it("doesn't publish the host's food checkbox", () => {
+    const { snapshot } = buildSnapshot(EMPTY_SNAPSHOT, [okResult([makeClassified("a", { foodProvided: true })])], NOW);
+    expect(serializeSnapshot(snapshot)).not.toContain("foodProvided");
   });
 });
 

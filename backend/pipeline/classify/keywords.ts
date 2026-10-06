@@ -8,6 +8,8 @@ export interface ClassifierInput {
   description: string;
   cost?: string | null;
   isVirtual?: boolean;
+  // The host ticked "food provided" (CardinalEngage). As explicit as wording gets.
+  foodProvided?: boolean;
 }
 
 // Confidence bands. Keep in sync with frontend/src/constants.ts.
@@ -562,6 +564,16 @@ const round2 = (value: number): number => Math.round(value * 100) / 100;
 const isOnlineOnly = (text: string): boolean => ONLINE_ONLY.test(text) && !IN_PERSON.test(text);
 
 export const classifyByKeywords = (input: ClassifierInput): Classification => {
+  const fromText = classifyText(input);
+  // A host's "food provided" checkbox counts as an explicit offer, except where
+  // nobody can be fed (online only) or the food comes with a paid ticket.
+  if (!input.foodProvided || fromText.foodConfidence >= EXPLICIT_WEIGHT || isPaidCost(input.cost)) return fromText;
+  const text = `${input.title}\n${input.description}`;
+  if (input.isVirtual || isOnlineOnly(text)) return fromText;
+  return { ...fromText, hasFreeFood: true, foodConfidence: EXPLICIT_WEIGHT };
+};
+
+const classifyText = (input: ClassifierInput): Classification => {
   if (input.isVirtual) return noFood();
 
   const title = normalize(input.title);

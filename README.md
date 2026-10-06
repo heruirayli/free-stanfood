@@ -36,7 +36,6 @@ cp .env.example .env           # then fill in the values below
 | `PORT` | server | Port for Express (default `5000`). |
 | `SCRAPER_CONTACT_EMAIL` | pipeline | Sent in the pipeline's User-Agent so source operators can reach you. Required. |
 | `HOST_REMOVAL_EMAIL` | frontend (build time) | Address for the "Host? Request removal" link. The link is hidden if this is unset. |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | pipeline (Phase 4) | LLM classification of borderline events. Not used yet. |
 
 `.env` is gitignored. Never commit keys.
 
@@ -116,6 +115,7 @@ Each run, for every adapter registered in `backend/pipeline/run.ts`:
 |---|---|---|
 | Stanford Events (`events.stanford.edu`) | Public Localist JSON API, `/api/2/events` | Verified 2026-09-28. robots.txt allows `/api/` (`Crawl-Delay: 1`). See the header of `adapters/localist.ts`. |
 | Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | Currently three Luma calendars of Stanford centers, found through Luma links in Stanford Events listings. `api.luma.com` allows `/ics/get` in robots.txt (checked 2026-09-30). Most of their events are already on Stanford Events, so today they add few or none. |
+| CardinalEngage (`cardinalengage.stanford.edu`) | Public RSS feed, `/rss_events` | Only events clubs publish publicly (about two dozen, mostly GSB clubs). Rooms are hidden from signed-out visitors, so cards show no location. The host's "food provided" checkbox counts as an explicit offer. robots.txt (checked 2026-10-06) disallows the mobile app backend (`/mobile_ws/`), which we never use; the event pages need a login, so they aren't scraped either. See the header of `adapters/cardinalengage.ts`. |
 
 New sources should prefer, in order: an official API, a discovered JSON endpoint, iCal/RSS, schema.org JSON-LD, and HTML parsing only as a last resort. Never add a source that requires a login.
 
@@ -136,7 +136,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 - `open`: listed for "Everyone" or "General Public".
 - `rsvp`: has a registration link or asks for an RSVP.
 - `unknown`: no clear signal. The UI shows any targeted groups the host listed (e.g. "Intended for: Students").
-- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"), or the title or description limits attendance to Stanford groups ("exclusively for Stanford community members", "Open to all Stanford undergraduates", "STANFORD AFFILIATES ONLY") without also welcoming the public. These are **never published**.
+- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"), or the title or description limits attendance to Stanford groups ("exclusively for Stanford community members", "Open to all Stanford undergraduates", "STANFORD AFFILIATES ONLY") without also welcoming the public, or a CardinalEngage event has a members-only privacy level. These are **never published**.
 
 ### Food confidence
 
@@ -184,4 +184,4 @@ frontend/
 - **Phase 1** (backend and data foundation): done.
 - **Phase 2** (keyword classifier and basic UI): done.
 - **Phase 3** (scheduled refresh): the workflow is ready and needs the one-time setup above. The second source (public iCal feeds, currently Luma calendars) is done; deploy is still to do.
-- **Phase 4** (LLM classification for borderline events, `.ics` feed): later.
+- **Phase 4** (`.ics` feed): later. Classification stays rule-based: there is no LLM step.

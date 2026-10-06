@@ -1,0 +1,1485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:cg="https://www.campusgroups.com/rss_calendar">
+	<channel>
+		<title>stanfordu Events</title>
+		<link>https://cardinalengage.stanford.edu/events</link>
+		<description>Events calendar for stanfordu</description>
+		<pubDate>Tue, 6 Oct 2026 04:07:00 +0000</pubDate>
+		<generator>https://www.campusgroups.com</generator>
+		<language>en</language>
+		<item>
+			<eventId>2266468</eventId>
+			<eventUid>13159d7ee3de76265c6cf87351a931cd</eventUid>
+			<groupId>54903</groupId>
+			<group>GSB Latin American Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBLASA</groupAcronym>
+			<eventDate>10/6/2026</eventDate>
+			<eventEndDate>10/6/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>LASA: a conversation with Bernardo Parnes (former CEO of Deutsche Bank LATAM, Bradesco BBI &amp; Merrill Lynch)</title>
+			<description>A fireside chat to hear about the behind the scenes of Investment Banking &amp; IPO&apos;s in Latin America :) </description>
+			<fullDescription>A fireside chat to hear about the behind the scenes of Investment Banking &amp; IPO&apos;s in Latin America :) </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=13159d7ee3de76265c6cf87351a931cd</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266468</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Career Education</eventType>
+			<eventTypeId>2644889</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>-</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>9430408,15142516</eventTopicIds>
+			<eventTopics>Finance,Investment</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Finance</eventTopic>
+				<eventTopic>Investment</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-06T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-06T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266468</link>
+			<category>Career Education</category>
+			<guid>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266468</guid>
+			<start>Tue, 06 Oct 2026 19:00:00 GMT</start>
+			<end>Tue, 06 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266496</eventId>
+			<eventUid>893c5ca238694ed20c5d531abbd89f1b</eventUid>
+			<groupId>54905</groupId>
+			<group>GSB MSx Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBMSxSA</groupAcronym>
+			<eventDate>10/6/2026</eventDate>
+			<eventEndDate>10/6/2026</eventEndDate>
+			<eventTime>6:15pm</eventTime>
+			<eventEndTime>7:30pm</eventEndTime>
+			<locale></locale>
+			<title>SF Tech Week Comes to GSB: Founder and VC Mixer</title>
+			<description>SF Tech Week is coming to GSB! Join us for an evening with founders building globally from San Francisco, and the VCs who back them.&#xD;&#xA;&#xD;&#xA;We will open with a short panel on where U.S. and LatAm opportunities are converging: payments, the agentic AI wave, and more. Our speakers:&#xD;&#xA;&#xD;&#xA;Julian Nuñez, co-founder and CEO of Yuno&#xD;&#xA;Daniel Ospina, co-founder of Pygma, one of LatAm&apos;s fastest-growing accelera...</description>
+			<fullDescription>SF Tech Week is coming to GSB! Join us for an evening with founders building globally from San Francisco, and the VCs who back them.&#xD;&#xA;&#xD;&#xA;We will open with a short panel on where U.S. and LatAm opportunities are converging: payments, the agentic AI wave, and more. Our speakers:&#xD;&#xA;&#xD;&#xA;Julian Nuñez, co-founder and CEO of Yuno&#xD;&#xA;Daniel Ospina, co-founder of Pygma, one of LatAm&apos;s fastest-growing accelerators, with two recent YC companies&#xD;&#xA;VC Fund to confirm&#xD;&#xA;&#xD;&#xA;Matteo Gilliotti (MSx &apos;27, previously a VC investor in LatAm) will open the evening.&#xD;&#xA;&#xD;&#xA;Afterward, stay for the sunset at Arbuckle with some great beers, and meet the founders and investors in the room.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=893c5ca238694ed20c5d531abbd89f1b</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266496</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Career Education</eventType>
+			<eventTypeId>2644889</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>13066080</eventTopicIds>
+			<eventTopics>Venture Capital</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Venture Capital</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-06T18:15:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-06T19:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266496</link>
+			<category>Career Education</category>
+			<guid>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266496</guid>
+			<start>Wed, 07 Oct 2026 01:15:00 GMT</start>
+			<end>Wed, 07 Oct 2026 02:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266453</eventId>
+			<eventUid>0db4f7b8f12dc1851c72ffde39210e5f</eventUid>
+			<groupId>54869</groupId>
+			<group>GSB Africa Business Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBABC</groupAcronym>
+			<eventDate>10/7/2026</eventDate>
+			<eventEndDate>10/7/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:30pm</eventEndTime>
+			<locale></locale>
+			<title>A conversation on Manufacturing in Africa with Africa Job Fund </title>
+			<description>Join us for A Conversation About African Manufacturing with Ben from the Africa Jobs Fund. We’ll explore what it takes to build globally competitive manufacturing businesses in Africa and how export-led industry can create durable, higher-paying jobs at scale. From turning overlooked opportunities into real companies to connecting African talent and products with global markets, this is a conve...</description>
+			<fullDescription>Join us for A Conversation About African Manufacturing with Ben from the Africa Jobs Fund. We’ll explore what it takes to build globally competitive manufacturing businesses in Africa and how export-led industry can create durable, higher-paying jobs at scale. From turning overlooked opportunities into real companies to connecting African talent and products with global markets, this is a conversation for anyone interested in the continent’s industrial future.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=0db4f7b8f12dc1851c72ffde39210e5f</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBABC/rsvp?id=2266453</eventLink>
+			<eventExternalRegistrationLink>https://forms.gle/NoDSBagEG9uUEHqm8</eventExternalRegistrationLink>
+			<eventType>Educational/Awareness</eventType>
+			<eventTypeId>2644888</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-07T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-07T13:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBABC/rsvp?id=2266453</link>
+			<category>Educational/Awareness</category>
+			<guid>https://cardinalengage.stanford.edu/GSBABC/rsvp?id=2266453</guid>
+			<start>Wed, 07 Oct 2026 19:00:00 GMT</start>
+			<end>Wed, 07 Oct 2026 20:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink>https://forms.gle/NoDSBagEG9uUEHqm8</externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266428</eventId>
+			<eventUid>2d4428d0cb6714aa6c69ce7953ae48bc</eventUid>
+			<groupId>54874</groupId>
+			<group>GSB Black Business Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBBBSA</groupAcronym>
+			<eventDate>10/7/2026</eventDate>
+			<eventEndDate>10/7/2026</eventEndDate>
+			<eventTime>6:00pm</eventTime>
+			<eventEndTime>7:00pm</eventEndTime>
+			<locale></locale>
+			<title>BBSA Tap Ins (Autumn)</title>
+			<description>Tap In is BBSA&apos;s recurring community building event series. Light snacks are provided. </description>
+			<fullDescription>Tap In is BBSA&apos;s recurring community building event series. Light snacks are provided. </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=2d4428d0cb6714aa6c69ce7953ae48bc</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBBBSA/rsvp?id=2266428</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (register to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>0</publishOnHome>
+			<eventStartDateTime>2026-10-07T18:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-07T19:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBBBSA/rsvp?id=2266428</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/GSBBBSA/rsvp?id=2266428</guid>
+			<start>Thu, 08 Oct 2026 01:00:00 GMT</start>
+			<end>Thu, 08 Oct 2026 02:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>1</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266475</eventId>
+			<eventUid>ca3b3cabb77bfc5f228fbdbf6d736aee</eventUid>
+			<groupId>54896</groupId>
+			<group>GSB Government &amp; Politics Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBGOVPOL</groupAcronym>
+			<eventDate>10/8/2026</eventDate>
+			<eventEndDate>10/8/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>G&amp;P | Political Discussion</title>
+			<description>Discussion during lunch to discuss a topic in politics with a wide range of perspectives.</description>
+			<fullDescription>Discussion during lunch to discuss a topic in politics with a wide range of perspectives.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=ca3b3cabb77bfc5f228fbdbf6d736aee</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBGOVPOL/rsvp?id=2266475</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-08T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-08T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBGOVPOL/rsvp?id=2266475</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/GSBGOVPOL/rsvp?id=2266475</guid>
+			<start>Thu, 08 Oct 2026 19:00:00 GMT</start>
+			<end>Thu, 08 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266489</eventId>
+			<eventUid>66f9002491d8924f46920749ef942369</eventUid>
+			<groupId>54897</groupId>
+			<group>GSB Greater China Business Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBGCBC</groupAcronym>
+			<eventDate>10/8/2026</eventDate>
+			<eventEndDate>10/8/2026</eventEndDate>
+			<eventTime>6:30pm</eventTime>
+			<eventEndTime>9:30pm</eventEndTime>
+			<locale></locale>
+			<title>GCBC Welcome Back Hotpot Night</title>
+			<description>The Greater China Business Club (GCBC) invites all MBA2 students to a relaxed Welcome Back Hotpot Night on October 8. After a busy summer of internships and travel, this is a chance to reconnect with classmates, meet fellow second-years, and ease back into the GSB rhythm over a shared hotpot meal.</description>
+			<fullDescription>The Greater China Business Club (GCBC) invites all MBA2 students to a relaxed Welcome Back Hotpot Night on October 8. After a busy summer of internships and travel, this is a chance to reconnect with classmates, meet fellow second-years, and ease back into the GSB rhythm over a shared hotpot meal.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=66f9002491d8924f46920749ef942369</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBGCBC/rsvp?id=2266489</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Cultural</eventType>
+			<eventTypeId>2644886</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Haidilao</eventLocation>
+			<locationType>Off-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-08T18:30:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-08T21:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBGCBC/rsvp?id=2266489</link>
+			<category>Cultural</category>
+			<guid>https://cardinalengage.stanford.edu/GSBGCBC/rsvp?id=2266489</guid>
+			<start>Fri, 09 Oct 2026 01:30:00 GMT</start>
+			<end>Fri, 09 Oct 2026 04:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266456</eventId>
+			<eventUid>f5ed4a71f0ac442e1a184a288fec4bb7</eventUid>
+			<groupId>54903</groupId>
+			<group>GSB Latin American Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBLASA</groupAcronym>
+			<eventDate>10/8/2026</eventDate>
+			<eventEndDate>10/8/2026</eventEndDate>
+			<eventTime>6:30pm</eventTime>
+			<eventEndTime>7:30pm</eventEndTime>
+			<locale></locale>
+			<title>LASA: MELI @ GSB - A conversation with Leandro,  Strategy &amp; Corporate Development, Investor Relations &amp; Sustainability</title>
+			<description>Mercado Libre is hosting a conversation with the LASA students to offer perspective into one of the fastest growing companies in Latin America. </description>
+			<fullDescription>Mercado Libre is hosting a conversation with the LASA students to offer perspective into one of the fastest growing companies in Latin America. </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=f5ed4a71f0ac442e1a184a288fec4bb7</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266456</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Career Education</eventType>
+			<eventTypeId>2644889</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>10333358</eventTopicIds>
+			<eventTopics>Latin America</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Latin America</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-08T18:30:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-08T19:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266456</link>
+			<category>Career Education</category>
+			<guid>https://cardinalengage.stanford.edu/GSBLASA/rsvp?id=2266456</guid>
+			<start>Fri, 09 Oct 2026 01:30:00 GMT</start>
+			<end>Fri, 09 Oct 2026 02:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266514</eventId>
+			<eventUid>f783bba7f31ae076fdff8def463c05f7</eventUid>
+			<groupId>57045</groupId>
+			<group>GSB Artificial Intelligence Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBAIC</groupAcronym>
+			<eventDate>10/9/2026</eventDate>
+			<eventEndDate>10/9/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title> Lovable X GSB AI Club</title>
+			<description>Join us for a lunch session with Sophia Sigerud, Head of Community at Lovable, the AI-powered platform that lets you build full-stack web apps from a single prompt. Sophia will demo the product live and share what&apos;s next for Lovable&apos;s vision of making software creation accessible to everyone.</description>
+			<fullDescription>Join us for a lunch session with Sophia Sigerud, Head of Community at Lovable, the AI-powered platform that lets you build full-stack web apps from a single prompt. Sophia will demo the product live and share what&apos;s next for Lovable&apos;s vision of making software creation accessible to everyone.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=f783bba7f31ae076fdff8def463c05f7</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBAIC/rsvp?id=2266514</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Educational/Awareness</eventType>
+			<eventTypeId>2644888</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-09T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-09T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBAIC/rsvp?id=2266514</link>
+			<category>Educational/Awareness</category>
+			<guid>https://cardinalengage.stanford.edu/GSBAIC/rsvp?id=2266514</guid>
+			<start>Fri, 09 Oct 2026 19:00:00 GMT</start>
+			<end>Fri, 09 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266487</eventId>
+			<eventUid>2310f7ff4fd3d4a68f41e01891f06508</eventUid>
+			<groupId>54918</groupId>
+			<group>GSB Show</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBShow</groupAcronym>
+			<eventDate>10/13/2026</eventDate>
+			<eventEndDate>10/13/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>GSB Show Info Session</title>
+			<description>Information session about GSB Show</description>
+			<fullDescription>Information session about GSB Show</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=2310f7ff4fd3d4a68f41e01891f06508</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBShow/rsvp?id=2266487</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Meeting</eventType>
+			<eventTypeId>50061</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-13T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-13T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBShow/rsvp?id=2266487</link>
+			<category>Meeting</category>
+			<guid>https://cardinalengage.stanford.edu/GSBShow/rsvp?id=2266487</guid>
+			<start>Tue, 13 Oct 2026 19:00:00 GMT</start>
+			<end>Tue, 13 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266454</eventId>
+			<eventUid>37a427bf67bc326d7cd7aca9189d1760</eventUid>
+			<groupId>54882</groupId>
+			<group>GSB Energy Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBEnergy</groupAcronym>
+			<eventDate>10/13/2026</eventDate>
+			<eventEndDate>10/13/2026</eventEndDate>
+			<eventTime>6:10pm</eventTime>
+			<eventEndTime>8:10pm</eventEndTime>
+			<locale></locale>
+			<title>Climate &amp; Energy Kickoff</title>
+			<description>Get oriented to the Climate &amp; Energy landscape at Stanford to understand opportunities during your time on campus and beyond, and build connections with your fellow GSBers in Climate. We&apos;ll be joined by several guests from the main Energy orgs on campus to provide overviews of all the different programs. We&apos;ll also have time for mingling and meeting each other to build our awesome GSB Climate c...</description>
+			<fullDescription>Get oriented to the Climate &amp; Energy landscape at Stanford to understand opportunities during your time on campus and beyond, and build connections with your fellow GSBers in Climate. We&apos;ll be joined by several guests from the main Energy orgs on campus to provide overviews of all the different programs. We&apos;ll also have time for mingling and meeting each other to build our awesome GSB Climate community!</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=37a427bf67bc326d7cd7aca9189d1760</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBEnergy/rsvp?id=2266454</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Happy Hour</eventType>
+			<eventTypeId>50066</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-13T18:10:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-13T20:10:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBEnergy/rsvp?id=2266454</link>
+			<category>Happy Hour</category>
+			<guid>https://cardinalengage.stanford.edu/GSBEnergy/rsvp?id=2266454</guid>
+			<start>Wed, 14 Oct 2026 01:10:00 GMT</start>
+			<end>Wed, 14 Oct 2026 03:10:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266349</eventId>
+			<eventUid>7053650a82812901cc244ee1bbbad18c</eventUid>
+			<groupId>73971</groupId>
+			<group>GSB Canada Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>canadaclub</groupAcronym>
+			<eventDate>10/13/2026</eventDate>
+			<eventEndDate>10/13/2026</eventEndDate>
+			<eventTime>6:30pm</eventTime>
+			<eventEndTime>9:30pm</eventEndTime>
+			<locale></locale>
+			<title>Canadian Thanksgiving Dinner</title>
+			<description>Come join us for Canadian Thanksgiving dinner! All are welcome</description>
+			<fullDescription>Come join us for Canadian Thanksgiving dinner! All are welcome</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=7053650a82812901cc244ee1bbbad18c</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/canadaclub/rsvp?id=2266349</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>Off-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-13T18:30:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-13T21:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/canadaclub/rsvp?id=2266349</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/canadaclub/rsvp?id=2266349</guid>
+			<start>Wed, 14 Oct 2026 01:30:00 GMT</start>
+			<end>Wed, 14 Oct 2026 04:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>1</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266464</eventId>
+			<eventUid>06eb5bebac4cc4fac29a1b1ce5549fc6</eventUid>
+			<groupId>54876</groupId>
+			<group>GSB Business &amp; Environment Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBBEC</groupAcronym>
+			<eventDate>10/14/2026</eventDate>
+			<eventEndDate>10/14/2026</eventEndDate>
+			<eventTime>5:30pm</eventTime>
+			<eventEndTime>7:00pm</eventEndTime>
+			<locale></locale>
+			<title>Innovation for Climate &amp; Sustainability Information Session</title>
+			<description>EARTHSYS 213 runs Wednesdays 4:30-7:20 PM in the Winter Quarter and follows the Lean Launchpad methodology: interdisciplinary teams take a climate technology or idea and stress-test it through 10 weeks of intensive customer discovery and expert interviews. This event is an information session cum mixer, where the professors will interact with interested students to share more about the course, ...</description>
+			<fullDescription>EARTHSYS 213 runs Wednesdays 4:30-7:20 PM in the Winter Quarter and follows the Lean Launchpad methodology: interdisciplinary teams take a climate technology or idea and stress-test it through 10 weeks of intensive customer discovery and expert interviews. This event is an information session cum mixer, where the professors will interact with interested students to share more about the course, the application process, and what they can achieve. The event shall hopefully spark collaboration among students as they look to form project teams.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=06eb5bebac4cc4fac29a1b1ce5549fc6</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266464</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Educational/Awareness</eventType>
+			<eventTypeId>2644888</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>7415589</eventTopicIds>
+			<eventTopics>Climate Change</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Climate Change</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-14T17:30:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-14T19:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266464</link>
+			<category>Educational/Awareness</category>
+			<guid>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266464</guid>
+			<start>Thu, 15 Oct 2026 00:30:00 GMT</start>
+			<end>Thu, 15 Oct 2026 02:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266448</eventId>
+			<eventUid>3422c411931f5cc3b44da90de8be3346</eventUid>
+			<groupId>54906</groupId>
+			<group>GSB MBA Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBMBASA</groupAcronym>
+			<eventDate>10/14/2026</eventDate>
+			<eventEndDate>10/14/2026</eventEndDate>
+			<eventTime>6:00pm</eventTime>
+			<eventEndTime>7:30pm</eventEndTime>
+			<locale></locale>
+			<title>DivCom Identity Club Welcome Back! </title>
+			<description>Welcome back event for MBA1 to come meet and greet the identity groups available to them! </description>
+			<fullDescription>Welcome back event for MBA1 to come meet and greet the identity groups available to them! </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=3422c411931f5cc3b44da90de8be3346</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBMBASA/rsvp?id=2266448</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Training/Workshop</eventType>
+			<eventTypeId>2645008</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-14T18:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-14T19:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBMBASA/rsvp?id=2266448</link>
+			<category>Training/Workshop</category>
+			<guid>https://cardinalengage.stanford.edu/GSBMBASA/rsvp?id=2266448</guid>
+			<start>Thu, 15 Oct 2026 01:00:00 GMT</start>
+			<end>Thu, 15 Oct 2026 02:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266344</eventId>
+			<eventUid>11e5bc2c45e2435dad161f94dc1500d6</eventUid>
+			<groupId>74048</groupId>
+			<group>GSB Manufacturing &amp; Supply Chain Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>MSCC</groupAcronym>
+			<eventDate>10/15/2026</eventDate>
+			<eventEndDate>10/15/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>Manufacturing Club Meeting</title>
+			<description>General meeting</description>
+			<fullDescription>General meeting</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=11e5bc2c45e2435dad161f94dc1500d6</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/MSCC/rsvp?id=2266344</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Meeting</eventType>
+			<eventTypeId>50061</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-15T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-15T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/MSCC/rsvp?id=2266344</link>
+			<category>Meeting</category>
+			<guid>https://cardinalengage.stanford.edu/MSCC/rsvp?id=2266344</guid>
+			<start>Thu, 15 Oct 2026 19:00:00 GMT</start>
+			<end>Thu, 15 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266472</eventId>
+			<eventUid>610399dd1bbff4c0278fb6dc465f0832</eventUid>
+			<groupId>54905</groupId>
+			<group>GSB MSx Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBMSxSA</groupAcronym>
+			<eventDate>10/17/2026</eventDate>
+			<eventEndDate>10/17/2026</eventEndDate>
+			<eventTime>2:00pm</eventTime>
+			<eventEndTime>6:00pm</eventEndTime>
+			<locale></locale>
+			<title>MSx Sports Competition </title>
+			<description>Harry Potter themed sports competition</description>
+			<fullDescription>Harry Potter themed sports competition</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=610399dd1bbff4c0278fb6dc465f0832</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266472</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>-</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-17T14:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-17T18:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266472</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266472</guid>
+			<start>Sat, 17 Oct 2026 21:00:00 GMT</start>
+			<end>Sun, 18 Oct 2026 01:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266367</eventId>
+			<eventUid>183924c0b3756512e2e2fbe0ab1ec319</eventUid>
+			<groupId>54921</groupId>
+			<group>GSB Social Impact Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBSI</groupAcronym>
+			<eventDate>10/22/2026</eventDate>
+			<eventEndDate>10/22/2026</eventEndDate>
+			<eventTime>7:15pm</eventTime>
+			<eventEndTime>8:30pm</eventEndTime>
+			<locale></locale>
+			<title>Social Impact Club Community Social</title>
+			<description>Social Impact Club invites all MBA1&apos;s interested in social impact to join the community social to join other like minded peers and explore opportunities to collaborate together. </description>
+			<fullDescription>Social Impact Club invites all MBA1&apos;s interested in social impact to join the community social to join other like minded peers and explore opportunities to collaborate together. </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=183924c0b3756512e2e2fbe0ab1ec319</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBSI/rsvp?id=2266367</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Happy Hour</eventType>
+			<eventTypeId>50066</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>10001210,15134812</eventTopicIds>
+			<eventTopics>Social Impact,social entrepreneurship</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Social Impact</eventTopic>
+				<eventTopic>social entrepreneurship</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>13</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-22T19:15:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-22T20:30:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBSI/rsvp?id=2266367</link>
+			<category>Happy Hour</category>
+			<guid>https://cardinalengage.stanford.edu/GSBSI/rsvp?id=2266367</guid>
+			<start>Fri, 23 Oct 2026 02:15:00 GMT</start>
+			<end>Fri, 23 Oct 2026 03:30:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266512</eventId>
+			<eventUid>6bfc93e000e804ea8f31ce97cf71f74a</eventUid>
+			<groupId>73948</groupId>
+			<group>GSB Disability &amp; Caregiving Community</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>dcc</groupAcronym>
+			<eventDate>10/23/2026</eventDate>
+			<eventEndDate>10/23/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>Disability &amp; Caregiving Club Fall Kickoff</title>
+			<description>If you&apos;re personally navigating, caregiving for, or generally passionate about visible or invisible disabilities, please swing by this safe space for a community lunch! </description>
+			<fullDescription>If you&apos;re personally navigating, caregiving for, or generally passionate about visible or invisible disabilities, please swing by this safe space for a community lunch! </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=6bfc93e000e804ea8f31ce97cf71f74a</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/dcc/rsvp?id=2266512</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>15009609</eventTopicIds>
+			<eventTopics>Disability</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Disability</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-23T12:00:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-23T13:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/dcc/rsvp?id=2266512</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/dcc/rsvp?id=2266512</guid>
+			<start>Fri, 23 Oct 2026 19:00:00 GMT</start>
+			<end>Fri, 23 Oct 2026 20:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266466</eventId>
+			<eventUid>449f48c851a1ba1138742bd2c0d3317c</eventUid>
+			<groupId>54876</groupId>
+			<group>GSB Business &amp; Environment Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBBEC</groupAcronym>
+			<eventDate>10/28/2026</eventDate>
+			<eventEndDate>10/28/2026</eventEndDate>
+			<eventTime>5:30pm</eventTime>
+			<eventEndTime>7:00pm</eventEndTime>
+			<locale></locale>
+			<title>Innovation for Climate &amp; Sustainability Information Session</title>
+			<description>EARTHSYS 213 is a climate-tech project-based class. This information session will feature the instructors and have a networking mixer.</description>
+			<fullDescription>EARTHSYS 213 is a climate-tech project-based class. This information session will feature the instructors and have a networking mixer.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=449f48c851a1ba1138742bd2c0d3317c</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266466</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Educational/Awareness</eventType>
+			<eventTypeId>2644888</eventTypeId>
+			<timeZone>-7</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-10-28T17:30:00.0000000-07:00</eventStartDateTime>
+			<eventEndDateTime>2026-10-28T19:00:00.0000000-07:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266466</link>
+			<category>Educational/Awareness</category>
+			<guid>https://cardinalengage.stanford.edu/GSBBEC/rsvp?id=2266466</guid>
+			<start>Thu, 29 Oct 2026 00:30:00 GMT</start>
+			<end>Thu, 29 Oct 2026 02:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266467</eventId>
+			<eventUid>1890a537c0aa3c22aa3c6e8a28d9b104</eventUid>
+			<groupId>54923</groupId>
+			<group>GSB Tech Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBTech</groupAcronym>
+			<eventDate>11/2/2026</eventDate>
+			<eventEndDate>11/2/2026</eventEndDate>
+			<eventTime>7:00pm</eventTime>
+			<eventEndTime>8:00pm</eventEndTime>
+			<locale></locale>
+			<title>Fireside Chat with Speechify CEO Cliff Weitzman</title>
+			<description>60-minute fireside chat for MBA2s/MSx students with Speechify CEO Cliff Weitzman. Cliff started Speechify in college at Brown to help with my dyslexia and ADHD. In college he did 42 hackathons and launched 36 products. Today speechify has 60 million users and ~200 software engineers &amp; designers, they are remote first and have several teammates who are currently in University, masters, PHD while...</description>
+			<fullDescription>60-minute fireside chat for MBA2s/MSx students with Speechify CEO Cliff Weitzman. Cliff started Speechify in college at Brown to help with my dyslexia and ADHD. In college he did 42 hackathons and launched 36 products. Today speechify has 60 million users and ~200 software engineers &amp; designers, they are remote first and have several teammates who are currently in University, masters, PHD while working at Speechify (actively hiring). Speechify&apos;s Voice AI model is benchmarked above 11L, OpenAI, Gemini, Nvidia, etc for quality while being faster and 10x more affordable than models like 11L. They just crossed 1M five star reviews and recently won the Apple Design Award. </fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=1890a537c0aa3c22aa3c6e8a28d9b104</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBTech/rsvp?id=2266467</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Career Education</eventType>
+			<eventTypeId>2644889</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>5836304</eventTopicIds>
+			<eventTopics>Technology</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Technology</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>6</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-11-02T19:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-11-02T20:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBTech/rsvp?id=2266467</link>
+			<category>Career Education</category>
+			<guid>https://cardinalengage.stanford.edu/GSBTech/rsvp?id=2266467</guid>
+			<start>Tue, 03 Nov 2026 03:00:00 GMT</start>
+			<end>Tue, 03 Nov 2026 04:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2265596</eventId>
+			<eventUid>1f63f92b5b531ff61165149a896be2f9</eventUid>
+			<groupId>44736</groupId>
+			<group>Society for International Affairs at Stanford</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>Academic</groupType>
+			<groupAcronym>SIAS</groupAcronym>
+			<eventDate>11/6/2026</eventDate>
+			<eventEndDate>11/8/2026</eventEndDate>
+			<eventTime>4:00pm</eventTime>
+			<eventEndTime>2:00pm</eventEndTime>
+			<locale></locale>
+			<title>Stanford Model United Nations Conference XXX (SMUNC XXX)</title>
+			<description>SMUNC is an international conference held for high school students, where individuals will compete by representing diplomats in a mock forum to discuss global issues.</description>
+			<fullDescription>SMUNC is an international conference held for high school students, where individuals will compete by representing diplomats in a mock forum to discuss global issues.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2026/e3_image_upload_5154379_SMUNCLogopngwebp_41619211.jpeg</eventPhoto>
+			<eventPhotoAltText>SMUNC Logo</eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2026/e3_image_upload_5154379_SMUNCLogopngwebp_41619211.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=1f63f92b5b531ff61165149a896be2f9</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/SIAS/rsvp?id=2265596</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Conference/Competition</eventType>
+			<eventTypeId>2645037</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds>10211938</eventTopicIds>
+			<eventTopics>Model United Nations</eventTopics>
+			<eventTopicsSeparated>
+				<eventTopic>Model United Nations</eventTopic>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-11-06T16:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-11-08T14:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/SIAS/rsvp?id=2265596</link>
+			<category>Conference/Competition</category>
+			<guid>https://cardinalengage.stanford.edu/SIAS/rsvp?id=2265596</guid>
+			<start>Sat, 07 Nov 2026 00:00:00 GMT</start>
+			<end>Sun, 08 Nov 2026 22:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2026/image_upload_5154379_SMUNCLogopngwebp_41619211.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266451</eventId>
+			<eventUid>ff300736188979bea9f2865f10c0f7ec</eventUid>
+			<groupId>54880</groupId>
+			<group>GSB Consumer &amp; Retail Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBRetail</groupAcronym>
+			<eventDate>11/10/2026</eventDate>
+			<eventEndDate>11/10/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>Founding Mrs. Meyer’s Clean Day with Monica Nassif</title>
+			<description>Join the Consumer &amp; Retail Club for a fireside chat with Monica Nassif, founder of Mrs. Meyer&apos;s Clean Day, as she shares the story behind one of CPG&apos;s most distinctive brands.</description>
+			<fullDescription>Join the Consumer &amp; Retail Club for a fireside chat with Monica Nassif, founder of Mrs. Meyer&apos;s Clean Day, as she shares the story behind one of CPG&apos;s most distinctive brands.</fullDescription>
+			<eventPhoto>/upload/stanfordu/2026/e3_image_upload_5155413__0e5a7d58-e45c-4037-a5d9-3516249eed11_922114949.png</eventPhoto>
+			<eventPhotoAltText>Consumer &amp; Retail Club Presents: Monica Nassif</eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2026/e3_image_upload_5155413__0e5a7d58-e45c-4037-a5d9-3516249eed11_922114949.png</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=ff300736188979bea9f2865f10c0f7ec</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBRetail/rsvp?id=2266451</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Lecture/Speaker</eventType>
+			<eventTypeId>2644930</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-11-10T12:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-11-10T13:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBRetail/rsvp?id=2266451</link>
+			<category>Lecture/Speaker</category>
+			<guid>https://cardinalengage.stanford.edu/GSBRetail/rsvp?id=2266451</guid>
+			<start>Tue, 10 Nov 2026 20:00:00 GMT</start>
+			<end>Tue, 10 Nov 2026 21:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2026/image_upload_5155413__0e5a7d58-e45c-4037-a5d9-3516249eed11_922114949.png</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266473</eventId>
+			<eventUid>6e6ac4660f84b19d42398454e3e78ed0</eventUid>
+			<groupId>54905</groupId>
+			<group>GSB MSx Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBMSxSA</groupAcronym>
+			<eventDate>11/12/2026</eventDate>
+			<eventEndDate>11/12/2026</eventEndDate>
+			<eventTime>6:00pm</eventTime>
+			<eventEndTime>9:00pm</eventEndTime>
+			<locale></locale>
+			<title>MSx Thanksgiving Party</title>
+			<description>MSx Thanksgiving Party</description>
+			<fullDescription>MSx Thanksgiving Party</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=6e6ac4660f84b19d42398454e3e78ed0</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266473</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-11-12T18:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-11-12T21:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266473</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266473</guid>
+			<start>Fri, 13 Nov 2026 02:00:00 GMT</start>
+			<end>Fri, 13 Nov 2026 05:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266397</eventId>
+			<eventUid>5500a284ae48da2dc4e4e621bf5fdced</eventUid>
+			<groupId>54886</groupId>
+			<group>GSB Finance &amp; Investment Club</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBFIC</groupAcronym>
+			<eventDate>11/13/2026</eventDate>
+			<eventEndDate>11/13/2026</eventEndDate>
+			<eventTime>12:00pm</eventTime>
+			<eventEndTime>1:00pm</eventEndTime>
+			<locale></locale>
+			<title>Meeting on Special Situations Investing</title>
+			<description>Meeting on Special Situations &amp; Small-cap Investing</description>
+			<fullDescription>Meeting on Special Situations &amp; Small-cap Investing</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=5500a284ae48da2dc4e4e621bf5fdced</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBFIC/rsvp?id=2266397</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Meeting</eventType>
+			<eventTypeId>50061</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-11-13T12:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-11-13T13:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBFIC/rsvp?id=2266397</link>
+			<category>Meeting</category>
+			<guid>https://cardinalengage.stanford.edu/GSBFIC/rsvp?id=2266397</guid>
+			<start>Fri, 13 Nov 2026 20:00:00 GMT</start>
+			<end>Fri, 13 Nov 2026 21:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>1</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+		<item>
+			<eventId>2266474</eventId>
+			<eventUid>fa1522ceba9e706791a98dad467a4b9a</eventUid>
+			<groupId>54905</groupId>
+			<group>GSB MSx Student Association</group>
+			<coHostedGroupIds deprecated="deprecated"></coHostedGroupIds>
+			<groupType>GSB (Business School)</groupType>
+			<groupAcronym>GSBMSxSA</groupAcronym>
+			<eventDate>12/3/2026</eventDate>
+			<eventEndDate>12/3/2026</eventEndDate>
+			<eventTime>6:00pm</eventTime>
+			<eventEndTime>9:00pm</eventEndTime>
+			<locale></locale>
+			<title>MSx see you soon party</title>
+			<description>Social gathering after final exam</description>
+			<fullDescription>Social gathering after final exam</fullDescription>
+			<eventPhoto>/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhoto>
+			<eventPhotoAltText></eventPhotoAltText>
+			<eventPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/e3_image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventPhotoFullUrl>
+			<eventFlyerFullUrl></eventFlyerFullUrl>
+			<iCalLink>https://cardinalengage.stanford.edu/vcal?source=rss_feed&amp;type=ical&amp;school=stanfordu&amp;uid=fa1522ceba9e706791a98dad467a4b9a</iCalLink>
+			<eventLink>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266474</eventLink>
+			<eventExternalRegistrationLink></eventExternalRegistrationLink>
+			<eventType>Social</eventType>
+			<eventTypeId>4693566</eventTypeId>
+			<timeZone>-8</timeZone>
+			<timeZoneId>Pacific Standard Time</timeZoneId>
+			<publishLcd>0</publishLcd>
+			<publishCalendar>0</publishCalendar>
+			<publishSchoolWebsite>0</publishSchoolWebsite>
+			<eventLocation>Private Location (sign in to display)</eventLocation>
+			<locationType>On-Campus</locationType>
+			<allDayEvent>0</allDayEvent>
+			<approvalStatus>1</approvalStatus>
+			<approvalStatus2>2</approvalStatus2>
+			<eventDelete>0</eventDelete>
+			<eventTopicIds></eventTopicIds>
+			<eventTopics></eventTopics>
+			<eventTopicsSeparated>
+			</eventTopicsSeparated>
+			<privacyLevel>0</privacyLevel>
+			<privacyDisplayedTo>0</privacyDisplayedTo>
+			<publishOnHome>1</publishOnHome>
+			<eventStartDateTime>2026-12-03T18:00:00.0000000-08:00</eventStartDateTime>
+			<eventEndDateTime>2026-12-03T21:00:00.0000000-08:00</eventEndDateTime>
+			<eventPromoteTo></eventPromoteTo>
+			<cohostingGroupIds></cohostingGroupIds>
+			<cohostingGroupNames></cohostingGroupNames>
+			<link>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266474</link>
+			<category>Social</category>
+			<guid>https://cardinalengage.stanford.edu/GSBMSxSA/rsvp?id=2266474</guid>
+			<start>Fri, 04 Dec 2026 02:00:00 GMT</start>
+			<end>Fri, 04 Dec 2026 05:00:00 GMT</end>
+			<eventOriginalPhotoFullUrl>https://cardinalengage.stanford.edu/upload/stanfordu/2024/image_upload_5147372_CE_20240917_FroshMoveIn_VPSANikolasLiepins77jpg_10919325.jpeg</eventOriginalPhotoFullUrl>
+			<eventOriginalFlyerFullUrl></eventOriginalFlyerFullUrl>
+			<externalRegistrationLink></externalRegistrationLink>
+			<foodProvided>0</foodProvided>
+			<attendeesRating></attendeesRating>
+			<feedbackRequested>0</feedbackRequested>
+			<attendanceEstimate></attendanceEstimate>
+		</item>
+	</channel>
+</rss>

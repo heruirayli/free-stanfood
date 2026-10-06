@@ -8,6 +8,7 @@ import {
   writeSnapshotFile,
   type EventSnapshot,
 } from "../models/eventSnapshot.js";
+import { createCardinalEngageAdapter } from "./adapters/cardinalengage.js";
 import { createIcalAdapter } from "./adapters/ical.js";
 import { ICAL_FEEDS } from "./adapters/icalFeeds.js";
 import { createLocalistAdapter } from "./adapters/localist.js";
@@ -24,7 +25,11 @@ dotenv.config({ quiet: true });
 const buildAdapters = (contactEmail: string, cache: ResponseCache): SourceAdapter[] => {
   const http = createHttpClient({ contactEmail, cache });
   // Stanford Events first: when two sources list the same event, the first one wins.
-  return [createLocalistAdapter({ http }), ...ICAL_FEEDS.map((feed) => createIcalAdapter({ http, feed }))];
+  return [
+    createLocalistAdapter({ http }),
+    ...ICAL_FEEDS.map((feed) => createIcalAdapter({ http, feed })),
+    createCardinalEngageAdapter({ http }),
+  ];
 };
 
 // In GitHub Actions these lines become annotations on the workflow run.

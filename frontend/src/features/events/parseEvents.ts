@@ -40,7 +40,7 @@ const FIELDS: Record<keyof FoodEvent, Check> = {
   hasFreeFood: isBoolean,
   foodConfidence: isNumber,
   foodDetails: nullable(isString),
-  classifiedBy: oneOf("keywords", "llm"),
+  classifiedBy: oneOf("keywords"),
   firstSeenAt: isDate,
 };
 

@@ -14,7 +14,8 @@ export type Audience = z.infer<typeof audienceSchema>;
 export const PUBLIC_AUDIENCES = ["open", "rsvp", "unknown"] as const;
 export const publicAudienceSchema = z.enum(PUBLIC_AUDIENCES);
 
-export const classifiedBySchema = z.enum(["keywords", "llm"]);
+// Classification is rule-based only (no LLM), so this is always "keywords".
+export const classifiedBySchema = z.enum(["keywords"]);
 export type ClassifiedBy = z.infer<typeof classifiedBySchema>;
 
 // What an adapter produces: source-agnostic, validated, not yet classified.
@@ -37,6 +38,9 @@ export const normalizedEventSchema = z.object({
   // Ticket or admission text as listed by the source, e.g. "Free" or "$20".
   cost: z.string().nullable(),
   isVirtual: z.boolean(),
+  // The host's own "food provided" checkbox, where the source has one (CardinalEngage).
+  // Only the classifier reads it; it isn't published.
+  foodProvided: z.boolean().optional(),
 });
 export type NormalizedEvent = z.infer<typeof normalizedEventSchema>;
 
@@ -49,7 +53,7 @@ export const classificationSchema = z.object({
 export type Classification = z.infer<typeof classificationSchema>;
 
 // A published event, as stored in data/events.json and returned by the API.
-export const eventSchema = normalizedEventSchema.extend({
+export const eventSchema = normalizedEventSchema.omit({ foodProvided: true }).extend({
   // Stable hash of source + sourceEventId.
   id: z.string().min(1),
   ...classificationSchema.shape,
