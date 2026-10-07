@@ -1,7 +1,8 @@
 import { addDays } from "date-fns";
 import { PUBLIC_AUDIENCES, type Audience, type Event, type EventQuery } from "../types/event.js";
 
-export const DEFAULT_WINDOW_DAYS = 56;
+// Without `to`, everything published: the pipeline keeps events up to a year ahead.
+export const DEFAULT_WINDOW_DAYS = 366;
 export const MAX_RESULTS = 1000;
 // Events with no end time count as ongoing for this long after they start.
 export const ASSUMED_DURATION_MS = 60 * 60 * 1000;

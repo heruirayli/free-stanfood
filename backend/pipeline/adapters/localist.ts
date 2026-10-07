@@ -40,9 +40,9 @@ import { SourceFetchError, type RawEvent, type SourceAdapter } from "./types.js"
 export const LOCALIST_SOURCE = "localist";
 export const LOCALIST_BASE_URL = "https://events.stanford.edu";
 const PAGE_SIZE = 100;
-// About 3x the ~15 pages an 8-week window currently needs. Exceeding it fails the
+// Room to spare over the ~32 pages a year-long window needs today. Exceeding it fails the
 // run loudly instead of silently storing a partial (and misleading) snapshot.
-export const MAX_PAGES = 40;
+export const MAX_PAGES = 60;
 
 const OPEN_AUDIENCE_GROUPS = new Set(["everyone", "general public"]);
 

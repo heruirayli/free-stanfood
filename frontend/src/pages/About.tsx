@@ -12,6 +12,17 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
   </section>
 );
 
+const SourceLink = ({ href, children }: { href: string; children: ReactNode }) => (
+  <a
+    href={href}
+    className="font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:decoration-stone-900"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {children}
+  </a>
+);
+
 const About = () => (
   <Page title={`About ${APP_NAME}`} documentTitle="About">
     <Section title="What This Is">
@@ -22,24 +33,29 @@ const About = () => (
     </Section>
 
     <Section title="Where Listings Come From">
-      <ul className="list-disc space-y-1 pl-5 marker:text-stone-400">
+      <ul className="list-disc space-y-2 pl-5 marker:text-stone-400">
         <li>
-          <a
-            href="https://events.stanford.edu"
-            className="font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:decoration-stone-900"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Stanford Events
-          </a>
-          , through its public events API.
+          <SourceLink href="https://events.stanford.edu">Stanford Events</SourceLink>, through its public events
+          API. Most listings come from here: talks, seminars, workshops, and department events.
         </li>
-        <li>Public calendar feeds from campus groups, such as Stanford centers’ Luma calendars.</li>
+        <li>
+          <SourceLink href="https://cardinalengage.stanford.edu">CardinalEngage</SourceLink>, through its public
+          events feed, for student organizations. Only events a club makes public appear. Rooms are hidden from
+          people who aren’t signed in, so check the original listing for the location.
+        </li>
+        <li>
+          Public <SourceLink href="https://luma.com">Luma</SourceLink> calendars of Stanford centers, institutes, and
+          student groups.
+        </li>
       </ul>
       <p>
-        Only public, event-level information is collected: no attendee names, emails, or RSVP lists. Private
-        listings and events restricted to specific groups are left out. Every event links back to its original
-        listing, which is always the authority.
+        Listings refresh automatically once a day and look up to a year ahead. When the same event appears in more
+        than one place, it’s shown once.
+      </p>
+      <p>
+        Only public, event-level information is collected: no attendee names, emails, or RSVP lists. Nothing behind
+        a sign-in is read. Private listings, members-only club events, and events restricted to specific groups are
+        left out. Every event links back to its original listing, which is always the authority.
       </p>
     </Section>
 

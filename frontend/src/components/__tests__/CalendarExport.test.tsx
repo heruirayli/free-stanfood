@@ -15,8 +15,8 @@ const a = makeEvent({ id: "a".repeat(24), title: "Pizza night", startTime: "2026
 const b = makeEvent({ id: "b".repeat(24), title: "Boba social", startTime: "2026-10-09T19:00:00.000Z" });
 const c = makeEvent({ id: "c".repeat(24), title: "Taco Tuesday", startTime: "2026-10-13T19:00:00.000Z" });
 const d = makeEvent({ id: "d".repeat(24), title: "Bagel break", startTime: "2026-10-09T22:00:00.000Z" });
-// Shown on the calendar but outside the 8-week export.
-const later = makeEvent({ id: "e".repeat(24), title: "Winter dinner", startTime: "2027-01-20T03:00:00.000Z" });
+// Shown on the calendar but outside the upcoming export (more than a year out).
+const later = makeEvent({ id: "e".repeat(24), title: "Winter dinner", startTime: "2028-01-20T03:00:00.000Z" });
 
 describe("export URLs", () => {
   it("exports everything with no list by default", () => {
@@ -37,8 +37,8 @@ describe("export URLs", () => {
     expect(url.pathname).toBe("/api/events/calendar.ics");
     expect(Object.fromEntries(url.searchParams)).toEqual({
       ids: later.id,
-      from: "2027-01-20T03:00:00.000Z",
-      to: "2027-01-20T03:00:00.001Z",
+      from: "2028-01-20T03:00:00.000Z",
+      to: "2028-01-20T03:00:00.001Z",
       minConfidence: "0",
     });
   });

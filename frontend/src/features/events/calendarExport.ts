@@ -27,7 +27,7 @@ export const exportUrl = (events: FoodEvent[], deselected: ReadonlySet<string>, 
 };
 
 // A file with just this event. The window starts at the event, so it works for
-// any date the calendar shows, not only the next 8 weeks.
+// any date the calendar shows, including past events.
 export const eventExportUrl = (event: FoodEvent): string => {
   const start = new Date(event.startTime);
   return withQuery(
@@ -52,7 +52,7 @@ export interface CalendarExportState {
 }
 
 // The "Add to Your Calendar" choices, shared by the export section and the event
-// dialog on the Calendar page. Loads the next 8 weeks with everything chosen, and
+// dialog on the Calendar page. Loads every upcoming event with everything chosen, and
 // reloads (choosing everything again) when the "Food possible" toggle changes.
 export const useCalendarExport = (): CalendarExportState => {
   const { showLowConfidence } = useAppSelector(selectFilters);

@@ -48,7 +48,7 @@ const DayCheckbox = ({
   );
 };
 
-// Download an .ics of the next 8 weeks of free food, for importing into Google
+// Download an .ics of all upcoming free food (up to a year ahead), for importing into Google
 // Calendar (or Apple, Outlook). Everything is selected; people can drop events here
 // or from an event's details. The choices live in useCalendarExport, which the
 // Calendar page shares with its event dialog.
@@ -68,7 +68,7 @@ const CalendarExport = ({ state }: { state: CalendarExportState }) => {
         Add to Your Calendar
       </h2>
       <p className="mt-1 text-sm leading-relaxed text-stone-600">
-        Download the next 8 weeks of free food as an .ics file. In Google Calendar, open Settings, then Import &amp;
+        Download all upcoming free food as an .ics file. In Google Calendar, open Settings, then Import &amp;
         export, and choose the file.
       </p>
 

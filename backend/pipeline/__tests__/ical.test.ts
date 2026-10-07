@@ -137,7 +137,7 @@ describe("ical adapter: zones, cancellations, and locations", () => {
     ...vevent(["UID:plain", "DTSTART:20261028T190000Z", "SUMMARY:Tacos <3", "DESCRIPTION:Snacks if 3 < 4 people RSVP > 2 days ahead."]),
     ...vevent(["UID:daily-boba", "DTSTART;VALUE=DATE:20261027", "RRULE:FREQ=DAILY;COUNT=2", "SUMMARY:Boba week"]),
     ...vevent(["UID:open-weekly", "DTSTART:20261021T190000Z", "RRULE:FREQ=WEEKLY", "SUMMARY:Endless weekly pizza"]),
-    ...vevent(["UID:far-future", "DTSTART:20270115T190000Z", "SUMMARY:Next year's pizza"]),
+    ...vevent(["UID:far-future", "DTSTART:20280115T190000Z", "SUMMARY:Pizza in 2028"]),
     "END:VCALENDAR",
   ].join("\r\n");
 
@@ -181,13 +181,13 @@ describe("ical adapter: zones, cancellations, and locations", () => {
     expect(moved.map((e) => e.sourceEventId)).toEqual(["orphan@2026-11-04T19:00:00.000Z"]);
   });
 
-  it("stops at the 8-week window, even for series with no end", async () => {
+  it("stops a year ahead, even for series with no end", async () => {
     const { events } = await normalizeAll(FEED, FEED_BODY);
-    const windowEnd = new Date("2026-12-17T00:00:00Z");
+    const windowEnd = new Date("2027-10-22T00:00:00Z");
     const weekly = byTitle(events, "Endless weekly pizza");
-    expect(weekly.length).toBeGreaterThanOrEqual(8);
+    expect(weekly.length).toBeGreaterThanOrEqual(50);
     expect(weekly.every((e) => e.startTime < windowEnd)).toBe(true);
-    expect(byTitle(events, "Next year's pizza")).toEqual([]);
+    expect(byTitle(events, "Pizza in 2028")).toEqual([]);
   });
 
   it("keeps plain-text angle brackets", async () => {

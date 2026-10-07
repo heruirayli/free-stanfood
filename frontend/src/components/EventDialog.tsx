@@ -14,7 +14,7 @@ interface EventDialogProps {
 }
 
 // The calendar actions for one event: download just this event, or (when it's in
-// the next 8 weeks) include it in the "Add to Your Calendar" download below the calendar.
+// the upcoming export) include it in the "Add to Your Calendar" download below the calendar.
 const AddToCalendar = ({ event, exportState }: { event: FoodEvent; exportState: CalendarExportState }) => (
   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-white px-4 py-3 shadow-sm ring-1 ring-stone-200">
     <a

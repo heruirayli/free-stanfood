@@ -61,7 +61,7 @@ Open http://localhost:5173. The repo already contains a `data/events.json`, so t
 
 ## Scheduled scraping with GitHub Actions
 
-`.github/workflows/refresh-events.yml` runs the pipeline twice a day (00:17 and 12:17 UTC) and whenever you trigger it by hand. If `data/events.json` changed, it commits and pushes the file as `github-actions[bot]`. The file is written deterministically, so a run that finds nothing new makes no commit.
+`.github/workflows/refresh-events.yml` runs the pipeline once a day (12:17 UTC, early morning Pacific) and whenever you trigger it by hand. If `data/events.json` changed, it commits and pushes the file as `github-actions[bot]`. The file is written deterministically, so a run that finds nothing new makes no commit.
 
 One-time setup after pushing the repo to GitHub:
 
@@ -114,7 +114,7 @@ Each run, for every adapter registered in `backend/pipeline/run.ts`:
 | Source | Method | Notes |
 |---|---|---|
 | Stanford Events (`events.stanford.edu`) | Public Localist JSON API, `/api/2/events` | Verified 2026-09-28. robots.txt allows `/api/` (`Crawl-Delay: 1`). See the header of `adapters/localist.ts`. |
-| Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | Currently three Luma calendars of Stanford centers, found through Luma links in Stanford Events listings. `api.luma.com` allows `/ics/get` in robots.txt (checked 2026-09-30). Most of their events are already on Stanford Events, so today they add few or none. |
+| Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | Currently 11 public Luma calendars: Stanford centers and institutes (CEAS, The Europe Center, Precourt, IDA), found through Luma links in Stanford Events listings, and student groups (Stanford Founders, Stanford Entrepreneurs, Blockchain Club, Cardinal Ventures, GDG, Biotech Group, Climate Week), found by web search. Each was checked to be public with a feed that loads without a login. `api.luma.com` allows `/ics/get` in robots.txt (checked 2026-10-07). Luma feeds carry only the title, so food is mostly detected from it, and many club events are already on Stanford Events. |
 | CardinalEngage (`cardinalengage.stanford.edu`) | Public RSS feed, `/rss_events` | Only events clubs publish publicly (about two dozen, mostly GSB clubs). Rooms are hidden from signed-out visitors, so cards show no location. The host's "food provided" checkbox counts as an explicit offer. robots.txt (checked 2026-10-06) disallows the mobile app backend (`/mobile_ws/`), which we never use; the event pages need a login, so they aren't scraped either. See the header of `adapters/cardinalengage.ts`. |
 
 New sources should prefer, in order: an official API, a discovered JSON endpoint, iCal/RSS, schema.org JSON-LD, and HTML parsing only as a last resort. Never add a source that requires a login.
@@ -150,7 +150,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 
 | Method | Route | Purpose |
 |---|---|---|
-| GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to 8 weeks out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
+| GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to a year out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
 | GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The Calendar page has a download button with every event selected; people can uncheck the ones they don't want. |
 | GET | `/api/events/:id` | A single event |
 

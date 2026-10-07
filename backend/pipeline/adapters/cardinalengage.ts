@@ -151,7 +151,7 @@ export const createCardinalEngageAdapter = ({
     if (!/<rss[\s>]/.test(response.body)) {
       throw new SourceFetchError(`${url} did not return an RSS feed`, response.body);
     }
-    // The feed is small and unpaged; keep the same 8-week horizon as other sources.
+    // The feed is small and unpaged; keep the same horizon as the other sources.
     const horizon = addDays(now(), DAYS_AHEAD + 1);
     return parseRssFeed(response.body).filter((item) => {
       const start = parseSourceTime(item.eventStartDateTime);

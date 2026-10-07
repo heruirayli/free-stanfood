@@ -37,11 +37,10 @@ afterEach(() => {
 });
 
 describe("cardinalengage adapter", () => {
-  it("normalizes every item within 8 weeks", async () => {
-    // 24 items; the Dec 3 party is past the window (Oct 6 + 57 days).
+  it("normalizes every item in the public feed", async () => {
     const { raw, events } = await normalizeAll();
-    expect(raw).toHaveLength(23);
-    expect(events).toHaveLength(23);
+    expect(raw).toHaveLength(24);
+    expect(events).toHaveLength(24);
   });
 
   it("maps fields, reading ISO times with their offset", async () => {
@@ -88,10 +87,10 @@ describe("cardinalengage adapter", () => {
     expect(normalizeCardinalEngageEvent({ ...first, eventStartDateTime: "soon" })).toBeNull();
   });
 
-  it("leaves out events past the 8-week window", async () => {
-    const later = FEED.replace("2026-10-06T12:00:00.0000000-07:00", "2027-03-01T12:00:00.0000000-08:00");
+  it("leaves out events more than a year ahead", async () => {
+    const later = FEED.replace("2026-10-06T12:00:00.0000000-07:00", "2028-03-01T12:00:00.0000000-08:00");
     const { raw } = await normalizeAll(later);
-    expect(raw).toHaveLength(22);
+    expect(raw).toHaveLength(23);
   });
 
   it("requests the feed and rejects responses that aren't RSS", async () => {

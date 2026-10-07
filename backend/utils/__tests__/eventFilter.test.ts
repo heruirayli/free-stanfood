@@ -18,8 +18,8 @@ const events = [
   makePublished("no-end-recent", { startTime: new Date("2026-10-01T17:30:00Z"), endTime: null }),
   makePublished("no-end-old", { startTime: new Date("2026-10-01T15:00:00Z"), endTime: null }),
   makePublished("far-future", {
-    startTime: new Date("2027-01-10T19:00:00Z"),
-    endTime: new Date("2027-01-10T20:00:00Z"),
+    startTime: new Date("2028-01-10T19:00:00Z"),
+    endTime: new Date("2028-01-10T20:00:00Z"),
   }),
   makePublished("low", { foodConfidence: 0.3 }),
   makePublished("restricted", { audience: "restricted" }),
@@ -62,11 +62,11 @@ describe("selectEvents", () => {
   });
 
   it("respects an explicit window", () => {
-    expect(find({ from: "2027-01-01T00:00:00Z", to: "2027-02-01T00:00:00Z" })).toEqual(["far-future"]);
+    expect(find({ from: "2028-01-01T00:00:00Z", to: "2028-02-01T00:00:00Z" })).toEqual(["far-future"]);
   });
 
   it("never returns restricted events", () => {
-    expect(find({ from: "2026-01-01T00:00:00Z", to: "2028-01-01T00:00:00Z" })).not.toContain("restricted");
+    expect(find({ from: "2026-01-01T00:00:00Z", to: "2029-01-01T00:00:00Z" })).not.toContain("restricted");
   });
 });
 

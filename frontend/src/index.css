@@ -69,6 +69,12 @@ body {
   outline-offset: 2px;
 }
 
+/* FullCalendar disables "Today" while today is in view; hide it until then. It
+   keeps its space, so the date title doesn't shift when it appears. */
+.fc .fc-today-button:disabled {
+  visibility: hidden;
+}
+
 /* Phones: keep the toolbar title on one line. */
 @media (max-width: 639px) {
   .fc .fc-toolbar-title {

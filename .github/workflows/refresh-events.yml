@@ -6,9 +6,9 @@ name: Refresh events
 
 on:
   schedule:
-    # Twice a day, at 00:17 and 12:17 UTC (late afternoon and early morning Pacific).
+    # Once a day, at 12:17 UTC (5:17 AM PDT, 4:17 AM PST), so each morning starts fresh.
     # :17 past avoids the top-of-hour rush on shared runners.
-    - cron: "17 */12 * * *"
+    - cron: "17 12 * * *"
   workflow_dispatch:
 
 permissions:

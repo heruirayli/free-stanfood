@@ -240,11 +240,11 @@ describe("deriveAudience", () => {
 });
 
 describe("fetchWindow", () => {
-  it("covers yesterday through eight weeks ahead in campus time", () => {
+  it("covers yesterday through a year ahead in campus time", () => {
     // 13:00 PDT on Sep 28
     expect(fetchWindow(new Date("2026-09-28T20:00:00Z"))).toEqual({
       start: "2026-09-27",
-      end: "2026-11-24",
+      end: "2027-09-29",
     });
   });
 
@@ -282,8 +282,8 @@ describe("createLocalistAdapter().fetch", () => {
     const events = await adapter.fetch();
     expect(events).toHaveLength(100);
     expect(requested).toEqual([
-      "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2026-11-24&pp=100&page=1",
-      "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2026-11-24&pp=100&page=2",
+      "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2027-09-29&pp=100&page=1",
+      "https://events.stanford.edu/api/2/events?start=2026-09-27&end=2027-09-29&pp=100&page=2",
     ]);
   });
 
