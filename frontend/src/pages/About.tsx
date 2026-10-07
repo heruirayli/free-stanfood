@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import AudienceBadge from "../components/AudienceBadge";
 import FoodBadge from "../components/FoodBadge";
 import Page from "../components/Page";
@@ -12,93 +13,106 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
   </section>
 );
 
-const SourceLink = ({ href, children }: { href: string; children: ReactNode }) => (
-  <a
-    href={href}
-    className="font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:decoration-stone-900"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
+const linkClass = "font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:decoration-stone-900";
+
+const ExternalLink = ({ href, children }: { href: string; children: ReactNode }) => (
+  <a href={href} className={linkClass} target="_blank" rel="noopener noreferrer">
     {children}
   </a>
 );
+
+const Term = ({ children }: { children: ReactNode }) => <strong className="font-semibold text-stone-900">{children}</strong>;
 
 const About = () => (
   <Page title={`About ${APP_NAME}`} documentTitle="About">
     <Section title="What This Is">
       <p>
-        {APP_NAME} collects public event listings from around campus and highlights the ones that mention free
-        food.
+        {APP_NAME} gathers events from around campus and shows you the ones with free food: what’s happening right
+        now, what’s later today, and what’s coming up.
       </p>
+    </Section>
+
+    <Section title="How to Use It">
+      <ul className="list-disc space-y-2 pl-5 marker:text-stone-400">
+        <li>
+          <Term>
+            <Link to="/" className={linkClass}>
+              Today
+            </Link>
+          </Term>{" "}
+          shows what’s free right now, later today, and tomorrow, soonest first.
+        </li>
+        <li>
+          <Term>
+            <Link to="/calendar" className={linkClass}>
+              Calendar
+            </Link>
+          </Term>{" "}
+          shows events by month, week, or as a list. Tap an event for details.
+        </li>
+        <li>
+          <Term>Filters</Term> narrow things down by food, time of day, or a search like “pizza” or a building name.
+        </li>
+        <li>
+          <Term>Add to Your Calendar</Term>, at the bottom of the Calendar page, downloads upcoming events for Google
+          Calendar, Apple Calendar, or Outlook. Everything is included; uncheck the events or days you don’t want.
+          In Google Calendar, open Settings, then Import &amp; export, and choose the file.
+        </li>
+      </ul>
+    </Section>
+
+    <Section title="What the Labels Mean">
+      <ul className="space-y-2">
+        <li className="flex flex-wrap items-center gap-2.5">
+          <FoodBadge confidence={0.9} /> The listing says food will be there, like “lunch will be provided”.
+        </li>
+        <li className="flex flex-wrap items-center gap-2.5">
+          <FoodBadge confidence={0.5} /> Food is mentioned, but the listing doesn’t say outright that it’s provided.
+        </li>
+        <li className="flex flex-wrap items-center gap-2.5">
+          <FoodBadge confidence={0.3} /> Only a hint, like coffee or a reception. Hidden unless you turn it on in the
+          filters.
+        </li>
+      </ul>
+      <ul className="space-y-2 pt-1">
+        <li className="flex flex-wrap items-center gap-2.5">
+          <AudienceBadge audience="open" /> Anyone can come.
+        </li>
+        <li className="flex flex-wrap items-center gap-2.5">
+          <AudienceBadge audience="rsvp" /> Sign up first, so the host orders enough.
+        </li>
+        <li className="flex flex-wrap items-center gap-2.5">
+          <AudienceBadge audience="unknown" /> The listing doesn’t say. Check it before you go.
+        </li>
+      </ul>
+    </Section>
+
+    <Section title="Before You Go">
+      <ul className="list-disc space-y-2 pl-5 marker:text-stone-400">
+        <li>Food isn’t guaranteed. Hosts can run out or change plans, so earlier is better.</li>
+        <li>Open the original listing for the latest details, the exact room, and any sign-up.</li>
+        <li>Respect who the event is for. Free food is a kindness from the host, not an open invitation.</li>
+      </ul>
     </Section>
 
     <Section title="Where Listings Come From">
-      <ul className="list-disc space-y-2 pl-5 marker:text-stone-400">
-        <li>
-          <SourceLink href="https://events.stanford.edu">Stanford Events</SourceLink>, through its public events
-          API. Most listings come from here: talks, seminars, workshops, and department events.
-        </li>
-        <li>
-          <SourceLink href="https://cardinalengage.stanford.edu">CardinalEngage</SourceLink>, through its public
-          events feed, for student organizations. Only events a club makes public appear. Rooms are hidden from
-          people who aren’t signed in, so check the original listing for the location.
-        </li>
-        <li>
-          Public <SourceLink href="https://luma.com">Luma</SourceLink> calendars of Stanford centers, institutes, and
-          student groups.
-        </li>
-      </ul>
       <p>
-        Listings refresh automatically once a day and look up to a year ahead. When the same event appears in more
-        than one place, it’s shown once.
+        Events come from <ExternalLink href="https://events.stanford.edu">Stanford Events</ExternalLink>, student
+        groups on <ExternalLink href="https://cardinalengage.stanford.edu">CardinalEngage</ExternalLink>, and public{" "}
+        <ExternalLink href="https://luma.com">Luma</ExternalLink> calendars of Stanford centers and clubs. They’re
+        updated every morning and go up to a year ahead.
       </p>
       <p>
-        Only public, event-level information is collected: no attendee names, emails, or RSVP lists. Nothing behind
-        a sign-in is read. Private listings, members-only club events, and events restricted to specific groups are
-        left out. Every event links back to its original listing, which is always the authority.
+        Only public events are included, and only information about the event itself: never who’s attending.
+        Private and members-only events are left out. For student-group events, sign in on CardinalEngage to see
+        the room.
       </p>
-    </Section>
-
-    <Section title="How Food Is Detected">
-      <p>
-        Each listing’s title and description are scanned for food words and phrases such as “lunch will be
-        provided” or “free pizza”. Mentions that don’t mean free food, like food drives, food insecurity panels,
-        “bring your own lunch”, or food for purchase, are discounted.
-      </p>
-      <ul className="space-y-2">
-        <li className="flex flex-wrap items-center gap-2.5">
-          <FoodBadge confidence={0.9} /> The listing says food is provided.
-        </li>
-        <li className="flex flex-wrap items-center gap-2.5">
-          <FoodBadge confidence={0.5} /> Food is mentioned but not clearly provided.
-        </li>
-        <li className="flex flex-wrap items-center gap-2.5">
-          <FoodBadge confidence={0.3} /> Only a weak hint, like coffee or a reception. Hidden unless you turn it
-          on.
-        </li>
-      </ul>
-      <p>Food is never guaranteed. Hosts may run out, change plans, or limit food to registered guests.</p>
-    </Section>
-
-    <Section title="Who Can Attend">
-      <ul className="space-y-2">
-        <li className="flex flex-wrap items-center gap-2.5">
-          <AudienceBadge audience="open" /> Listed as open to everyone.
-        </li>
-        <li className="flex flex-wrap items-center gap-2.5">
-          <AudienceBadge audience="rsvp" /> Registration or RSVP is requested. Please RSVP before going.
-        </li>
-        <li className="flex flex-wrap items-center gap-2.5">
-          <AudienceBadge audience="unknown" /> The listing doesn’t say. Check the original listing.
-        </li>
-      </ul>
-      <p>Please respect each host’s stated audience. Free food is a courtesy, not an invitation to crash.</p>
     </Section>
 
     <Section title="Hosts">
       <p>
-        If you host an event listed here and want it removed, or the food information is wrong, please get in
-        touch. {HOST_REMOVAL_EMAIL ? <RemovalLink /> : "A contact address hasn’t been configured yet."}
+        Hosting an event listed here? If you’d like it removed, or the food details are wrong, let us know.{" "}
+        {HOST_REMOVAL_EMAIL ? <RemovalLink /> : "A contact address hasn’t been set up yet."}
       </p>
     </Section>
   </Page>
