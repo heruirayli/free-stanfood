@@ -1,17 +1,29 @@
-import { LIKELY_THRESHOLD } from "../../constants";
+import { parseISO } from "date-fns";
+import { LIKELY_THRESHOLD, NEXT_HOURS_MS } from "../../constants";
 import type { FoodEvent } from "../../types/event";
-import { timeOfDay, type TimeOfDay } from "../../utils/time";
+import { hasEnded, isAllDayToday, isHappeningNow, timeOfDay, type TimeOfDay } from "../../utils/time";
+
+// The Today page's time filter: everything left today, what's on now, or what's
+// on now or starting within two hours.
+export type TimeWindow = "today" | "now" | "next2h";
 
 export interface EventFilters {
   query: string;
-  foodType: string; // "any" or a label from foodDetails, e.g. "pizza"
-  timeOfDay: TimeOfDay | "any";
+  openOnly: boolean;
+  foodTypes: string[]; // labels from foodDetails, e.g. "pizza"; empty for any food
+  window: TimeWindow; // Today page only
+  timeOfDay: TimeOfDay | "any"; // calendar only
   showLowConfidence: boolean;
 }
 
+// The page the filters are on. Each shows the shared filters plus its own time filter.
+export type FilterScope = "today" | "calendar";
+
 export const DEFAULT_FILTERS: EventFilters = {
   query: "",
-  foodType: "any",
+  openOnly: false,
+  foodTypes: [],
+  window: "today",
   timeOfDay: "any",
   showLowConfidence: false,
 };
@@ -36,8 +48,8 @@ const normalizeText = (text: string): string =>
   text
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[\u2018\u2019\u02bc\u2032]/g, "'");
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[‘’ʼ′]/g, "'");
 
 const searchableText = (event: FoodEvent): string =>
   normalizeText(
@@ -53,16 +65,38 @@ const matchesQuery = (event: FoodEvent, query: string): boolean => {
 
 export const isLowConfidence = (event: FoodEvent): boolean => event.foodConfidence < LIKELY_THRESHOLD;
 
+// The filters both pages share. Several food types match events with any of them.
 export const applyFilters = (events: FoodEvent[], filters: EventFilters): FoodEvent[] =>
   events.filter(
     (event) =>
       (filters.showLowConfidence || !isLowConfidence(event)) &&
-      (filters.foodType === "any" || foodLabels(event).includes(filters.foodType)) &&
-      (filters.timeOfDay === "any" || (!event.allDay && timeOfDay(event.startTime) === filters.timeOfDay)) &&
+      (!filters.openOnly || event.audience === "open") &&
+      (filters.foodTypes.length === 0 || foodLabels(event).some((label) => filters.foodTypes.includes(label))) &&
       matchesQuery(event, filters.query),
   );
 
-export const hasActiveFilters = (filters: EventFilters): boolean =>
+// On now: started and not over, or an all-day event today.
+export const isOnNow = (event: FoodEvent, now: Date): boolean =>
+  isHappeningNow(event, now) || isAllDayToday(event, now);
+
+export const matchesWindow = (event: FoodEvent, window: TimeWindow, now: Date): boolean => {
+  switch (window) {
+    case "today":
+      return true;
+    case "now":
+      return isOnNow(event, now);
+    case "next2h":
+      return !hasEnded(event, now) && parseISO(event.startTime).getTime() < now.getTime() + NEXT_HOURS_MS;
+  }
+};
+
+export const matchesTimeOfDay = (event: FoodEvent, time: TimeOfDay | "any"): boolean =>
+  time === "any" || (!event.allDay && timeOfDay(event.startTime) === time);
+
+// Whether anything narrows the list on this page. The "Food possible" toggle
+// doesn't count: it widens the list, and Clear filters leaves it as it is.
+export const hasActiveFilters = (filters: EventFilters, scope: FilterScope): boolean =>
   filters.query.trim() !== "" ||
-  filters.foodType !== DEFAULT_FILTERS.foodType ||
-  filters.timeOfDay !== DEFAULT_FILTERS.timeOfDay;
+  filters.openOnly ||
+  filters.foodTypes.length > 0 ||
+  (scope === "today" ? filters.window !== DEFAULT_FILTERS.window : filters.timeOfDay !== DEFAULT_FILTERS.timeOfDay);

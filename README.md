@@ -2,7 +2,7 @@
 
 **Find free food on the Stanford campus.** Free Stanfood gathers public events from across campus every morning and shows the ones with free food: what's happening right now, what's later today, and what's coming up over the next year.
 
-<!-- Screenshots go here. Suggested: the Today page and an event's details on a phone, and the month calendar on a desktop. Put the images in docs/screenshots/ and add them like:
+<!-- Screenshots go here. Suggested: the Today page and an event's details on a phone, and the week calendar on a desktop. Put the images in docs/screenshots/ and add them like:
 <img src="docs/screenshots/today-mobile.png" alt="The Today page on a phone" width="260" />
 -->
 
@@ -12,11 +12,11 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 
 ## What You Can Do
 
-- **See what's free today.** The Today page shows what's happening now, later today, and tomorrow, soonest first.
-- **Browse the calendar.** Month, week, and list views of everything with food, up to a year ahead.
+- **See what's free today.** The Today page shows what's happening now, later today, and tonight, with how soon each starts and which are about to end.
+- **Browse the calendar.** Week and month views of everything with food, up to a year ahead.
 - **Know what to expect.** Every event says what food there is, how sure the listing is ("Food listed", "Food likely", "Food possible"), and who can come.
-- **Filter.** By food, by time of day, or by searching for "pizza", a building, or a host.
-- **Add events to your calendar.** Download a calendar file for Google Calendar, Apple Calendar, or Outlook. Everything is included by default; drop single events or whole days.
+- **Filter.** By food, by what's on now or in the next two hours, by events open to all, or by searching for "pizza", a building, or a host. Filters stay in the address, so a filtered view can be shared.
+- **Add events to your calendar.** Subscribe once in Google Calendar or Apple Calendar and new events show up on their own, or download a calendar file of just the events you pick.
 - **Use it on your phone.** Designed for small screens first, and usable by keyboard and screen reader.
 
 ## How It Works
@@ -37,11 +37,11 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 - **A polite scraper.** It reads only public pages, never anything behind a login, and follows each site's robots.txt. It sends at most one request a second, backs off when a site is busy, and skips downloads that haven't changed.
 - **Privacy first.** Only details about the event are kept, never who's attending. Private and members-only events are left out, and hosts can ask for a listing to be removed.
 - **Careful with time.** Times are always shown in campus time, whatever the viewer's time zone, including all-day and multi-day events and daylight saving changes.
-- **Well tested.** About 370 automated tests cover the scraper, the food detector, the API, and the interface, using saved real data instead of live sites.
+- **Well tested.** About 410 automated tests cover the scraper, the food detector, the API, and the interface, using saved real data instead of live sites.
 
 ## Built With
 
-TypeScript throughout. React 19, Redux Toolkit, Tailwind CSS, Motion, and FullCalendar on the front end. Node, Express 5, and Zod on the back end. Vitest and Testing Library for tests. GitHub Actions runs the daily scrape.
+TypeScript throughout. React 19, Redux Toolkit, Tailwind CSS, and FullCalendar on the front end. Node, Express 5, and Zod on the back end. Vitest and Testing Library for tests. GitHub Actions runs the daily scrape.
 
 ## Run It Locally
 

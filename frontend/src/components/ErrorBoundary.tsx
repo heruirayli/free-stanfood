@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from "react";
+import { primaryButtonClass } from "../styles";
 import StatusMessage from "./StatusMessage";
 
 interface ErrorBoundaryProps {
@@ -31,11 +32,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return (
       <div className="mx-auto max-w-2xl">
         <StatusMessage tone="error" title="This page couldn’t be loaded.">
-          <p className="mb-3">Check your connection and reload. If the site was just updated, a reload fixes it.</p>
+          <p className="mb-4">Check your connection and reload. If the site was just updated, a reload fixes it.</p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="inline-flex min-h-11 items-center rounded-full bg-stone-900 px-5 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+            className={primaryButtonClass}
           >
             Reload
           </button>

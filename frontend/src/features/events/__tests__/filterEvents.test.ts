@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { makeEvent } from "../../../testUtils";
-import { DEFAULT_FILTERS, applyFilters, foodTypesIn, hasActiveFilters } from "../filterEvents";
+import {
+  DEFAULT_FILTERS,
+  applyFilters,
+  foodTypesIn,
+  hasActiveFilters,
+  matchesTimeOfDay,
+  matchesWindow,
+} from "../filterEvents";
 
 const events = [
-  makeEvent({ id: "pizza", foodDetails: "pizza", foodConfidence: 0.9 }),
+  makeEvent({ id: "pizza", foodDetails: "pizza", foodConfidence: 0.9, audience: "open" }),
   makeEvent({
     id: "boba",
     title: "Boba social",
@@ -11,8 +18,9 @@ const events = [
     foodConfidence: 0.6,
     startTime: "2026-10-02T01:00:00Z", // 6 PM PDT
     hostOrg: "Taiwanese Student Association",
+    audience: "rsvp",
   }),
-  makeEvent({ id: "coffee", title: "Coffee hour", foodDetails: "coffee", foodConfidence: 0.25 }),
+  makeEvent({ id: "coffee", title: "Coffee hour", foodDetails: "coffee", foodConfidence: 0.25, audience: "unknown" }),
 ];
 
 const ids = (list: { id: string }[]) => list.map((e) => e.id);
@@ -30,12 +38,13 @@ describe("applyFilters", () => {
     ]);
   });
 
-  it("filters by food type", () => {
-    expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, foodType: "snacks" }))).toEqual(["boba"]);
+  it("keeps only events open to all", () => {
+    expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, openOnly: true, showLowConfidence: true }))).toEqual(["pizza"]);
   });
 
-  it("filters by time of day", () => {
-    expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, timeOfDay: "evening" }))).toEqual(["boba"]);
+  it("matches any of the chosen food types", () => {
+    expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, foodTypes: ["snacks"] }))).toEqual(["boba"]);
+    expect(ids(applyFilters(events, { ...DEFAULT_FILTERS, foodTypes: ["snacks", "pizza"] }))).toEqual(["pizza", "boba"]);
   });
 
   it("searches across fields, requiring every word", () => {
@@ -56,6 +65,36 @@ describe("applyFilters", () => {
   });
 });
 
+describe("matchesWindow", () => {
+  const now = new Date("2026-10-01T19:30:00Z"); // 12:30 PM PDT
+  const lunch = makeEvent({ startTime: "2026-10-01T19:00:00Z", endTime: "2026-10-01T20:00:00Z" });
+  const soon = makeEvent({ startTime: "2026-10-01T21:00:00Z", endTime: null }); // 2 PM
+  const later = makeEvent({ startTime: "2026-10-01T23:00:00Z", endTime: null }); // 4 PM
+  const allDay = makeEvent({ startTime: "2026-10-01T07:00:00Z", endTime: "2026-10-02T06:59:00Z", allDay: true });
+
+  it("keeps everything for today", () => {
+    expect([lunch, soon, later, allDay].every((e) => matchesWindow(e, "today", now))).toBe(true);
+  });
+
+  it("keeps what's on now, including all-day events", () => {
+    expect([lunch, soon, later, allDay].map((e) => matchesWindow(e, "now", now))).toEqual([true, false, false, true]);
+  });
+
+  it("adds what starts within two hours", () => {
+    expect([lunch, soon, later, allDay].map((e) => matchesWindow(e, "next2h", now))).toEqual([true, true, false, true]);
+  });
+});
+
+describe("matchesTimeOfDay", () => {
+  it("filters by the campus hour of the start, leaving out all-day events", () => {
+    const evening = makeEvent({ startTime: "2026-10-02T01:00:00Z" }); // 6 PM PDT
+    expect(matchesTimeOfDay(evening, "evening")).toBe(true);
+    expect(matchesTimeOfDay(evening, "midday")).toBe(false);
+    expect(matchesTimeOfDay(makeEvent({ allDay: true }), "morning")).toBe(false);
+    expect(matchesTimeOfDay(makeEvent({ allDay: true }), "any")).toBe(true);
+  });
+});
+
 describe("foodTypesIn", () => {
   it("lists food types by frequency", () => {
     const list = [...events, makeEvent({ id: "p2", foodDetails: "pizza, snacks" })];
@@ -65,8 +104,16 @@ describe("foodTypesIn", () => {
 
 describe("hasActiveFilters", () => {
   it("ignores the low-confidence toggle", () => {
-    expect(hasActiveFilters(DEFAULT_FILTERS)).toBe(false);
-    expect(hasActiveFilters({ ...DEFAULT_FILTERS, showLowConfidence: true })).toBe(false);
-    expect(hasActiveFilters({ ...DEFAULT_FILTERS, query: "pizza" })).toBe(true);
+    expect(hasActiveFilters(DEFAULT_FILTERS, "today")).toBe(false);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, showLowConfidence: true }, "today")).toBe(false);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, query: "pizza" }, "today")).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, openOnly: true }, "calendar")).toBe(true);
+  });
+
+  it("counts only the page's own time filter", () => {
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, window: "now" }, "today")).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, window: "now" }, "calendar")).toBe(false);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timeOfDay: "evening" }, "calendar")).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timeOfDay: "evening" }, "today")).toBe(false);
   });
 });

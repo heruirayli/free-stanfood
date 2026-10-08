@@ -1,3 +1,8 @@
+import { render } from "@testing-library/react";
+import type { ReactElement } from "react";
+import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
+import { makeStore, type AppStore } from "./app/store";
 import type { FoodEvent } from "./types/event";
 
 export const makeEvent = (overrides: Partial<FoodEvent> = {}): FoodEvent => ({
@@ -33,4 +38,15 @@ export const openDetails = (summary: HTMLElement): void => {
   if (!details) throw new Error("not inside a <details>");
   details.open = true;
   details.dispatchEvent(new Event("toggle"));
+};
+
+// Renders `ui` with a fresh store and a router at `route`, for components that
+// use either.
+export const renderWithApp = (ui: ReactElement, { route = "/", store = makeStore() }: { route?: string; store?: AppStore } = {}) => {
+  const result = render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
+    </Provider>,
+  );
+  return { ...result, store };
 };

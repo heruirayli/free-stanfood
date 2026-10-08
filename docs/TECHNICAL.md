@@ -151,7 +151,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 | Method | Route | Purpose |
 |---|---|---|
 | GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to a year out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
-| GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The Calendar page has a download button with every event selected; people can uncheck the ones they don't want. |
+| GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The site's Subscribe button shows this URL. The Week and Month pages have a download button with every event selected; people can uncheck the ones they don't want. Each event's details download just that event. |
 | GET | `/api/events/:id` | A single event |
 
 Invalid query parameters return `400` with `{ message }`.
@@ -174,9 +174,9 @@ backend/
   pipeline/            standalone ingestion process (never imported by the server)
 frontend/
   src/app/             Redux store and typed hooks
-  src/features/events/ slice, axios service, filtering, agenda grouping
-  src/components/      cards, badges, filters, header/footer
-  src/pages/           Today (default), Calendar, About, Contact (request removal), NotFound
+  src/features/events/ slices (events and filters, export choices), axios service, filtering and its URL form, agenda grouping
+  src/components/      cards, badges, filter chips, event details sheet, header/footer
+  src/pages/           Today (default), Week and Month (CalendarPage), an event's own page, About, Contact (request removal), NotFound
   src/types/event.ts   mirrors backend/types/event.ts
 ```
 

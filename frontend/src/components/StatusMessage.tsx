@@ -10,12 +10,12 @@ interface StatusMessageProps {
 const StatusMessage = ({ title, children, tone = "neutral" }: StatusMessageProps) => (
   <div
     role={tone === "error" ? "alert" : undefined}
-    className={`rounded-2xl border p-8 text-center ${
-      tone === "error" ? "border-rose-200 bg-rose-50 text-rose-900" : "border-dashed border-stone-300 bg-white/60 text-stone-600"
+    className={`rounded-xl px-6 py-8 text-center ${
+      tone === "error" ? "border border-primary/30 bg-primary-soft text-ink" : "bg-surface text-ink-muted"
     }`}
   >
-    <p className={`font-medium ${tone === "error" ? "" : "text-stone-800"}`}>{title}</p>
-    {children && <div className="mt-2 text-sm">{children}</div>}
+    <p className="text-[1.0625rem] font-semibold text-ink">{title}</p>
+    {children && <div className="mt-2">{children}</div>}
   </div>
 );
 

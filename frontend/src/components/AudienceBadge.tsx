@@ -16,8 +16,8 @@ const AUDIENCE_STYLES: Record<Audience, { label: string; Icon: IconType }> = {
 const AudienceBadge = ({ audience }: AudienceBadgeProps) => {
   const { label, Icon } = AUDIENCE_STYLES[audience];
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-2.5 py-1 text-xs font-medium text-stone-700">
-      <Icon aria-hidden="true" className="text-stone-500" />
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-2.5 py-0.5 text-[0.8125rem] font-semibold text-ink-muted">
+      <Icon aria-hidden="true" className="text-[0.7rem]" />
       {label}
     </span>
   );

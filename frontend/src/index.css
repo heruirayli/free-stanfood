@@ -1,71 +1,125 @@
 @import "tailwindcss";
 
-/* Quiet, mostly monochrome look: warm off-white page, white surfaces, near-black
-   type. Color is reserved for meaning (food and audience badges). */
+/* Calm and mostly neutral: white page, light gray surfaces, near-black type.
+   Cardinal red is kept for the main actions and for "ending soon". */
 
-:root {
-  color-scheme: light;
-}
+@theme {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-/* Keep focused controls clear of the sticky header (two rows on phones, one from sm up). */
-html {
-  scroll-padding-top: 8rem;
-}
+  --color-primary: #8c1515;
+  --color-primary-hover: #820000;
+  --color-primary-soft: #f9eded;
+  --color-ink: #2e2d29;
+  --color-ink-muted: #4d4f53;
+  --color-surface: #f4f4f4;
+  --color-surface-strong: #e9e9e8;
+  --color-line: #e0e0de;
+  /* Borders that mark a control's edge (text fields): 3:1 against white. */
+  --color-line-strong: #8c8c8c;
 
-@media (min-width: 640px) {
-  html {
-    scroll-padding-top: 5rem;
+  /* Food confidence bands. The solid colors mark events on cards and in the
+     calendar; white text passes WCAG AA on each. The soft ones back the badges. */
+  --color-listed: #175e54;
+  --color-listed-soft: #e7f1ef;
+  --color-likely: #8f4f00;
+  --color-likely-soft: #fbf1e3;
+  --color-possible: #6b6b6b;
+  --color-possible-soft: #f0f0f0;
+
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-sheet-in: sheet-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
   }
 }
 
-body {
-  @apply bg-stone-50 text-stone-900 antialiased;
-  font-feature-settings: "cv11", "ss01";
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  /* Keep focused controls clear of the sticky header and section headings.
+     --header-height is set by the Header (two rows on phones, one from sm up). */
+  html {
+    scroll-padding-top: calc(var(--header-height, 7rem) + 3rem);
+  }
+
+  /* The page behind an open sheet or dialog stays put. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-white text-ink antialiased;
+  }
+
+  /* One visible focus style for every control, for keyboard users. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
-/* One visible focus style for every control, for keyboard users. */
-:focus-visible {
-  outline: 2px solid var(--color-stone-900);
-  outline-offset: 2px;
+/* Honor the OS "reduce motion" setting everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* FullCalendar, matched to the rest of the site. */
 .fc {
-  --fc-border-color: var(--color-stone-200);
+  --fc-border-color: var(--color-line);
   --fc-page-bg-color: white;
-  --fc-neutral-bg-color: var(--color-stone-50);
-  --fc-today-bg-color: var(--color-stone-100);
-  --fc-list-event-hover-bg-color: var(--color-stone-50);
-  --fc-button-text-color: var(--color-stone-800);
+  --fc-neutral-bg-color: var(--color-surface);
+  --fc-today-bg-color: var(--color-primary-soft);
+  --fc-list-event-hover-bg-color: var(--color-surface);
+  --fc-now-indicator-color: var(--color-primary);
+  --fc-button-text-color: var(--color-ink);
   --fc-button-bg-color: white;
-  --fc-button-border-color: var(--color-stone-200);
-  --fc-button-hover-bg-color: var(--color-stone-100);
-  --fc-button-hover-border-color: var(--color-stone-300);
-  --fc-button-active-bg-color: var(--color-stone-900);
-  --fc-button-active-border-color: var(--color-stone-900);
-  --fc-event-bg-color: var(--color-emerald-700);
-  --fc-event-border-color: var(--color-emerald-700);
-  font-size: 0.875rem;
+  --fc-button-border-color: var(--color-line);
+  --fc-button-hover-bg-color: var(--color-surface);
+  --fc-button-hover-border-color: var(--color-line);
+  --fc-button-active-bg-color: var(--color-ink);
+  --fc-button-active-border-color: var(--color-ink);
+  --fc-event-bg-color: var(--color-listed);
+  --fc-event-border-color: var(--color-listed);
+  font-size: 0.9375rem;
+  color: var(--color-ink);
 }
 
 .fc .fc-toolbar-title {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 
 .fc .fc-button {
   min-height: 2.5rem;
   padding: 0 0.95rem;
   border-radius: 9999px;
-  font-weight: 500;
+  font-weight: 600;
   box-shadow: none !important;
 }
 
 /* FullCalendar's ".fc .fc-button:focus { outline: 0 }" beats the global focus
    style, and its box-shadow ring is removed above, so restore the outline here. */
 .fc .fc-toolbar .fc-button:focus-visible {
-  outline: 2px solid var(--color-stone-900);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -78,7 +132,7 @@ body {
 /* Phones: keep the toolbar title on one line. */
 @media (max-width: 639px) {
   .fc .fc-toolbar-title {
-    font-size: 0.9375rem;
+    font-size: 1rem;
   }
 
   .fc .fc-button {
@@ -105,24 +159,25 @@ body {
 
 .fc .fc-col-header-cell-cushion {
   padding: 0.5rem 0;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--color-stone-500);
-}
-
-.fc .fc-daygrid-day-number {
   font-size: 0.8125rem;
-  color: var(--color-stone-600);
+  font-weight: 600;
+  color: var(--color-ink-muted);
 }
 
-/* Days from the next or previous month: lighter than the current month's, but
-   still readable (FullCalendar's default opacity of .3 fails contrast). */
+.fc .fc-daygrid-day-number,
+.fc .fc-timegrid-slot-label-cushion {
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
+}
+
+/* Days from the next or previous month: still readable (FullCalendar's default
+   opacity of .3 fails contrast). */
 .fc .fc-day-other .fc-daygrid-day-top {
   opacity: 1;
 }
 
 .fc .fc-day-other .fc-daygrid-day-number {
-  color: var(--color-stone-500);
+  color: var(--color-possible);
 }
 
 .fc .fc-event {
@@ -130,22 +185,27 @@ body {
   border-radius: 0.375rem;
 }
 
-.fc .fc-list-day-cushion {
-  font-weight: 600;
+.fc .fc-event:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
-/* Event colors by food confidence band. White text passes WCAG AA on each. */
+.fc .fc-list-day-cushion {
+  font-weight: 700;
+}
+
+/* Event colors by food confidence band, the same as the stripe on Today's cards. */
 .fc .food-listed {
-  --fc-event-bg-color: var(--color-emerald-700);
-  --fc-event-border-color: var(--color-emerald-700);
+  --fc-event-bg-color: var(--color-listed);
+  --fc-event-border-color: var(--color-listed);
 }
 
 .fc .food-likely {
-  --fc-event-bg-color: var(--color-amber-700);
-  --fc-event-border-color: var(--color-amber-700);
+  --fc-event-bg-color: var(--color-likely);
+  --fc-event-border-color: var(--color-likely);
 }
 
 .fc .food-possible {
-  --fc-event-bg-color: var(--color-stone-500);
-  --fc-event-border-color: var(--color-stone-500);
+  --fc-event-bg-color: var(--color-possible);
+  --fc-event-border-color: var(--color-possible);
 }

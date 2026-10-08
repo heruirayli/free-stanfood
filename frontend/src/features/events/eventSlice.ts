@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import type { RootState } from "../../app/store";
-import type { ApiErrorBody, EventQuery, FoodEvent } from "../../types/event";
+import type { EventQuery, FoodEvent } from "../../types/event";
+import { errorMessage } from "./errorMessage";
 import eventService from "./eventService";
 import { DEFAULT_FILTERS, applyFilters, foodTypesIn, isLowConfidence, type EventFilters } from "./filterEvents";
 
@@ -25,18 +25,6 @@ const initialState: EventState = {
   isLoading: false,
   message: "",
   currentRequestId: null,
-};
-
-const isApiErrorBody = (data: unknown): data is ApiErrorBody =>
-  typeof data === "object" && data !== null && "message" in data && typeof data.message === "string";
-
-const errorMessage = (error: unknown): string => {
-  if (axios.isAxiosError(error)) {
-    const data: unknown = error.response?.data;
-    if (isApiErrorBody(data)) return data.message;
-    return error.message;
-  }
-  return error instanceof Error ? error.message : String(error);
 };
 
 // Get events for a time window

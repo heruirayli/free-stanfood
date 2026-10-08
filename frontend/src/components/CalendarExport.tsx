@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef } from "react";
-import { FaCalendarPlus } from "react-icons/fa";
-import type { CalendarExportState, ExportItem } from "../features/events/calendarExport";
+import { FaRegCalendarPlus } from "react-icons/fa";
+import { useCalendarExport } from "../features/events/calendarExport";
+import type { ExportItem } from "../features/events/exportSlice";
 import { useDisclosure } from "../hooks/useDisclosure";
+import { primaryButtonClass } from "../styles";
 import { campusDateKey, formatDayLabel, formatTime } from "../utils/time";
 
 const groupByDay = (events: ExportItem[]): [string, ExportItem[]][] => {
@@ -33,14 +35,14 @@ const DayCheckbox = ({
   }, [partly]);
 
   return (
-    <label className="flex min-h-11 cursor-pointer items-center gap-3 py-1 text-xs font-medium tracking-wider text-stone-600 uppercase">
+    <label className="flex min-h-11 cursor-pointer items-center gap-3 py-1 text-[0.8125rem] font-bold tracking-wide text-ink-muted uppercase">
       <input
         ref={box}
         type="checkbox"
         checked={chosen === total}
         onChange={() => onChange(chosen < total)}
         aria-label={`All events on ${label}`}
-        className="size-4 shrink-0 accent-stone-900"
+        className="size-4 shrink-0 accent-ink"
       />
       <span aria-hidden="true">{label}</span>
     </label>
@@ -49,34 +51,35 @@ const DayCheckbox = ({
 
 // Download an .ics of all upcoming free food (up to a year ahead), for importing into Google
 // Calendar (or Apple, Outlook). Everything is selected; people can drop events here
-// or from an event's details. The choices live in useCalendarExport, which the
-// Calendar page shares with its event dialog.
-const CalendarExport = ({ state, now }: { state: CalendarExportState; now: Date }) => {
-  const { events, status, deselected, url, toggle, setMany } = state;
+// or from an event's details. The choices are in the store (see exportSlice.ts),
+// loaded by the calendar page.
+const CalendarExport = ({ now }: { now: Date }) => {
+  const { events, status, deselected, url, toggle, setMany } = useCalendarExport();
   // The event list renders only while "Choose events" is open.
   const chooser = useDisclosure();
   const days = useMemo(() => (chooser.isOpen ? groupByDay(events) : []), [chooser.isOpen, events]);
-  const chosenCount = events.length - events.filter((event) => deselected.has(event.id)).length;
+  const chosenCount = events.length - events.filter((event) => event.id in deselected).length;
   const ids = (list: ExportItem[]) => list.map((event) => event.id);
 
   return (
     <section
       aria-labelledby="calendar-export-heading"
-      className="mt-6 rounded-2xl border border-stone-200/80 bg-white p-4 sm:p-5"
+      className="mt-8 rounded-xl border border-line bg-white p-4 sm:p-6"
     >
-      <h2 id="calendar-export-heading" className="text-base font-semibold tracking-tight text-stone-900">
+      <h2 id="calendar-export-heading" className="text-lg font-bold text-ink">
         Add to Your Calendar
       </h2>
-      <p className="mt-1 text-sm leading-relaxed text-stone-600">
-        Download all upcoming free food as an .ics file. In Google Calendar, open Settings, then Import &amp;
-        export, and choose the file.
+      <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-muted">
+        Download upcoming free food as an .ics file, choosing the events you want. In Google Calendar, open
+        Settings, then Import &amp; export, and choose the file. To get new events as they’re found, use Subscribe
+        at the top instead.
       </p>
 
-      {status === "error" && <p className="mt-3 text-sm text-rose-800">Couldn’t load the events to choose from.</p>}
+      {status === "error" && <p className="mt-3 text-[0.9375rem] font-semibold text-primary">Couldn’t load the events to choose from.</p>}
 
       {status === "ready" && events.length > 0 && (
         <details {...chooser.detailsProps} className="group mt-3">
-          <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium text-stone-800">
+          <summary className="flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-ink">
             <span aria-hidden="true" className="transition-transform group-open:rotate-90">
               ›
             </span>
@@ -86,39 +89,39 @@ const CalendarExport = ({ state, now }: { state: CalendarExportState; now: Date 
             <button
               type="button"
               onClick={() => setMany(ids(events), true)}
-              className="min-h-10 rounded-full border border-stone-200 px-4 text-sm font-medium text-stone-800 hover:bg-stone-100"
+              className="min-h-10 rounded-full border border-line px-4 text-[0.9375rem] font-semibold text-ink hover:bg-surface"
             >
               Select all
             </button>
             <button
               type="button"
               onClick={() => setMany(ids(events), false)}
-              className="min-h-10 rounded-full border border-stone-200 px-4 text-sm font-medium text-stone-800 hover:bg-stone-100"
+              className="min-h-10 rounded-full border border-line px-4 text-[0.9375rem] font-semibold text-ink hover:bg-surface"
             >
               Deselect all
             </button>
           </div>
-          <div className="mt-3 max-h-80 overflow-y-auto overscroll-contain rounded-xl border border-stone-200/80">
+          <div className="mt-3 max-h-80 overflow-y-auto overscroll-contain rounded-xl border border-line">
             {days.map(([day, dayEvents]) => (
-              <fieldset key={day} className="border-b border-stone-200/80 px-3 py-2 last:border-b-0">
+              <fieldset key={day} className="border-b border-line px-3 py-2 last:border-b-0">
                 <legend className="sr-only">{formatDayLabel(dayEvents[0]!.startTime, now)}</legend>
                 <DayCheckbox
                   label={formatDayLabel(dayEvents[0]!.startTime, now)}
-                  chosen={dayEvents.filter((event) => !deselected.has(event.id)).length}
+                  chosen={dayEvents.filter((event) => !(event.id in deselected)).length}
                   total={dayEvents.length}
                   onChange={(selectDay) => setMany(ids(dayEvents), selectDay)}
                 />
                 {dayEvents.map((event) => (
-                  <label key={event.id} className="flex min-h-11 cursor-pointer items-start gap-3 py-1.5 pl-5 text-sm">
+                  <label key={event.id} className="flex min-h-11 cursor-pointer items-start gap-3 py-1.5 pl-5 text-[0.9375rem]">
                     <input
                       type="checkbox"
-                      checked={!deselected.has(event.id)}
+                      checked={!(event.id in deselected)}
                       onChange={() => toggle(event.id)}
-                      className="mt-0.5 size-4 shrink-0 accent-stone-900"
+                      className="mt-1 size-4 shrink-0 accent-ink"
                     />
                     <span>
-                      <span className="text-stone-600">{event.allDay ? "All day" : formatTime(event.startTime)}</span>
-                      <span className="text-stone-900"> · {event.title}</span>
+                      <span className="text-ink-muted">{event.allDay ? "All day" : formatTime(event.startTime)}</span>
+                      <span className="text-ink"> · {event.title}</span>
                     </span>
                   </label>
                 ))}
@@ -129,16 +132,12 @@ const CalendarExport = ({ state, now }: { state: CalendarExportState; now: Date 
       )}
 
       {chosenCount > 0 || status !== "ready" ? (
-        <a
-          href={url}
-          download="free-stanfood.ics"
-          className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-stone-900 px-5 text-sm font-medium text-white transition-colors hover:bg-stone-700"
-        >
-          <FaCalendarPlus aria-hidden="true" />
+        <a href={url} download="free-stanfood.ics" className={`${primaryButtonClass} mt-3`}>
+          <FaRegCalendarPlus aria-hidden="true" />
           {status === "ready" && chosenCount < events.length ? `Download ${chosenCount} events (.ics)` : "Download .ics"}
         </a>
       ) : (
-        <p className="mt-3 text-sm text-stone-600">Select at least one event to download.</p>
+        <p className="mt-3 text-[0.9375rem] text-ink-muted">Select at least one event to download.</p>
       )}
     </section>
   );

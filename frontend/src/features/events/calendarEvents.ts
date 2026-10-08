@@ -1,6 +1,7 @@
 import type { EventInput } from "@fullcalendar/core";
 import { foodBand } from "../../components/FoodBadge";
 import type { FoodEvent } from "../../types/event";
+import { describeFood } from "../../utils/food";
 import { addDaysToKey, campusDateKey, lastCampusDateKey, toCampusWallClock } from "../../utils/time";
 
 // The calendar runs in UTC and gets campus wall-clock times, so it shows campus
@@ -14,6 +15,7 @@ export const toCalendarEvent = (event: FoodEvent): EventInput => ({
     : { start: toCampusWallClock(event.startTime), end: event.endTime ? toCampusWallClock(event.endTime) : undefined }),
   allDay: event.allDay,
   classNames: [`food-${foodBand(event.foodConfidence)}`],
+  extendedProps: { food: describeFood(event.foodDetails) },
 });
 
 // "Now" for the calendar's today highlight and now indicator, in the same form.

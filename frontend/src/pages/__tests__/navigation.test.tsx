@@ -1,9 +1,8 @@
-import { configureStore } from "@reduxjs/toolkit";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { Link, MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import eventReducer from "../../features/events/eventSlice";
+import { makeStore } from "../../app/store";
 import eventService from "../../features/events/eventService";
 import { makeEvent } from "../../testUtils";
 import CalendarPage from "../CalendarPage";
@@ -15,17 +14,17 @@ const SLOW = { timeout: 5000 };
 // Rendered without StrictMode on purpose: its double effects re-send the
 // calendar's request and hid the Today -> Calendar race in development.
 const renderApp = () => {
-  const store = configureStore({ reducer: { events: eventReducer } });
+  const store = makeStore();
   render(
     <Provider store={store}>
       <MemoryRouter>
         <nav>
           <Link to="/">Today</Link>
-          <Link to="/calendar">Calendar</Link>
+          <Link to="/week">Week</Link>
         </nav>
         <Routes>
           <Route path="/" element={<Today />} />
-          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/week" element={<CalendarPage view="week" />} />
         </Routes>
       </MemoryRouter>
     </Provider>,
@@ -33,7 +32,7 @@ const renderApp = () => {
   return store;
 };
 
-describe("Today -> Calendar navigation", () => {
+describe("Today -> Week navigation", () => {
   beforeEach(() => {
     // jsdom has no matchMedia; report a desktop-width screen.
     vi.stubGlobal("matchMedia", (query: string) => ({
@@ -57,7 +56,7 @@ describe("Today -> Calendar navigation", () => {
     // FullCalendar requests its range during the layout phase, before Today's
     // cleanup runs, so that cleanup must not discard the calendar's request.
     await act(async () => {
-      fireEvent.click(screen.getByRole("link", { name: "Calendar" }));
+      fireEvent.click(screen.getByRole("link", { name: "Week" }));
     });
     // Today's range and the calendar's range (the export list makes its own, undated request).
     const rangeRequests = () => vi.mocked(eventService.getEvents).mock.calls.filter(([query]) => query.from !== undefined);
@@ -73,18 +72,18 @@ describe("Today page overnight", () => {
     vi.restoreAllMocks();
   });
 
-  it("refetches when the campus day rolls over, so Tomorrow covers the new day", async () => {
+  it("refetches when the campus day rolls over, so Today covers the new day", async () => {
     vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
     vi.setSystemTime(new Date("2026-10-02T06:58:00Z")); // Oct 1, 11:58 PM PDT
     const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
     const store = renderApp();
     await waitFor(() => expect(store.getState().events.isSuccess).toBe(true), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-03T07:00:00.000Z" }), expect.anything());
+    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-02T07:00:00.000Z" }), expect.anything());
 
     await act(async () => {
       vi.advanceTimersByTime(10 * 60_000); // past campus midnight
     });
     await waitFor(() => expect(getEvents).toHaveBeenCalledTimes(2), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-04T07:00:00.000Z" }), expect.anything());
+    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-03T07:00:00.000Z" }), expect.anything());
   }, 20_000);
 });

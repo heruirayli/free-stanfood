@@ -4,48 +4,43 @@ import { agendaIsEmpty, buildAgenda } from "../agenda";
 
 const NOW = new Date("2026-10-01T19:30:00Z"); // Oct 1, 12:30 PM PDT
 
+const ids = (list: { id: string }[]) => list.map((e) => e.id);
+
 describe("buildAgenda", () => {
   const events = [
     makeEvent({ id: "later-2", startTime: "2026-10-01T23:00:00Z", endTime: null }), // 4 PM
     makeEvent({ id: "now", startTime: "2026-10-01T19:00:00Z", endTime: "2026-10-01T20:00:00Z" }),
     makeEvent({ id: "ended", startTime: "2026-10-01T16:00:00Z", endTime: "2026-10-01T17:00:00Z" }),
-    makeEvent({ id: "later-1a", startTime: "2026-10-01T21:00:00Z", endTime: null }), // 2 PM
-    makeEvent({ id: "later-1b", startTime: "2026-10-01T21:00:00Z", endTime: null }), // 2 PM
+    makeEvent({ id: "later-1", startTime: "2026-10-01T21:00:00Z", endTime: null }), // 2 PM
     makeEvent({ id: "all-day", startTime: "2026-10-01T07:00:00Z", endTime: "2026-10-02T06:59:00Z", allDay: true }),
+    makeEvent({ id: "five", startTime: "2026-10-02T00:00:00Z", endTime: null }), // 5 PM: tonight
     makeEvent({ id: "tomorrow", startTime: "2026-10-02T16:00:00Z", endTime: null }),
-    makeEvent({ id: "next-week", startTime: "2026-10-08T16:00:00Z", endTime: null }),
-    // 11 PM PDT today is already tomorrow in UTC, but it belongs to today.
-    makeEvent({ id: "late-tonight", startTime: "2026-10-02T06:00:00Z", endTime: null }),
+    // 11 PM PDT today is already tomorrow in UTC, but it belongs to tonight.
+    makeEvent({ id: "late", startTime: "2026-10-02T06:00:00Z", endTime: null }),
+    makeEvent({ id: "445", startTime: "2026-10-01T23:45:00Z", endTime: null }), // 4:45 PM: still later today
   ];
 
   const agenda = buildAgenda(events, NOW);
 
-  it("puts ongoing events under happening now", () => {
-    expect(agenda.happeningNow.map((e) => e.id)).toEqual(["now"]);
+  it("puts ongoing events, and today's all-day events, under happening now", () => {
+    expect(ids(agenda.happeningNow)).toEqual(["all-day", "now"]);
   });
 
-  it("separates all-day events", () => {
-    expect(agenda.allDayToday.map((e) => e.id)).toEqual(["all-day"]);
+  it("splits the rest of today at 5 PM, soonest first", () => {
+    expect(ids(agenda.laterToday)).toEqual(["later-1", "later-2", "445"]);
+    expect(ids(agenda.tonight)).toEqual(["five", "late"]);
   });
 
-  it("groups later events by start time, soonest first", () => {
-    expect(agenda.laterToday.map((g) => [g.label, g.events.map((e) => e.id)])).toEqual([
-      ["2:00 PM", ["later-1a", "later-1b"]],
-      ["4:00 PM", ["later-2"]],
-      ["11:00 PM", ["late-tonight"]],
-    ]);
-  });
-
-  it("lists tomorrow separately and drops ended and far-off events", () => {
-    expect(agenda.tomorrow.map((g) => g.events.map((e) => e.id))).toEqual([["tomorrow"]]);
-    const all = [
-      ...agenda.happeningNow,
-      ...agenda.allDayToday,
-      ...agenda.laterToday.flatMap((g) => g.events),
-      ...agenda.tomorrow.flatMap((g) => g.events),
-    ].map((e) => e.id);
+  it("drops ended events and other days", () => {
+    const all = ids([...agenda.happeningNow, ...agenda.laterToday, ...agenda.tonight]);
     expect(all).not.toContain("ended");
-    expect(all).not.toContain("next-week");
+    expect(all).not.toContain("tomorrow");
+  });
+
+  it("moves an event to happening now once it starts, and drops it once it ends", () => {
+    const at = (iso: string) => buildAgenda(events, new Date(iso));
+    expect(ids(at("2026-10-01T21:00:00Z").happeningNow)).toContain("later-1");
+    expect(ids(at("2026-10-01T22:00:00Z").happeningNow)).not.toContain("later-1"); // no end listed: an hour
   });
 
   it("reports an empty agenda", () => {
@@ -59,11 +54,14 @@ describe("buildAgenda", () => {
       makeEvent({ id: "mid-run", startTime: "2026-09-30T07:00:00Z", endTime: "2026-10-03T06:59:00Z", allDay: true }),
       // Oct 2 – Oct 3: starts tomorrow.
       makeEvent({ id: "from-tomorrow", startTime: "2026-10-02T07:00:00Z", endTime: "2026-10-04T06:59:00Z", allDay: true }),
-      // Sep 29 – Sep 30: over.
-      makeEvent({ id: "over", startTime: "2026-09-29T07:00:00Z", endTime: "2026-10-01T06:59:00Z", allDay: true }),
     ];
     const result = buildAgenda(multi, NOW);
-    expect(result.allDayToday.map((e) => e.id)).toEqual(["mid-run"]);
-    expect(result.tomorrow.flatMap((g) => g.events.map((e) => e.id))).toEqual(["from-tomorrow"]);
+    expect(ids(result.happeningNow)).toEqual(["mid-run"]);
+    expect([...result.laterToday, ...result.tonight]).toEqual([]);
+  });
+
+  it("counts a timed event that began yesterday as happening now", () => {
+    const hackathon = makeEvent({ id: "hack", startTime: "2026-10-01T01:00:00Z", endTime: "2026-10-02T01:00:00Z" });
+    expect(ids(buildAgenda([hackathon], NOW).happeningNow)).toEqual(["hack"]);
   });
 });

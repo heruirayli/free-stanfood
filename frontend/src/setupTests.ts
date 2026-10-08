@@ -6,6 +6,16 @@ import { afterEach } from "vitest";
 // of campus time fails here too, even on a Pacific machine. Node applies TZ at runtime.
 process.env.TZ = "Asia/Tokyo";
 
+// jsdom has no modal dialogs: open and close them, firing "close" as browsers do.
+HTMLDialogElement.prototype.showModal = function () {
+  this.open = true;
+};
+HTMLDialogElement.prototype.close = function () {
+  if (!this.open) return;
+  this.open = false;
+  this.dispatchEvent(new Event("close"));
+};
+
 afterEach(() => {
   cleanup();
 });

@@ -1,31 +1,35 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
-import { LIKELY_THRESHOLD } from "../../constants";
+import { createSelector } from "@reduxjs/toolkit";
+import { useCallback, useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { CALENDAR_FEED_PATH } from "../../constants";
 import type { FoodEvent } from "../../types/event";
 import { selectFilters } from "./eventSlice";
-import eventService from "./eventService";
-
-const CALENDAR_URL = "/api/events/calendar.ics";
-
-// What the export list needs about each event. Kept instead of the full event, so
-// a year of descriptions isn't held in memory twice (the calendar has its own copy).
-export type ExportItem = Pick<FoodEvent, "id" | "title" | "startTime" | "allDay">;
-
-const toExportItem = ({ id, title, startTime, allDay }: FoodEvent): ExportItem => ({ id, title, startTime, allDay });
+import {
+  clearExport,
+  loadExport,
+  selectCalendarExport,
+  setExportEvents,
+  toggleExportEvent,
+  type ExportItem,
+} from "./exportSlice";
 
 const withQuery = (params: URLSearchParams): string => {
   const query = params.toString();
-  return query ? `${CALENDAR_URL}?${query}` : CALENDAR_URL;
+  return query ? `${CALENDAR_FEED_PATH}?${query}` : CALENDAR_FEED_PATH;
 };
 
 // The download URL for the chosen events. Everything is the default (no list at
 // all); otherwise send whichever list is shorter: the chosen ids or the dropped ones.
-export const exportUrl = (events: ExportItem[], deselected: ReadonlySet<string>, includeLow: boolean): string => {
+export const exportUrl = (
+  events: ExportItem[],
+  deselected: Readonly<Record<string, true>>,
+  includeLow: boolean,
+): string => {
   const params = new URLSearchParams();
   if (includeLow) params.set("minConfidence", "0");
-  const dropped = events.filter((event) => deselected.has(event.id)).map((event) => event.id);
+  const dropped = events.filter((event) => event.id in deselected).map((event) => event.id);
   if (dropped.length > 0) {
-    const chosen = events.filter((event) => !deselected.has(event.id)).map((event) => event.id);
+    const chosen = events.filter((event) => !(event.id in deselected)).map((event) => event.id);
     if (chosen.length <= dropped.length) params.set("ids", chosen.join(","));
     else params.set("exclude", dropped.join(","));
   }
@@ -46,76 +50,66 @@ export const eventExportUrl = (event: FoodEvent): string => {
   );
 };
 
+const selectExportUrl = createSelector([selectCalendarExport], ({ items, deselected, includeLow }) =>
+  exportUrl(items, deselected, includeLow),
+);
+
+const selectExportIds = createSelector([selectCalendarExport], ({ items }) => new Set(items.map((item) => item.id)));
+
 export interface CalendarExportState {
   events: ExportItem[];
-  status: "loading" | "ready" | "error";
-  deselected: ReadonlySet<string>;
+  status: "idle" | "loading" | "ready" | "error";
+  deselected: Readonly<Record<string, true>>;
   url: string;
   isChosen: (id: string) => boolean;
+  // In the list, so it can be added or dropped (only while a calendar page is open).
   isExportable: (id: string) => boolean;
   toggle: (id: string) => void;
   setMany: (ids: string[], chosen: boolean) => void;
 }
 
-// The "Add to Your Calendar" choices, shared by the export section and the event
-// dialog on the Calendar page. Loads every upcoming event with everything chosen, and
-// reloads (choosing everything again) when the "Food possible" toggle changes.
+// The "Add to Your Calendar" choices, for the export section and an event's details.
 export const useCalendarExport = (): CalendarExportState => {
+  const dispatch = useAppDispatch();
+  const { items, status, deselected } = useAppSelector(selectCalendarExport);
+  const url = useAppSelector(selectExportUrl);
+  const ids = useAppSelector(selectExportIds);
+  const toggle = useCallback((id: string) => dispatch(toggleExportEvent(id)), [dispatch]);
+  const setMany = useCallback(
+    (list: string[], chosen: boolean) => dispatch(setExportEvents({ ids: list, chosen })),
+    [dispatch],
+  );
+
+  return useMemo(
+    () => ({
+      events: items,
+      status,
+      deselected,
+      url,
+      isChosen: (id: string) => ids.has(id) && !(id in deselected),
+      isExportable: (id: string) => ids.has(id),
+      toggle,
+      setMany,
+    }),
+    [items, status, deselected, url, ids, toggle, setMany],
+  );
+};
+
+// Loads the choices while a calendar page is open (again, with everything chosen,
+// when the "Food possible" toggle changes) and frees them when it closes.
+export const useLoadCalendarExport = (): void => {
+  const dispatch = useAppDispatch();
   const { showLowConfidence } = useAppSelector(selectFilters);
-  const [events, setEvents] = useState<ExportItem[]>([]);
-  const [deselected, setDeselected] = useState<ReadonlySet<string>>(new Set());
-  const [status, setStatus] = useState<CalendarExportState["status"]>("loading");
 
   useEffect(() => {
-    const controller = new AbortController();
-    setStatus("loading");
-    eventService
-      .getEvents({ minConfidence: showLowConfidence ? 0 : LIKELY_THRESHOLD }, controller.signal)
-      .then((loaded) => {
-        setEvents(loaded.map(toExportItem));
-        setDeselected(new Set());
-        setStatus("ready");
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setStatus("error");
-      });
-    return () => controller.abort();
-  }, [showLowConfidence]);
+    const request = dispatch(loadExport({ includeLow: showLowConfidence }));
+    return () => request.abort();
+  }, [dispatch, showLowConfidence]);
 
-  const exportableIds = useMemo(() => new Set(events.map((event) => event.id)), [events]);
-
-  const setMany = useCallback(
-    (ids: string[], chosen: boolean) =>
-      setDeselected((current) => {
-        const next = new Set(current);
-        for (const id of ids) {
-          if (chosen) next.delete(id);
-          else next.add(id);
-        }
-        return next;
-      }),
-    [],
+  useEffect(
+    () => () => {
+      dispatch(clearExport());
+    },
+    [dispatch],
   );
-
-  const toggle = useCallback(
-    (id: string) =>
-      setDeselected((current) => {
-        const next = new Set(current);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        return next;
-      }),
-    [],
-  );
-
-  return {
-    events,
-    status,
-    deselected,
-    url: exportUrl(events, deselected, showLowConfidence),
-    isChosen: (id) => exportableIds.has(id) && !deselected.has(id),
-    isExportable: (id) => exportableIds.has(id),
-    toggle,
-    setMany,
-  };
 };

@@ -1,15 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
-import { useState } from "react";
-import { Provider } from "react-redux";
+import { act, fireEvent, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { eventExportUrl, exportUrl, useCalendarExport } from "../../features/events/calendarExport";
-import eventReducer, { setFilters } from "../../features/events/eventSlice";
+import { eventExportUrl, exportUrl, useLoadCalendarExport } from "../../features/events/calendarExport";
+import { setFilters } from "../../features/events/eventSlice";
 import eventService from "../../features/events/eventService";
-import { makeEvent, openDetails } from "../../testUtils";
+import { makeEvent, openDetails, renderWithApp } from "../../testUtils";
 import type { FoodEvent } from "../../types/event";
 import CalendarExport from "../CalendarExport";
-import EventDialog from "../EventDialog";
+import EventDetails from "../EventDetails";
 
 const a = makeEvent({ id: "a".repeat(24), title: "Pizza night", startTime: "2026-10-08T01:00:00.000Z" });
 const b = makeEvent({ id: "b".repeat(24), title: "Boba social", startTime: "2026-10-09T19:00:00.000Z" });
@@ -18,18 +15,20 @@ const d = makeEvent({ id: "d".repeat(24), title: "Bagel break", startTime: "2026
 // Shown on the calendar but outside the upcoming export (more than a year out).
 const later = makeEvent({ id: "e".repeat(24), title: "Winter dinner", startTime: "2028-01-20T03:00:00.000Z" });
 
+const NOW = new Date("2026-10-06T12:00:00Z");
+
 describe("export URLs", () => {
   it("exports everything with no list by default", () => {
-    expect(exportUrl([a, b, c], new Set(), false)).toBe("/api/events/calendar.ics");
+    expect(exportUrl([a, b, c], {}, false)).toBe("/api/events/calendar.ics");
   });
 
   it("sends whichever list is shorter", () => {
-    expect(exportUrl([a, b, c], new Set([a.id]), false)).toBe(`/api/events/calendar.ics?exclude=${a.id}`);
-    expect(exportUrl([a, b, c], new Set([a.id, b.id]), false)).toBe(`/api/events/calendar.ics?ids=${c.id}`);
+    expect(exportUrl([a, b, c], { [a.id]: true }, false)).toBe(`/api/events/calendar.ics?exclude=${a.id}`);
+    expect(exportUrl([a, b, c], { [a.id]: true, [b.id]: true }, false)).toBe(`/api/events/calendar.ics?ids=${c.id}`);
   });
 
   it("asks for 'Food possible' matches when they're shown", () => {
-    expect(exportUrl([a], new Set(), true)).toBe("/api/events/calendar.ics?minConfidence=0");
+    expect(exportUrl([a], {}, true)).toBe("/api/events/calendar.ics?minConfidence=0");
   });
 
   it("builds a one-event file for any date", () => {
@@ -44,58 +43,38 @@ describe("export URLs", () => {
   });
 });
 
-// The Calendar page in miniature: one useCalendarExport shared by the export
-// section and the event dialog.
-const Harness = ({ dialogEvent }: { dialogEvent: FoodEvent | null }) => {
-  const state = useCalendarExport();
-  const [open, setOpen] = useState(dialogEvent);
+// The calendar page in miniature: it loads the choices, and an event's details
+// (which open over it) share them with the export section.
+const Harness = ({ detailsFor }: { detailsFor?: FoodEvent }) => {
+  useLoadCalendarExport();
   return (
     <>
-      <CalendarExport state={state} now={new Date("2026-10-06T12:00:00Z")} />
-      <EventDialog event={open} now={new Date("2026-10-06T12:00:00Z")} onClose={() => setOpen(null)} exportState={state} />
+      <CalendarExport now={NOW} />
+      {detailsFor && <EventDetails event={detailsFor} now={NOW} headingLevel="h2" />}
     </>
   );
+};
+
+const section = () => within(screen.getByRole("region", { name: "Add to Your Calendar" }));
+const downloadLink = () => section().getByRole("link", { name: /download/i });
+
+const renderExport = async (detailsFor?: FoodEvent, { open = true } = {}) => {
+  const view = renderWithApp(<Harness detailsFor={detailsFor} />);
+  await screen.findByText(/4 of 4 selected/);
+  if (open) act(() => openDetails(screen.getByText(/of 4 selected/)));
+  return view;
 };
 
 describe("CalendarExport", () => {
   beforeEach(() => {
     vi.spyOn(eventService, "getEvents").mockResolvedValue([a, b, d, c]);
-    // jsdom has no modal dialogs.
-    HTMLDialogElement.prototype.showModal = function () {
-      this.open = true;
-    };
-    HTMLDialogElement.prototype.close = function () {
-      this.open = false;
-    };
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  const renderExport = async (dialogEvent: FoodEvent | null = null) => {
-    const store = configureStore({ reducer: { events: eventReducer } });
-    render(
-      <Provider store={store}>
-        <Harness dialogEvent={dialogEvent} />
-      </Provider>,
-    );
-    await screen.findByText(/4 of 4 selected/);
-    act(() => openDetails(screen.getByText(/of 4 selected/)));
-    return store;
-  };
-
-  const section = () => within(screen.getByRole("region", { name: "Add to Your Calendar" }));
-  const downloadLink = () => section().getByRole("link", { name: /download/i });
-
   it("renders the event list only while 'Choose events' is open", async () => {
-    vi.mocked(eventService.getEvents).mockResolvedValue([a, b, d, c]);
-    const store = configureStore({ reducer: { events: eventReducer } });
-    render(
-      <Provider store={store}>
-        <Harness dialogEvent={null} />
-      </Provider>,
-    );
-    await screen.findByText(/4 of 4 selected/);
+    await renderExport(undefined, { open: false });
     expect(section().queryAllByRole("checkbox")).toHaveLength(0);
     expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics");
     act(() => openDetails(screen.getByText(/of 4 selected/)));
@@ -145,7 +124,7 @@ describe("CalendarExport", () => {
   });
 
   it("reloads the choices when 'Food possible' matches are turned on", async () => {
-    const store = await renderExport();
+    const { store } = await renderExport();
     act(() => {
       store.dispatch(setFilters({ showLowConfidence: true }));
     });
@@ -153,57 +132,46 @@ describe("CalendarExport", () => {
     expect(eventService.getEvents).toHaveBeenLastCalledWith({ minConfidence: 0 }, expect.any(AbortSignal));
     expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?minConfidence=0");
   });
+
+  it("frees the list when the calendar closes", async () => {
+    const { store, unmount } = await renderExport();
+    unmount();
+    expect(store.getState().calendarExport).toMatchObject({ items: [], status: "idle" });
+  });
 });
 
-describe("the event dialog and the export", () => {
+describe("an event's details and the export", () => {
   beforeEach(() => {
     vi.spyOn(eventService, "getEvents").mockResolvedValue([a, b, d, c]);
-    HTMLDialogElement.prototype.showModal = function () {
-      this.open = true;
-    };
-    HTMLDialogElement.prototype.close = function () {
-      this.open = false;
-    };
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  const renderWithDialog = async (event: FoodEvent) => {
-    const store = configureStore({ reducer: { events: eventReducer } });
-    render(
-      <Provider store={store}>
-        <Harness dialogEvent={event} />
-      </Provider>,
-    );
-    await screen.findByText(/4 of 4 selected/);
-    act(() => openDetails(screen.getByText(/of 4 selected/)));
-    return within(screen.getByRole("dialog", { hidden: true }));
-  };
-
   it("adds and drops the event from the export, in step with the list", async () => {
-    const dialog = await renderWithDialog(b);
-    const include = dialog.getByRole("checkbox", { name: /include in “add to your calendar”/i, hidden: true });
+    await renderExport(b);
+    const include = screen.getByRole("checkbox", { name: /include in “add to your calendar”/i });
     expect(include).toBeChecked();
 
     fireEvent.click(include);
     expect(screen.getByText(/3 of 4 selected/)).toBeInTheDocument();
-    const inList = within(screen.getByRole("region", { name: "Add to Your Calendar" })).getByRole("checkbox", {
-      name: /boba social/i,
-    });
+    const inList = section().getByRole("checkbox", { name: /boba social/i });
     expect(inList).not.toBeChecked();
 
-    // And the other way: rechecking it in the list checks it in the dialog.
+    // And the other way: rechecking it in the list checks it in the details.
     fireEvent.click(inList);
     expect(include).toBeChecked();
   });
 
   it("offers a one-event download for any event, but no include box outside the export", async () => {
-    const dialog = await renderWithDialog(later);
-    expect(dialog.getByRole("link", { name: /download this event/i, hidden: true })).toHaveAttribute(
-      "href",
-      eventExportUrl(later),
-    );
-    expect(dialog.queryByRole("checkbox", { hidden: true })).not.toBeInTheDocument();
+    await renderExport(later);
+    expect(screen.getByRole("link", { name: /add to calendar/i })).toHaveAttribute("href", eventExportUrl(later));
+    expect(screen.queryByRole("checkbox", { name: /include in/i })).not.toBeInTheDocument();
+  });
+
+  it("has no include box when no calendar page is open", () => {
+    renderWithApp(<EventDetails event={b} now={NOW} headingLevel="h1" />);
+    expect(screen.getByRole("link", { name: /add to calendar/i })).toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 });

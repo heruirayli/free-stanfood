@@ -12,24 +12,26 @@ export const foodBand = (confidence: number): FoodBand => {
   return "possible";
 };
 
-const BAND_STYLES: Record<FoodBand, { label: string; description: string; pill: string; dot: string }> = {
+// Each band's label and colors. `stripe` is the solid color that also marks the
+// event in the calendar (the .food-* classes in index.css), so the two match.
+export const BAND_STYLES: Record<FoodBand, { label: string; description: string; pill: string; stripe: string }> = {
   listed: {
     label: "Food listed",
     description: "The listing says food is provided.",
-    pill: "bg-emerald-50 text-emerald-800",
-    dot: "bg-emerald-500",
+    pill: "bg-listed-soft text-listed",
+    stripe: "bg-listed",
   },
   likely: {
     label: "Food likely",
     description: "The listing mentions food, but doesn't clearly say it's provided.",
-    pill: "bg-amber-50 text-amber-800",
-    dot: "bg-amber-500",
+    pill: "bg-likely-soft text-likely",
+    stripe: "bg-likely",
   },
   possible: {
     label: "Food possible",
     description: "Only a weak hint of food, such as coffee or a reception.",
-    pill: "bg-stone-100 text-stone-700",
-    dot: "bg-stone-400",
+    pill: "bg-possible-soft text-ink-muted",
+    stripe: "bg-possible",
   },
 };
 
@@ -38,9 +40,9 @@ const FoodBadge = ({ confidence }: FoodBadgeProps) => {
   return (
     <span
       title={band.description}
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${band.pill}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.8125rem] font-semibold ${band.pill}`}
     >
-      <span aria-hidden="true" className={`size-1.5 rounded-full ${band.dot}`} />
+      <span aria-hidden="true" className={`size-1.5 rounded-full ${band.stripe}`} />
       {band.label}
     </span>
   );

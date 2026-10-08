@@ -13,3 +13,15 @@ export const ASSUMED_DURATION_MS = 60 * 60 * 1000;
 // From HOST_REMOVAL_EMAIL in the root .env (exposed by vite.config.ts).
 export const HOST_REMOVAL_EMAIL: string | undefined =
   import.meta.env.HOST_REMOVAL_EMAIL?.trim() || undefined;
+
+// Today's sections: events starting at or after this campus hour are "Tonight".
+export const TONIGHT_START_HOUR = 17;
+
+// Happening-now events this close to their listed end get the "ending soon" look.
+export const ENDING_SOON_MS = 30 * 60 * 1000;
+
+// How far ahead the Today page's "Next 2 hours" filter looks.
+export const NEXT_HOURS_MS = 2 * 60 * 60 * 1000;
+
+// The iCal feed of upcoming food events (Subscribe, Add to Your Calendar).
+export const CALENDAR_FEED_PATH = "/api/events/calendar.ics";
