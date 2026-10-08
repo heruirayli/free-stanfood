@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { eventExportUrl, exportUrl, useCalendarExport } from "../../features/events/calendarExport";
 import eventReducer, { setFilters } from "../../features/events/eventSlice";
 import eventService from "../../features/events/eventService";
-import { makeEvent } from "../../testUtils";
+import { makeEvent, openDetails } from "../../testUtils";
 import type { FoodEvent } from "../../types/event";
 import CalendarExport from "../CalendarExport";
 import EventDialog from "../EventDialog";
@@ -51,7 +51,7 @@ const Harness = ({ dialogEvent }: { dialogEvent: FoodEvent | null }) => {
   const [open, setOpen] = useState(dialogEvent);
   return (
     <>
-      <CalendarExport state={state} />
+      <CalendarExport state={state} now={new Date("2026-10-06T12:00:00Z")} />
       <EventDialog event={open} now={new Date("2026-10-06T12:00:00Z")} onClose={() => setOpen(null)} exportState={state} />
     </>
   );
@@ -80,11 +80,27 @@ describe("CalendarExport", () => {
       </Provider>,
     );
     await screen.findByText(/4 of 4 selected/);
+    act(() => openDetails(screen.getByText(/of 4 selected/)));
     return store;
   };
 
   const section = () => within(screen.getByRole("region", { name: "Add to Your Calendar" }));
   const downloadLink = () => section().getByRole("link", { name: /download/i });
+
+  it("renders the event list only while 'Choose events' is open", async () => {
+    vi.mocked(eventService.getEvents).mockResolvedValue([a, b, d, c]);
+    const store = configureStore({ reducer: { events: eventReducer } });
+    render(
+      <Provider store={store}>
+        <Harness dialogEvent={null} />
+      </Provider>,
+    );
+    await screen.findByText(/4 of 4 selected/);
+    expect(section().queryAllByRole("checkbox")).toHaveLength(0);
+    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics");
+    act(() => openDetails(screen.getByText(/of 4 selected/)));
+    expect(section().getAllByRole("checkbox", { name: /^All events on/ })).toHaveLength(3);
+  });
 
   it("selects every event by default", async () => {
     await renderExport();
@@ -161,6 +177,7 @@ describe("the event dialog and the export", () => {
       </Provider>,
     );
     await screen.findByText(/4 of 4 selected/);
+    act(() => openDetails(screen.getByText(/of 4 selected/)));
     return within(screen.getByRole("dialog", { hidden: true }));
   };
 

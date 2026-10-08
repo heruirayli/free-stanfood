@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { FaArrowRight, FaMapMarkerAlt, FaTicketAlt, FaUsers, FaUtensils } from "react-icons/fa";
+import { useDisclosure } from "../hooks/useDisclosure";
 import type { FoodEvent } from "../types/event";
 import { cx } from "../utils/cx";
 import { formatEventTime, isHappeningNow } from "../utils/time";
@@ -46,6 +47,8 @@ const HappeningNow = () => (
 const EventCard = ({ event, now, headingLevel: Heading = "h3" }: EventCardProps) => {
   const happeningNow = isHappeningNow(event, now);
   const titleId = `event-${event.id}-title`;
+  // The description renders only once "Details" is opened.
+  const details = useDisclosure();
 
   return (
     <motion.article
@@ -101,14 +104,14 @@ const EventCard = ({ event, now, headingLevel: Heading = "h3" }: EventCardProps)
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-stone-100 pt-3">
         {event.description ? (
-          <details className="group w-full text-sm text-stone-600 open:pb-1">
+          <details {...details.detailsProps} className="group w-full text-sm text-stone-600 open:pb-1">
             <summary className="cursor-pointer list-none font-medium text-stone-700 select-none hover:text-stone-900 [&::-webkit-details-marker]:hidden">
               <span className="inline-block transition-transform group-open:rotate-90" aria-hidden="true">
                 ›
               </span>{" "}
               Details
             </summary>
-            <p className="mt-2 leading-relaxed whitespace-pre-line">{event.description}</p>
+            {details.isOpen && <p className="mt-2 leading-relaxed whitespace-pre-line">{event.description}</p>}
           </details>
         ) : null}
         <a

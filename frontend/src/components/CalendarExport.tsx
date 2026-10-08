@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { FaCalendarPlus } from "react-icons/fa";
-import type { CalendarExportState } from "../features/events/calendarExport";
-import { useNow } from "../hooks/useNow";
-import type { FoodEvent } from "../types/event";
+import type { CalendarExportState, ExportItem } from "../features/events/calendarExport";
+import { useDisclosure } from "../hooks/useDisclosure";
 import { campusDateKey, formatDayLabel, formatTime } from "../utils/time";
 
-const groupByDay = (events: FoodEvent[]): [string, FoodEvent[]][] => {
-  const days = new Map<string, FoodEvent[]>();
+const groupByDay = (events: ExportItem[]): [string, ExportItem[]][] => {
+  const days = new Map<string, ExportItem[]>();
   for (const event of events) {
     const key = campusDateKey(event.startTime);
     days.set(key, [...(days.get(key) ?? []), event]);
@@ -52,12 +51,13 @@ const DayCheckbox = ({
 // Calendar (or Apple, Outlook). Everything is selected; people can drop events here
 // or from an event's details. The choices live in useCalendarExport, which the
 // Calendar page shares with its event dialog.
-const CalendarExport = ({ state }: { state: CalendarExportState }) => {
+const CalendarExport = ({ state, now }: { state: CalendarExportState; now: Date }) => {
   const { events, status, deselected, url, toggle, setMany } = state;
-  const now = useNow();
-  const days = useMemo(() => groupByDay(events), [events]);
+  // The event list renders only while "Choose events" is open.
+  const chooser = useDisclosure();
+  const days = useMemo(() => (chooser.isOpen ? groupByDay(events) : []), [chooser.isOpen, events]);
   const chosenCount = events.length - events.filter((event) => deselected.has(event.id)).length;
-  const ids = (list: FoodEvent[]) => list.map((event) => event.id);
+  const ids = (list: ExportItem[]) => list.map((event) => event.id);
 
   return (
     <section
@@ -75,7 +75,7 @@ const CalendarExport = ({ state }: { state: CalendarExportState }) => {
       {status === "error" && <p className="mt-3 text-sm text-rose-800">Couldn’t load the events to choose from.</p>}
 
       {status === "ready" && events.length > 0 && (
-        <details className="group mt-3">
+        <details {...chooser.detailsProps} className="group mt-3">
           <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium text-stone-800">
             <span aria-hidden="true" className="transition-transform group-open:rotate-90">
               ›

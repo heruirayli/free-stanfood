@@ -153,7 +153,7 @@ const CalendarPage = () => {
           </li>
         ))}
       </ul>
-      <CalendarExport state={calendarExport} />
+      <CalendarExport state={calendarExport} now={now} />
       <EventDialog event={selected} now={now} onClose={() => setSelectedId(null)} exportState={calendarExport} />
     </Page>
   );

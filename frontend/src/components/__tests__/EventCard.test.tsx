@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { makeEvent } from "../../testUtils";
+import { makeEvent, openDetails } from "../../testUtils";
 import EventCard from "../EventCard";
 
 const BEFORE = new Date("2026-10-01T16:00:00Z"); // 9 AM PDT, before the event
@@ -42,8 +42,16 @@ describe("EventCard", () => {
     expect(screen.queryByText("Happening now")).not.toBeInTheDocument();
   });
 
+  it("renders the description only once Details is opened", () => {
+    render(<EventCard event={makeEvent({ description: "Pizza in the lobby after the talk." })} now={BEFORE} />);
+    expect(screen.queryByText("Pizza in the lobby after the talk.")).not.toBeInTheDocument();
+    act(() => openDetails(screen.getByText("Details")));
+    expect(screen.getByText("Pizza in the lobby after the talk.")).toBeInTheDocument();
+  });
+
   it("renders descriptions as text, never as HTML", () => {
     render(<EventCard event={makeEvent({ description: "<img src=x onerror=alert(1)>" })} now={BEFORE} />);
+    act(() => openDetails(screen.getByText("Details")));
     expect(screen.getByText("<img src=x onerror=alert(1)>")).toBeInTheDocument();
     expect(document.querySelector("img")).toBeNull();
   });

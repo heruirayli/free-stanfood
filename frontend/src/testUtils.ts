@@ -25,3 +25,12 @@ export const makeEvent = (overrides: Partial<FoodEvent> = {}): FoodEvent => ({
   firstSeenAt: "2026-09-28T10:00:00.000Z",
   ...overrides,
 });
+
+// Opens the <details> around `summary` the way a browser does: sets `open` and
+// fires "toggle". jsdom doesn't toggle <details> on a summary click.
+export const openDetails = (summary: HTMLElement): void => {
+  const details = summary.closest("details");
+  if (!details) throw new Error("not inside a <details>");
+  details.open = true;
+  details.dispatchEvent(new Event("toggle"));
+};

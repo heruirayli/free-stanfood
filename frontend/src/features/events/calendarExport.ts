@@ -7,6 +7,12 @@ import eventService from "./eventService";
 
 const CALENDAR_URL = "/api/events/calendar.ics";
 
+// What the export list needs about each event. Kept instead of the full event, so
+// a year of descriptions isn't held in memory twice (the calendar has its own copy).
+export type ExportItem = Pick<FoodEvent, "id" | "title" | "startTime" | "allDay">;
+
+const toExportItem = ({ id, title, startTime, allDay }: FoodEvent): ExportItem => ({ id, title, startTime, allDay });
+
 const withQuery = (params: URLSearchParams): string => {
   const query = params.toString();
   return query ? `${CALENDAR_URL}?${query}` : CALENDAR_URL;
@@ -14,7 +20,7 @@ const withQuery = (params: URLSearchParams): string => {
 
 // The download URL for the chosen events. Everything is the default (no list at
 // all); otherwise send whichever list is shorter: the chosen ids or the dropped ones.
-export const exportUrl = (events: FoodEvent[], deselected: ReadonlySet<string>, includeLow: boolean): string => {
+export const exportUrl = (events: ExportItem[], deselected: ReadonlySet<string>, includeLow: boolean): string => {
   const params = new URLSearchParams();
   if (includeLow) params.set("minConfidence", "0");
   const dropped = events.filter((event) => deselected.has(event.id)).map((event) => event.id);
@@ -41,7 +47,7 @@ export const eventExportUrl = (event: FoodEvent): string => {
 };
 
 export interface CalendarExportState {
-  events: FoodEvent[];
+  events: ExportItem[];
   status: "loading" | "ready" | "error";
   deselected: ReadonlySet<string>;
   url: string;
@@ -56,7 +62,7 @@ export interface CalendarExportState {
 // reloads (choosing everything again) when the "Food possible" toggle changes.
 export const useCalendarExport = (): CalendarExportState => {
   const { showLowConfidence } = useAppSelector(selectFilters);
-  const [events, setEvents] = useState<FoodEvent[]>([]);
+  const [events, setEvents] = useState<ExportItem[]>([]);
   const [deselected, setDeselected] = useState<ReadonlySet<string>>(new Set());
   const [status, setStatus] = useState<CalendarExportState["status"]>("loading");
 
@@ -66,7 +72,7 @@ export const useCalendarExport = (): CalendarExportState => {
     eventService
       .getEvents({ minConfidence: showLowConfidence ? 0 : LIKELY_THRESHOLD }, controller.signal)
       .then((loaded) => {
-        setEvents(loaded);
+        setEvents(loaded.map(toExportItem));
         setDeselected(new Set());
         setStatus("ready");
       })
