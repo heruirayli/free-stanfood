@@ -13,6 +13,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "pipeline": "tsx backend/pipeline/run.ts",
     "build": "tsc -p backend && npm run build --prefix frontend",
+    "build:pages": "npm run build:pages --prefix frontend && tsx backend/scripts/exportStatic.ts frontend/dist",
     "start": "node backend/dist/server.js",
     "typecheck": "tsc -p backend/tsconfig.test.json && npm run typecheck --prefix frontend",
     "test": "vitest run --root backend && npm test --prefix frontend"

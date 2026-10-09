@@ -2,6 +2,8 @@
 
 **Find free food on the Stanford campus.** Free Stanfood gathers public events from across campus every morning and shows the ones with free food: what's happening right now, what's later today, and what's coming up over the next year.
 
+**[Try the live demo →](https://heruirayli.github.io/free-stanfood/)**
+
 <!-- Screenshots go here. Suggested: the Today page and an event's details on a phone, and the week calendar on a desktop. Put the images in docs/screenshots/ and add them like:
 <img src="docs/screenshots/today-mobile.png" alt="The Today page on a phone" width="260" />
 -->

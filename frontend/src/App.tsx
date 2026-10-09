@@ -58,8 +58,11 @@ export const AppRoutes = () => {
   );
 };
 
+// "/free-stanfood" on GitHub Pages, "" when served at the root.
+const BASENAME = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const App = () => (
-  <Router>
+  <Router basename={BASENAME}>
     <a
       href="#main"
       className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"

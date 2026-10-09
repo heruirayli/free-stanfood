@@ -1,0 +1,70 @@
+# Builds the static site (no API: the events ship as a file) and publishes it to
+# GitHub Pages at https://heruirayli.github.io/free-stanfood/.
+#
+# Runs on every push to main, and after each daily "Refresh events" run, whose
+# data commit doesn't trigger push workflows (it's pushed with GITHUB_TOKEN).
+#
+# Setup (once): Settings > Pages > Source: GitHub Actions. Optionally add a
+# repository variable HOST_REMOVAL_EMAIL (Settings > Secrets and variables >
+# Actions > Variables) for the "Host? Request removal" link.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [Refresh events]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer one replaces a queued older one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # After a refresh, build the latest main, which has the new data.
+          ref: main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci && npm ci --prefix frontend
+
+      - name: Build the static site
+        run: npm run build:pages
+        env:
+          HOST_REMOVAL_EMAIL: ${{ vars.HOST_REMOVAL_EMAIL }}
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -14,6 +14,7 @@ import type { FoodEvent } from "../types/event";
 import { describeFood } from "../utils/food";
 import { formatEventTime, relativeTime } from "../utils/time";
 import AudienceBadge from "./AudienceBadge";
+import CalendarFileLink from "./CalendarFileLink";
 import FoodBadge from "./FoodBadge";
 
 interface EventDetailsProps {
@@ -95,10 +96,10 @@ const EventDetails = ({ event, now, headingLevel: Heading, headingRef }: EventDe
       )}
 
       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-        <a href={eventExportUrl(event)} download="free-stanfood-event.ics" className={primaryButtonClass}>
+        <CalendarFileLink href={eventExportUrl(event)} filename="free-stanfood-event.ics" className={primaryButtonClass}>
           <FaRegCalendarPlus aria-hidden="true" />
           Add to calendar
-        </a>
+        </CalendarFileLink>
         <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${linkClass} inline-flex items-center gap-1.5`}>
           View original event
           <FaExternalLinkAlt aria-hidden="true" className="text-[0.7rem]" />

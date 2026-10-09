@@ -1,23 +1,15 @@
 import { addDays } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
-import type { Audience, Event } from "../types/event.js";
-import { ASSUMED_DURATION_MS } from "./eventFilter.js";
+import { ASSUMED_DURATION_MS, CAMPUS_TIME_ZONE, LIKELY_THRESHOLD, LISTED_THRESHOLD } from "../../constants";
+import type { Audience, FoodEvent } from "../../types/event";
 
-// Builds an iCalendar (RFC 5545) file of events for GET /api/events/calendar.ics.
-// Google Calendar imports it (Settings > Import & export) or subscribes to its URL.
-// Written by hand rather than with a library: the format is small and fixed.
+// Builds .ics files in the browser, for a static host with no API to serve them
+// (see staticCalendar.ts). Mirrors backend/utils/ics.ts: keep the two in sync.
 
-const CAMPUS_TIME_ZONE = "America/Los_Angeles";
 const DESCRIPTION_CHARS = 1500;
 
-// Like the app's default view, the calendar file leaves out "Food possible"
-// matches unless the request asks for them with minConfidence.
-export const CALENDAR_MIN_CONFIDENCE = 0.45;
-
-// Confidence bands, as labeled in the app. Keep in sync with
-// pipeline/classify/keywords.ts (the server never imports pipeline code).
 const bandOf = (confidence: number): string =>
-  confidence >= 0.75 ? "Food listed" : confidence >= 0.45 ? "Food likely" : "Food possible";
+  confidence >= LISTED_THRESHOLD ? "Food listed" : confidence >= LIKELY_THRESHOLD ? "Food likely" : "Food possible";
 
 const AUDIENCE_LABELS: Record<Audience, string> = {
   open: "Open to all",
@@ -30,6 +22,8 @@ const AUDIENCE_LABELS: Record<Audience, string> = {
 export const escapeText = (value: string): string =>
   value.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 
+const encoder = new TextEncoder();
+
 // Lines longer than 75 octets continue on the next line after a space. Splits
 // between characters, never inside a multi-byte UTF-8 sequence.
 export const foldLine = (line: string): string => {
@@ -37,7 +31,7 @@ export const foldLine = (line: string): string => {
   let current = "";
   let bytes = 0;
   for (const char of line) {
-    const size = Buffer.byteLength(char, "utf8");
+    const size = encoder.encode(char).length;
     const limit = parts.length === 0 ? 75 : 74; // continuation lines start with a space
     if (bytes + size > limit) {
       parts.push(current);
@@ -55,33 +49,30 @@ const utcStamp = (date: Date): string => date.toISOString().replace(/[-:]/g, "")
 
 const campusDate = (date: Date): string => formatInTimeZone(date, CAMPUS_TIME_ZONE, "yyyyMMdd");
 
-// The calendar date after `date`'s campus date. Done on dates, not instants, so a
-// DST change can't move it.
+// The calendar date after `date`'s campus date, done on dates so DST can't move it.
 const campusDayAfter = (date: Date): string => {
   const day = new Date(`${formatInTimeZone(date, CAMPUS_TIME_ZONE, "yyyy-MM-dd")}T00:00:00Z`);
   return addDays(day, 1).toISOString().slice(0, 10).replace(/-/g, "");
 };
 
-// All-day events use calendar dates with an exclusive end: the day after the last day.
-const timeLines = (event: Event): string[] => {
+const timeLines = (event: FoodEvent): string[] => {
+  const start = new Date(event.startTime);
   if (event.allDay) {
-    return [
-      `DTSTART;VALUE=DATE:${campusDate(event.startTime)}`,
-      `DTEND;VALUE=DATE:${campusDayAfter(event.endTime ?? event.startTime)}`,
-    ];
+    return [`DTSTART;VALUE=DATE:${campusDate(start)}`, `DTEND;VALUE=DATE:${campusDayAfter(new Date(event.endTime ?? event.startTime))}`];
   }
-  const end = event.endTime ?? new Date(event.startTime.getTime() + ASSUMED_DURATION_MS);
-  return [`DTSTART:${utcStamp(event.startTime)}`, `DTEND:${utcStamp(end)}`];
+  const end = event.endTime ? new Date(event.endTime) : new Date(start.getTime() + ASSUMED_DURATION_MS);
+  return [`DTSTART:${utcStamp(start)}`, `DTEND:${utcStamp(end)}`];
 };
 
-const descriptionOf = (event: Event): string => {
+const descriptionOf = (event: FoodEvent): string => {
   const food = event.foodDetails ? `Food: ${event.foodDetails} (${bandOf(event.foodConfidence)})` : bandOf(event.foodConfidence);
   const audience = event.audienceNote
     ? `${AUDIENCE_LABELS[event.audience]} (${event.audienceNote})`
     : AUDIENCE_LABELS[event.audience];
-  const details = event.description.length > DESCRIPTION_CHARS
-    ? `${event.description.slice(0, DESCRIPTION_CHARS).trimEnd()}…`
-    : event.description;
+  const details =
+    event.description.length > DESCRIPTION_CHARS
+      ? `${event.description.slice(0, DESCRIPTION_CHARS).trimEnd()}…`
+      : event.description;
   return [
     food,
     audience,
@@ -94,7 +85,7 @@ const descriptionOf = (event: Event): string => {
     .join("\n");
 };
 
-const eventLines = (event: Event, stamp: string): string[] => [
+const eventLines = (event: FoodEvent, stamp: string): string[] => [
   "BEGIN:VEVENT",
   `UID:${event.id}@free-stanfood`,
   `DTSTAMP:${stamp}`,
@@ -106,7 +97,7 @@ const eventLines = (event: Event, stamp: string): string[] => [
   "END:VEVENT",
 ];
 
-export const buildCalendar = (events: Event[], now: Date): string => {
+export const buildCalendar = (events: FoodEvent[], now: Date): string => {
   const stamp = utcStamp(now);
   const lines = [
     "BEGIN:VCALENDAR",

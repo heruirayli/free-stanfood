@@ -4,6 +4,7 @@ import { useCalendarExport } from "../features/events/calendarExport";
 import type { ExportItem } from "../features/events/exportSlice";
 import { useDisclosure } from "../hooks/useDisclosure";
 import { primaryButtonClass } from "../styles";
+import CalendarFileLink from "./CalendarFileLink";
 import { campusDateKey, formatDayLabel, formatTime } from "../utils/time";
 
 const groupByDay = (events: ExportItem[]): [string, ExportItem[]][] => {
@@ -132,10 +133,10 @@ const CalendarExport = ({ now }: { now: Date }) => {
       )}
 
       {chosenCount > 0 || status !== "ready" ? (
-        <a href={url} download="free-stanfood.ics" className={`${primaryButtonClass} mt-3`}>
+        <CalendarFileLink href={url} filename="free-stanfood.ics" className={`${primaryButtonClass} mt-3`}>
           <FaRegCalendarPlus aria-hidden="true" />
           {status === "ready" && chosenCount < events.length ? `Download ${chosenCount} events (.ics)` : "Download .ics"}
-        </a>
+        </CalendarFileLink>
       ) : (
         <p className="mt-3 text-[0.9375rem] text-ink-muted">Select at least one event to download.</p>
       )}

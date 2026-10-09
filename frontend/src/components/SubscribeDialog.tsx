@@ -1,6 +1,6 @@
 import { useRef, useState, type ReactNode } from "react";
 import { FaRegCopy } from "react-icons/fa";
-import { CALENDAR_FEED_PATH } from "../constants";
+import { CALENDAR_FEED_PATH, STATIC_DATA } from "../constants";
 import { linkClass, primaryButtonClass } from "../styles";
 import Sheet from "./Sheet";
 
@@ -21,7 +21,10 @@ const Steps = ({ title, children }: { title: string; children: ReactNode }) => (
 
 // The calendar feed's URL, with how to subscribe to it in Google and Apple Calendar.
 const SubscribeDialog = ({ onClose }: { onClose: () => void }) => {
-  const feedUrl = `${window.location.origin}${CALENDAR_FEED_PATH}`;
+  // The static build serves the feed as a file next to the site.
+  const feedUrl = STATIC_DATA
+    ? `${window.location.origin}${import.meta.env.BASE_URL}calendar.ics`
+    : `${window.location.origin}${CALENDAR_FEED_PATH}`;
   const input = useRef<HTMLInputElement>(null);
   const [copy, setCopy] = useState<CopyStatus>("idle");
 

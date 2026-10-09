@@ -81,6 +81,19 @@ Things to know:
 - Scheduled runs can start a few minutes late when GitHub is busy.
 - Anything committed stays in git history. The data is event-level public information only: no attendee names, emails, or RSVP lists.
 
+## The demo on GitHub Pages
+
+The demo at https://heruirayli.github.io/free-stanfood/ is a static build with no server: `.github/workflows/deploy-pages.yml` runs `npm run build:pages` and publishes `frontend/dist`. It deploys on every push to `main` and after each daily *Refresh events* run, so the demo's data is at most a day old.
+
+In that build (`vite build --mode pages`), the app is served from `/free-stanfood/` and does without the API:
+
+- `backend/scripts/exportStatic.ts` writes every published event to `data/events.json` next to the site, and the app filters them in the browser the way `GET /api/events` does (`frontend/src/features/events/staticEvents.ts`).
+- The calendar feed is written once per deploy as `calendar.ics`, which is what Subscribe links to.
+- "Add to calendar" and the chosen-events download build their `.ics` files in the browser (`features/events/ics.ts`, a copy of `backend/utils/ics.ts`).
+- `404.html` is a copy of `index.html`, so links like `/free-stanfood/week` start the app. GitHub Pages answers them with status 404, but the page works.
+
+One-time setup: *Settings → Pages → Source: GitHub Actions*, and a repository variable `HOST_REMOVAL_EMAIL` (*Settings → Secrets and variables → Actions → Variables*) for the "Host? Request removal" link. To try the static build locally, run `npm run build:pages` and serve `frontend/dist` under `/free-stanfood/`.
+
 ### Removing a listing
 
 When a host asks for a listing to come down, add its source URL (the "View original listing" link) to `data/removed.json` and commit it:
