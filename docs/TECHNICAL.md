@@ -152,7 +152,8 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 - `open`: listed for "Everyone" or "General Public".
 - `rsvp`: has a registration link or asks for an RSVP.
 - `unknown`: no clear signal. The UI shows any targeted groups the host listed (e.g. "Intended for: Students").
-- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"), or the title or description limits attendance to Stanford groups ("exclusively for Stanford community members", "Open to all Stanford undergraduates", "STANFORD AFFILIATES ONLY") without also welcoming the public, or a CardinalEngage event has a members-only privacy level. These are **never published**.
+- `restricted`: the host set a "restricted to" note (e.g. "Current Stanford students and postdocs"), or the title or description limits attendance to a group without also welcoming the public: Stanford-wide ("exclusively for Stanford community members", "Open to all Stanford undergraduates", "STANFORD AFFILIATES ONLY") or narrower ("ICME students only", "Open to all SLS students", "reserved for alumni"), or by invitation ("invitation-only", "members-only event", "not open to the public"). Also a CardinalEngage event with a members-only privacy level, and the Law School's community-only and invitation-only events. These are **never published**. The rules are in `pipeline/restrictions.ts`, with real sentences they must catch and leave alone in `__tests__/restrictions.test.ts`; "space is limited to 30 students", "in-person only", and "ticket-only event" aren't restrictions.
+- "Open to the Stanford community" is published (as `unknown`, with the note), since every Stanford student can come.
 
 ### Food confidence
 

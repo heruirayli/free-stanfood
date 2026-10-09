@@ -39,7 +39,8 @@ import { restrictionInText } from "../restrictions.js";
 import { SourceFetchError, type RawEvent, type SourceAdapter } from "./types.js";
 
 // A feed's own wording for who an event is for, e.g. a line every description
-// ends with. The first rule whose pattern matches the title or description wins.
+// ends with. A matching restricted rule wins, then any limit in the text itself
+// (restrictions.ts), then the first other rule that matches.
 export interface AudienceRule {
   pattern: RegExp;
   audience: Audience;
@@ -268,11 +269,16 @@ const campusMidnight = (dateKey: string): Date => fromZonedTime(`${dateKey}T00:0
 // Some calendars write the venue as "@ Venue, street, ..., United States".
 const tidyLocation = (location: string): string => location.replace(/^@\s*/, "").replace(/,\s*United States$/i, "");
 
+// A limit anywhere in the text outranks a feed's broader line: "Lunch provided.
+// Open to all SLS students." above "This event is open to the Stanford community."
 const audienceFor = (feed: IcalFeed, text: string): { audience: Audience; audienceNote: string | null } => {
-  const rule = feed.audienceRules?.find(({ pattern }) => pattern.test(text));
-  if (rule) return { audience: rule.audience, audienceNote: rule.note };
+  const matching = (feed.audienceRules ?? []).filter(({ pattern }) => pattern.test(text));
+  const restrictedRule = matching.find((rule) => rule.audience === "restricted");
+  if (restrictedRule) return { audience: "restricted", audienceNote: restrictedRule.note };
   const restriction = restrictionInText(text);
   if (restriction) return { audience: "restricted", audienceNote: restriction };
+  const rule = matching[0];
+  if (rule) return { audience: rule.audience, audienceNote: rule.note };
   return { audience: feed.audience ?? "unknown", audienceNote: null };
 };
 

@@ -377,6 +377,26 @@ describe("ical adapter: audience", () => {
     expect(requested).toEqual([{ url: LAW.url, retries: 0 }]);
   });
 
+  it("lets a limit in the text outrank the Law School's broader line", () => {
+    if (!LAW) throw new Error("stanford-law feed missing");
+    const raw = {
+      uid: "contracts@law.stanford.edu",
+      occurrenceKey: "contracts@law.stanford.edu",
+      allDay: false,
+      start: "2026-10-26T19:50:00.000Z",
+      end: "2026-10-26T21:00:00.000Z",
+      summary: "Beyond the Doctrine: Contracts",
+      description: "Lunch provided. Open to all SLS students.\n\nThis event is open to the Stanford community.",
+      location: null,
+      url: "https://law.stanford.edu/event/beyond-the-doctrine-contracts/",
+      status: null,
+      classification: null,
+      lat: null,
+      lng: null,
+    };
+    expect(normalizeIcalEvent(LAW, raw)).toMatchObject({ audience: "restricted", audienceNote: "Open to all SLS students." });
+  });
+
   it("treats a restriction in any feed's text as restricted", () => {
     const raw = {
       uid: "talk@example.edu",
