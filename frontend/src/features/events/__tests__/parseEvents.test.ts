@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeEvent } from "../../../testUtils";
-import { UNEXPECTED_RESPONSE, parseEvent, parseEvents } from "../parseEvents";
+import { UNEXPECTED_RESPONSE, parseEvent, parseEvents, parseStatus } from "../parseEvents";
 
 describe("parseEvents", () => {
   it("accepts a list of events", () => {
@@ -18,6 +18,13 @@ describe("parseEvents", () => {
     ["an unknown audience", [{ ...makeEvent(), audience: "members" }]],
   ])("rejects %s", (_label, body) => {
     expect(() => parseEvents(body)).toThrow(UNEXPECTED_RESPONSE);
+  });
+
+  it("reads the listings' status", () => {
+    expect(parseStatus({ updatedAt: "2026-10-08T12:17:00.000Z" })).toEqual({ updatedAt: "2026-10-08T12:17:00.000Z" });
+    expect(parseStatus({ updatedAt: null })).toEqual({ updatedAt: null });
+    expect(() => parseStatus({ updatedAt: "yesterday" })).toThrow(UNEXPECTED_RESPONSE);
+    expect(() => parseStatus("<html>")).toThrow(UNEXPECTED_RESPONSE);
   });
 
   it("checks single events too", () => {

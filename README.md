@@ -14,7 +14,7 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 
 ## What You Can Do
 
-- **See what's free today.** The Today page shows what's happening now, later today, and tonight, with how soon each starts and which are about to end, plus what already happened earlier in the day.
+- **See what's free today.** The Today page shows what's happening now, later today, and tonight, with how soon each starts and which are about to end, plus what already happened earlier in the day. In the evening it looks ahead to tomorrow.
 - **Browse the calendar.** Week and month views of everything with food, up to a year ahead.
 - **Know what to expect.** Every event says what food there is, how sure the listing is ("Food listed", "Food likely", "Food possible"), and who can come.
 - **Filter.** By food, by what's on now or in the next two hours, by events open to all, or by searching for "pizza", a building, or a host. Filters stay in the address, so a filtered view can be shared.

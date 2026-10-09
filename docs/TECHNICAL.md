@@ -90,6 +90,7 @@ In that build (`vite build --mode pages`), the app is served from `/free-stanfoo
 - `backend/scripts/exportStatic.ts` writes every published event to `data/events.json` next to the site, and the app filters them in the browser the way `GET /api/events` does (`frontend/src/features/events/staticEvents.ts`).
 - The calendar feed is written once per deploy as `calendar.ics`, which is what Subscribe links to.
 - "Add to calendar" and the chosen-events download build their `.ics` files in the browser (`features/events/ics.ts`, a copy of `backend/utils/ics.ts`).
+- When the listings last changed (shown in the footer) is written as `data/status.json`.
 - `404.html` is a copy of `index.html`, so links like `/free-stanfood/week` start the app. GitHub Pages answers them with status 404, but the page works.
 
 One-time setup: *Settings → Pages → Source: GitHub Actions*, and a repository variable `HOST_REMOVAL_EMAIL` (*Settings → Secrets and variables → Actions → Variables*) for the "Host? Request removal" link. To try the static build locally, run `npm run build:pages` and serve `frontend/dist` under `/free-stanfood/`.
@@ -167,6 +168,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 |---|---|---|
 | GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to a year out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
 | GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The site's Subscribe button shows this URL. The Week and Month pages have a download button with every event selected; people can uncheck the ones they don't want. Each event's details download just that event. |
+| GET | `/api/events/status` | `{ updatedAt }`: when the published listings last changed (ISO date, or null). Shown in the site's footer. |
 | GET | `/api/events/:id` | A single event |
 
 Invalid query parameters return `400` with `{ message }`.

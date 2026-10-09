@@ -1,9 +1,9 @@
-import { TIME_OF_DAY_LABELS, type TimeOfDay } from "../../utils/time";
+import { TIMES_OF_DAY } from "../../utils/time";
 import { DEFAULT_FILTERS, type EventFilters, type FilterScope, type TimeWindow } from "./filterEvents";
 
 // The filters in the address bar, so a filtered view can be shared, bookmarked,
 // or reloaded: ?q=pizza&open=1&food=pizza,boba&possible=1, plus the page's own
-// time filter (when=now or when=2h on Today, time=evening on the calendar).
+// time filter (when=now or when=2h on Today, time=morning,evening on the calendar).
 // Defaults are left out, so an unfiltered page has a clean URL.
 
 const WINDOW_PARAMS = new Map<TimeWindow, string>([
@@ -11,8 +11,6 @@ const WINDOW_PARAMS = new Map<TimeWindow, string>([
   ["next2h", "2h"],
 ]);
 const WINDOWS = new Map([...WINDOW_PARAMS].map(([window, param]) => [param, window]));
-
-const isTimeOfDay = (value: string): value is TimeOfDay => Object.hasOwn(TIME_OF_DAY_LABELS, value);
 
 export const filtersToParams = (filters: EventFilters, scope: FilterScope): URLSearchParams => {
   const params = new URLSearchParams();
@@ -23,8 +21,9 @@ export const filtersToParams = (filters: EventFilters, scope: FilterScope): URLS
   if (scope === "today") {
     const when = WINDOW_PARAMS.get(filters.window);
     if (when) params.set("when", when);
-  } else if (filters.timeOfDay !== "any") {
-    params.set("time", filters.timeOfDay);
+  } else if (filters.timesOfDay.length > 0) {
+    // In the day's order, so the same choice always makes the same URL.
+    params.set("time", TIMES_OF_DAY.filter((time) => filters.timesOfDay.includes(time)).join(","));
   }
   return params;
 };
@@ -40,8 +39,8 @@ export const filtersFromParams = (params: URLSearchParams, scope: FilterScope): 
     showLowConfidence: params.get("possible") === "1",
   };
   if (scope === "today") return { ...shared, window: WINDOWS.get(params.get("when") ?? "") ?? DEFAULT_FILTERS.window };
-  const time = params.get("time") ?? "";
-  return { ...shared, timeOfDay: isTimeOfDay(time) ? time : DEFAULT_FILTERS.timeOfDay };
+  const times = new Set((params.get("time") ?? "").split(",").map((time) => time.trim()));
+  return { ...shared, timesOfDay: TIMES_OF_DAY.filter((time) => times.has(time)) };
 };
 
 // The shared filters as a query string ("" or "?food=pizza"), for links between

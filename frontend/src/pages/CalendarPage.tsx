@@ -45,7 +45,7 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   useFilterUrlSync("calendar");
   useLoadCalendarExport();
   const { isLoading, isError, isSuccess, message } = useAppSelector(selectEventState);
-  const { timeOfDay } = useAppSelector(selectFilters);
+  const { timesOfDay } = useAppSelector(selectFilters);
   const events = useAppSelector(selectVisibleEvents);
   const now = useNow();
   const navigate = useNavigate();
@@ -53,7 +53,9 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   const isNarrow = useMediaQuery("(max-width: 639px)");
   const request = useRef<{ abort: () => void } | null>(null);
   const calendar = useRef<FullCalendar>(null);
-  const viewType = view === "month" ? "dayGridMonth" : isNarrow ? "listWeek" : "timeGridWeek";
+  // Phones get a list of the next seven days, from today: a Sunday-to-Saturday
+  // list would open on days that are already over.
+  const viewType = view === "month" ? "dayGridMonth" : isNarrow ? "listNextSevenDays" : "timeGridWeek";
 
   useEffect(
     () => () => {
@@ -100,8 +102,8 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   );
 
   const calendarEvents = useMemo(
-    () => events.filter((event) => matchesTimeOfDay(event, timeOfDay)).map(toCalendarEvent),
-    [events, timeOfDay],
+    () => events.filter((event) => matchesTimeOfDay(event, timesOfDay)).map(toCalendarEvent),
+    [events, timesOfDay],
   );
 
   return (
@@ -148,7 +150,15 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
             dayGridMonth: { displayEventTime: !isNarrow },
             timeGridWeek: { dayHeaderFormat: { weekday: "short", day: "numeric" } },
             // The list has room for times as the cards write them: "12:00 PM".
-            listWeek: { eventContent: listEventContent, eventTimeFormat: { hour: "numeric", minute: "2-digit" } },
+            listNextSevenDays: {
+              type: "list",
+              duration: { days: 7 },
+              // Day headings as in FullCalendar's weekly list: the weekday, then the date.
+              listDayFormat: { weekday: "long" },
+              listDaySideFormat: { month: "long", day: "numeric", year: "numeric" },
+              eventContent: listEventContent,
+              eventTimeFormat: { hour: "numeric", minute: "2-digit" },
+            },
           }}
           moreLinkContent={isNarrow ? shortMoreLink : undefined}
           nowIndicator

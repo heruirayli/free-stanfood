@@ -17,12 +17,14 @@ const restricted = makePublished("restricted", {
   endTime: new Date("2099-10-01T20:00:00Z"),
 });
 
+const UPDATED_AT = new Date("2099-09-30T12:17:00.000Z");
+
 let server: Server;
 let base: string;
 
 beforeAll(async () => {
   const file = path.join(await mkdtemp(path.join(tmpdir(), "api-")), "events.json");
-  await writeFile(file, serializeSnapshot({ updatedAt: new Date(), events: [open, restricted] }), "utf8");
+  await writeFile(file, serializeSnapshot({ updatedAt: UPDATED_AT, events: [open, restricted] }), "utf8");
   server = createApp({ eventsFile: file, serveFrontend: false }).listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -46,6 +48,14 @@ describe("GET /api/events", () => {
     const { status, body } = await get("/api/events?from=October%201");
     expect(status).toBe(400);
     expect(body).toMatchObject({ message: expect.stringMatching(/from/) });
+  });
+});
+
+describe("GET /api/events/status", () => {
+  it("says when the listings last changed", async () => {
+    const { status, body } = await get("/api/events/status");
+    expect(status).toBe(200);
+    expect(body).toEqual({ updatedAt: UPDATED_AT.toISOString() });
   });
 });
 

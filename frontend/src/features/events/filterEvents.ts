@@ -12,7 +12,7 @@ export interface EventFilters {
   openOnly: boolean;
   foodTypes: string[]; // labels from foodDetails, e.g. "pizza"; empty for any food
   window: TimeWindow; // Today page only
-  timeOfDay: TimeOfDay | "any"; // calendar only
+  timesOfDay: TimeOfDay[]; // calendar only; empty for any time
   showLowConfidence: boolean;
 }
 
@@ -24,7 +24,7 @@ export const DEFAULT_FILTERS: EventFilters = {
   openOnly: false,
   foodTypes: [],
   window: "today",
-  timeOfDay: "any",
+  timesOfDay: [],
   showLowConfidence: false,
 };
 
@@ -90,8 +90,9 @@ export const matchesWindow = (event: FoodEvent, window: TimeWindow, now: Date): 
   }
 };
 
-export const matchesTimeOfDay = (event: FoodEvent, time: TimeOfDay | "any"): boolean =>
-  time === "any" || (!event.allDay && timeOfDay(event.startTime) === time);
+// Several times of day match events in any of them.
+export const matchesTimeOfDay = (event: FoodEvent, times: TimeOfDay[]): boolean =>
+  times.length === 0 || (!event.allDay && times.includes(timeOfDay(event.startTime)));
 
 // Whether anything narrows the list on this page. The "Food possible" toggle
 // doesn't count: it widens the list, and Clear filters leaves it as it is.
@@ -99,4 +100,4 @@ export const hasActiveFilters = (filters: EventFilters, scope: FilterScope): boo
   filters.query.trim() !== "" ||
   filters.openOnly ||
   filters.foodTypes.length > 0 ||
-  (scope === "today" ? filters.window !== DEFAULT_FILTERS.window : filters.timeOfDay !== DEFAULT_FILTERS.timeOfDay);
+  (scope === "today" ? filters.window !== DEFAULT_FILTERS.window : filters.timesOfDay.length > 0);

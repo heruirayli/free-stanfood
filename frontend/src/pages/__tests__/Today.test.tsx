@@ -100,6 +100,27 @@ describe("Today page", () => {
     await waitFor(() => expect(location()).toBe("/week?food=boba"));
   });
 
+  it("shows tomorrow in the evening, above what's over", async () => {
+    vi.setSystemTime(new Date("2026-10-02T03:30:00Z")); // Oct 1, 8:30 PM
+    const tomorrowLunch = makeEvent({ id: "tomorrow".padEnd(24, "0"), title: "Tomorrow lunch", startTime: "2026-10-02T19:00:00Z", endTime: null });
+    vi.mocked(eventService.getEvents).mockResolvedValue([ended, boba, tomorrowLunch]);
+    renderAt("/");
+    await screen.findByText("Tomorrow lunch");
+    // Boba (6 PM, an hour) is over by now.
+    expect(sectionNames()).toEqual(["Tomorrow1 event", "Earlier Today2 events"]);
+    // No "Starts in 15 hr" on tomorrow's card.
+    expect(screen.queryByText(/Starts in/)).not.toBeInTheDocument();
+  });
+
+  it("says when today is done but tomorrow isn't", async () => {
+    vi.setSystemTime(new Date("2026-10-02T05:00:00Z")); // Oct 1, 10 PM
+    const tomorrowLunch = makeEvent({ id: "tomorrow".padEnd(24, "0"), title: "Tomorrow lunch", startTime: "2026-10-02T19:00:00Z", endTime: null });
+    vi.mocked(eventService.getEvents).mockResolvedValue([ended, tomorrowLunch]);
+    renderAt("/");
+    expect(await screen.findByText("No more free food today. Here’s what’s on tomorrow.")).toBeInTheDocument();
+    expect(sectionNames()).toEqual(["Tomorrow1 event", "Earlier Today1 event"]);
+  });
+
   it("hides empty sections", async () => {
     vi.mocked(eventService.getEvents).mockResolvedValue([pizza]);
     renderAt("/");
@@ -153,21 +174,25 @@ describe("Today page", () => {
     expect(screen.getByText("Lunch seminar")).toBeInTheDocument();
   });
 
-  it("shows a few food types, with the rest a click away", async () => {
-    const foods = ["lunch", "boba", "coffee", "cookies", "dinner", "mochi", "pancakes", "tacos"];
+  it("sorts the food chips into rows by kind", async () => {
+    const foods = ["tacos", "boba", "coffee", "cookies", "dinner", "mochi", "lunch", "reception"];
     vi.mocked(eventService.getEvents).mockResolvedValue(
       foods.map((food, i) =>
         makeEvent({ id: food.padEnd(24, "0"), foodDetails: food, startTime: `2026-10-01T2${i % 3}:00:00Z`, endTime: null }),
       ),
     );
-    renderAt("/?food=tacos");
+    renderAt("/?food=sushi");
     await screen.findAllByText("Lunch");
     const food = within(screen.getByRole("group", { name: "Food" }));
-    // The first six, plus "tacos", which is chosen.
-    expect(food.getAllByRole("checkbox")).toHaveLength(7);
-    expect(food.getByRole("checkbox", { name: "Tacos" })).toBeChecked();
-    fireEvent.click(food.getByRole("button", { name: "1 more foods" }));
-    expect(food.getAllByRole("checkbox")).toHaveLength(8);
+    const row = (name: string) =>
+      within(food.getByRole("group", { name }))
+        .getAllByRole("checkbox")
+        .map((box) => box.closest("label")?.textContent);
+    // Meals by time of day, then dishes; every chip is shown. Sushi stays: it's chosen.
+    expect(row("Meals")).toEqual(["Lunch", "Dinner", "Sushi", "Tacos"]);
+    expect(row("Snacks & sweets")).toEqual(["Cookies", "Mochi"]);
+    expect(row("Drinks")).toEqual(["Boba", "Coffee"]);
+    expect(row("Other")).toEqual(["Reception"]);
   });
 
   it("counts the filters folded behind the phone's Filters button", async () => {

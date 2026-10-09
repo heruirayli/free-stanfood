@@ -10,7 +10,7 @@ import Page from "../components/Page";
 import { AgendaSkeleton } from "../components/Skeleton";
 import StatusMessage from "../components/StatusMessage";
 import { CAMPUS_TIME_ZONE } from "../constants";
-import { agendaIsEmpty, buildAgenda } from "../features/events/agenda";
+import { agendaIsEmpty, buildAgenda, showsTomorrow } from "../features/events/agenda";
 import {
   clearFilters,
   getEvents,
@@ -38,16 +38,17 @@ const Today = () => {
   const now = useNow();
   const [attempt, setAttempt] = useState(0);
   const campusDay = campusDateKey(now);
+  const evening = showsTomorrow(now);
 
   // Load all of today (campus time), including what's already over, for Earlier
-  // Today. Reloads when the campus day rolls over, so a tab left open overnight
-  // shows the new day.
+  // Today, and in the evening tomorrow too. Reloads when the evening starts and
+  // when the campus day rolls over, so a tab left open overnight shows the new day.
   useEffect(() => {
     const start = new Date();
     const request = dispatch(
       getEvents({
         from: startOfCampusDay(start).toISOString(),
-        to: startOfCampusDay(start, 1).toISOString(),
+        to: startOfCampusDay(start, evening ? 2 : 1).toISOString(),
         minConfidence: 0,
       }),
     );
@@ -55,7 +56,7 @@ const Today = () => {
       request.abort();
       dispatch(reset());
     };
-  }, [dispatch, attempt, campusDay]);
+  }, [dispatch, attempt, campusDay, evening]);
 
   useEffect(() => {
     if (isError) toast.error(message);
@@ -91,6 +92,8 @@ const Today = () => {
           </button>
         </StatusMessage>
       );
+    } else if (agendaIsEmpty(agenda) && agenda.tomorrow.length > 0) {
+      upcoming = <StatusMessage title="No more free food today. Here’s what’s on tomorrow." />;
     } else if (agendaIsEmpty(agenda)) {
       upcoming = (
         <StatusMessage title="No free food right now. Check back around lunch.">
@@ -112,6 +115,7 @@ const Today = () => {
     content = (
       <>
         <div className={agendaIsEmpty(agenda) ? "mb-7" : undefined}>{upcoming}</div>
+        <AgendaSection id="tomorrow" title="Tomorrow" events={agenda.tomorrow} now={now} />
         <AgendaSection id="earlier" title="Earlier Today" events={agenda.earlierToday} now={now} />
       </>
     );

@@ -65,6 +65,14 @@ export const getCalendar = asyncHandler(async (req: Request, res: Response) => {
     .send(buildCalendar(selected, now));
 });
 
+// @desc    When the listings last changed
+// @route   GET /api/events/status
+// @access  Public
+export const getStatus = asyncHandler(async (req: Request, res: Response) => {
+  const { updatedAt } = await snapshotFor(req);
+  res.status(200).json({ updatedAt: updatedAt?.toISOString() ?? null });
+});
+
 // @desc    Get a single event
 // @route   GET /api/events/:id
 // @access  Public

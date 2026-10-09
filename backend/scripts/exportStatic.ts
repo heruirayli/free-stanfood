@@ -9,6 +9,7 @@ import { CALENDAR_MIN_CONFIDENCE, buildCalendar } from "../utils/ics.js";
 // For hosting the site without the API (GitHub Pages): writes what the API would
 // serve next to the built frontend, which then reads it in place of /api/events.
 // - data/events.json: every published event (the app filters them itself)
+// - data/status.json: when the listings last changed, as GET /api/events/status
 // - calendar.ics: the calendar feed, as GET /api/events/calendar.ics serves it
 // - 404.html: a copy of index.html, so deep links like /week start the app
 //   (GitHub Pages serves 404.html for any path it has no file for)
@@ -17,11 +18,12 @@ import { CALENDAR_MIN_CONFIDENCE, buildCalendar } from "../utils/ics.js";
 const main = async (): Promise<void> => {
   const outDir = path.resolve(process.argv[2] ?? "frontend/dist");
   const now = new Date();
-  const { events } = await readSnapshotFile(EVENTS_FILE);
+  const { events, updatedAt } = await readSnapshotFile(EVENTS_FILE);
   const published = events.filter((event) => (PUBLIC_AUDIENCES as readonly Audience[]).includes(event.audience));
 
   await mkdir(path.join(outDir, "data"), { recursive: true });
   await writeFile(path.join(outDir, "data", "events.json"), JSON.stringify(published), "utf8");
+  await writeFile(path.join(outDir, "data", "status.json"), JSON.stringify({ updatedAt: updatedAt?.toISOString() ?? null }), "utf8");
   const feed = selectEvents(published, { minConfidence: CALENDAR_MIN_CONFIDENCE }, now);
   await writeFile(path.join(outDir, "calendar.ics"), buildCalendar(feed, now), "utf8");
   await copyFile(path.join(outDir, "index.html"), path.join(outDir, "404.html"));

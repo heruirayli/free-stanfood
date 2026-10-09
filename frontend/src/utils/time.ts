@@ -12,6 +12,9 @@ export const TIME_OF_DAY_LABELS: Record<TimeOfDay, string> = {
   evening: "Evening",
 };
 
+// In the day's order.
+export const TIMES_OF_DAY = Object.keys(TIME_OF_DAY_LABELS) as TimeOfDay[];
+
 // The hours each label covers, for screen readers and tooltips.
 export const TIME_OF_DAY_HOURS: Record<TimeOfDay, string> = {
   morning: "before 11 AM",
@@ -22,6 +25,8 @@ export const TIME_OF_DAY_HOURS: Record<TimeOfDay, string> = {
 
 const MINUTE_MS = 60 * 1000;
 const DAY_MS = 24 * 60 * MINUTE_MS;
+// "Starts in" is shown for events later today, and for any starting this soon.
+const STARTS_IN_MS = 3 * 60 * MINUTE_MS;
 
 const toDate = (value: string | Date): Date => (typeof value === "string" ? parseISO(value) : value);
 
@@ -102,12 +107,15 @@ export interface RelativeTime {
 }
 
 // When the event is relative to now: "Starts in 40 min", "Started 15 min ago",
-// "Ends in 20 min". Null for all-day events and for events a day or more away,
-// where the date says enough.
+// "Ends in 20 min". Null for all-day events and for events on a later day (unless
+// they start within STARTS_IN_MS), where the date says enough.
 export const relativeTime = (event: FoodEvent, now: Date): RelativeTime | null => {
   if (event.allDay) return null;
   const until = parseISO(event.startTime).getTime() - now.getTime();
-  if (until > 0) return until < DAY_MS ? { label: `Starts in ${formatDuration(until)}`, endingSoon: false } : null;
+  if (until > 0) {
+    const soon = until < STARTS_IN_MS || campusDateKey(event.startTime) === campusDateKey(now);
+    return soon ? { label: `Starts in ${formatDuration(until)}`, endingSoon: false } : null;
+  }
   if (hasEnded(event, now)) return { label: "Ended", endingSoon: false };
   if (event.endTime) {
     const left = parseISO(event.endTime).getTime() - now.getTime();

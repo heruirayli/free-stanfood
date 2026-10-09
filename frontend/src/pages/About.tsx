@@ -39,7 +39,7 @@ const About = () => (
               Today
             </Link>
           </Term>{" "}
-          shows what’s happening now, later today, and tonight, soonest first, with what’s already over at the bottom. Tap an event for everything about it.
+          shows what’s happening now, later today, and tonight, soonest first, with what’s already over at the bottom. From 8 PM it shows tomorrow too. Tap an event for everything about it.
         </li>
         <li>
           <Term>

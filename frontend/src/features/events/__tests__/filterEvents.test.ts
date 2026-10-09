@@ -86,12 +86,21 @@ describe("matchesWindow", () => {
 });
 
 describe("matchesTimeOfDay", () => {
-  it("filters by the campus hour of the start, leaving out all-day events", () => {
-    const evening = makeEvent({ startTime: "2026-10-02T01:00:00Z" }); // 6 PM PDT
-    expect(matchesTimeOfDay(evening, "evening")).toBe(true);
-    expect(matchesTimeOfDay(evening, "midday")).toBe(false);
-    expect(matchesTimeOfDay(makeEvent({ allDay: true }), "morning")).toBe(false);
-    expect(matchesTimeOfDay(makeEvent({ allDay: true }), "any")).toBe(true);
+  const morning = makeEvent({ startTime: "2026-10-01T16:00:00Z" }); // 9 AM PDT
+  const evening = makeEvent({ startTime: "2026-10-02T01:00:00Z" }); // 6 PM PDT
+
+  it("matches any time when none is chosen", () => {
+    expect([morning, evening, makeEvent({ allDay: true })].every((e) => matchesTimeOfDay(e, []))).toBe(true);
+  });
+
+  it("matches any of the chosen times, by the campus hour of the start", () => {
+    expect(matchesTimeOfDay(evening, ["evening"])).toBe(true);
+    expect(matchesTimeOfDay(evening, ["midday"])).toBe(false);
+    expect([morning, evening].map((e) => matchesTimeOfDay(e, ["morning", "evening"]))).toEqual([true, true]);
+  });
+
+  it("leaves out all-day events once a time is chosen", () => {
+    expect(matchesTimeOfDay(makeEvent({ allDay: true }), ["morning"])).toBe(false);
   });
 });
 
@@ -113,7 +122,7 @@ describe("hasActiveFilters", () => {
   it("counts only the page's own time filter", () => {
     expect(hasActiveFilters({ ...DEFAULT_FILTERS, window: "now" }, "today")).toBe(true);
     expect(hasActiveFilters({ ...DEFAULT_FILTERS, window: "now" }, "calendar")).toBe(false);
-    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timeOfDay: "evening" }, "calendar")).toBe(true);
-    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timeOfDay: "evening" }, "today")).toBe(false);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timesOfDay: ["evening"] }, "calendar")).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_FILTERS, timesOfDay: ["evening"] }, "today")).toBe(false);
   });
 });

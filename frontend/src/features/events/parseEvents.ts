@@ -1,4 +1,4 @@
-import type { FoodEvent } from "../../types/event";
+import type { DataStatus, FoodEvent } from "../../types/event";
 
 // Runtime check of API responses, so an unexpected body (an HTML page from a proxy,
 // a changed API shape) becomes a load error instead of crashing the page.
@@ -57,6 +57,15 @@ export const UNEXPECTED_RESPONSE = "The events service sent an unexpected respon
 export const parseEvents = (data: unknown): FoodEvent[] => {
   if (!Array.isArray(data) || !data.every(isFoodEvent)) throw new Error(UNEXPECTED_RESPONSE);
   return data;
+};
+
+export const parseStatus = (data: unknown): DataStatus => {
+  if (typeof data === "object" && data !== null && "updatedAt" in data) {
+    const { updatedAt } = data;
+    if (updatedAt === null) return { updatedAt };
+    if (typeof updatedAt === "string" && isDate(updatedAt)) return { updatedAt };
+  }
+  throw new Error(UNEXPECTED_RESPONSE);
 };
 
 export const parseEvent = (data: unknown): FoodEvent => {

@@ -117,6 +117,13 @@ describe("Today card times", () => {
     expect(relativeTime(open, new Date("2026-10-01T19:45:00Z"))).toEqual({ label: "Started 45 min ago", endingSoon: false });
   });
 
+  it("says 'Starts in' for tomorrow only when it's soon", () => {
+    const tomorrowMorning = makeEvent({ startTime: "2026-10-02T16:00:00Z", endTime: null }); // Oct 2, 9 AM
+    expect(relativeTime(tomorrowMorning, new Date("2026-10-02T04:00:00Z"))).toBeNull(); // 9 PM the night before
+    const pastMidnight = makeEvent({ startTime: "2026-10-02T07:30:00Z", endTime: null }); // Oct 2, 12:30 AM
+    expect(relativeTime(pastMidnight, new Date("2026-10-02T06:30:00Z"))).toEqual({ label: "Starts in 1 hr", endingSoon: false });
+  });
+
   it("has no relative label for all-day events or ones a day away", () => {
     expect(relativeTime(makeEvent({ allDay: true }), now)).toBeNull();
     expect(relativeTime(makeEvent({ startTime: "2026-10-03T19:00:00Z", endTime: null }), now)).toBeNull();

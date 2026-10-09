@@ -60,6 +60,22 @@ describe("buildAgenda", () => {
     expect(agendaIsEmpty(onlyOver)).toBe(true);
   });
 
+  it("adds tomorrow from 8 PM, but not before", () => {
+    const tomorrowLunch = makeEvent({ id: "tomorrow-lunch", startTime: "2026-10-02T19:00:00Z", endTime: null });
+    const tomorrowFair = makeEvent({ id: "fair", startTime: "2026-10-02T07:00:00Z", endTime: "2026-10-03T06:59:00Z", allDay: true });
+    const dayAfter = makeEvent({ id: "day-after", startTime: "2026-10-03T19:00:00Z", endTime: null });
+    const list = [tomorrowLunch, tomorrowFair, dayAfter];
+    expect(ids(buildAgenda(list, new Date("2026-10-02T02:59:00Z")).tomorrow)).toEqual([]); // 7:59 PM
+    expect(ids(buildAgenda(list, new Date("2026-10-02T03:00:00Z")).tomorrow)).toEqual(["fair", "tomorrow-lunch"]); // 8 PM
+  });
+
+  it("doesn't count tomorrow toward today", () => {
+    const evening = new Date("2026-10-02T04:00:00Z"); // 9 PM
+    const result = buildAgenda([makeEvent({ startTime: "2026-10-02T19:00:00Z", endTime: null })], evening);
+    expect(result.tomorrow).toHaveLength(1);
+    expect(agendaIsEmpty(result)).toBe(true);
+  });
+
   it("keeps multi-day all-day events on every day they cover", () => {
     const multi = [
       // Sep 30 – Oct 2: mid-run today.

@@ -39,6 +39,11 @@ export interface EventQuery {
   audience?: PublicAudience;
 }
 
+// GET /api/events/status: when the published listings last changed.
+export interface DataStatus {
+  updatedAt: string | null;
+}
+
 export interface ApiErrorBody {
   message: string;
   stack?: string | null;

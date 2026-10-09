@@ -3,8 +3,9 @@ import { FaCheck, FaSearch, FaSlidersH } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { clearFilters, selectFilters, selectFoodTypes, setFilters } from "../features/events/eventSlice";
 import { hasActiveFilters, type FilterScope, type TimeWindow } from "../features/events/filterEvents";
+import { groupFoodTypes } from "../features/events/foodGroups";
 import { cx } from "../utils/cx";
-import { TIME_OF_DAY_HOURS, TIME_OF_DAY_LABELS, type TimeOfDay } from "../utils/time";
+import { TIMES_OF_DAY, TIME_OF_DAY_HOURS, TIME_OF_DAY_LABELS, type TimeOfDay } from "../utils/time";
 
 const WINDOWS: { value: TimeWindow; label: string }[] = [
   { value: "now", label: "Now" },
@@ -12,10 +13,6 @@ const WINDOWS: { value: TimeWindow; label: string }[] = [
   { value: "today", label: "Today" },
 ];
 
-const TIMES = Object.keys(TIME_OF_DAY_LABELS) as TimeOfDay[];
-
-// Food chips shown before "+N more": the most common types.
-const FOOD_CHIPS = 6;
 
 const focusRing = "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary";
 
@@ -42,7 +39,7 @@ const Chip = ({ type, name, checked, onChange, hint, children }: ChoiceProps) =>
     >
       {checked && type === "checkbox" && <FaCheck aria-hidden="true" className="text-[0.625rem]" />}
       {children}
-      {hint && <span className="sr-only"> ({hint})</span>}
+      {hint && <span className="sr-only">{`, ${hint}`}</span>}
     </span>
   </label>
 );
@@ -67,7 +64,7 @@ const ChipRow = ({ label, radio = false, children }: { label: string; radio?: bo
   const id = useId();
   return (
     <div role={radio ? "radiogroup" : "group"} aria-labelledby={id} className="sm:flex sm:items-start sm:gap-3">
-      <span id={id} className="mb-1.5 block text-sm font-semibold text-ink-muted sm:mb-0 sm:w-12 sm:shrink-0 sm:pt-2">
+      <span id={id} className="mb-1.5 block text-sm font-semibold text-ink-muted sm:mb-0 sm:w-28 sm:shrink-0 sm:pt-2">
         {label}
       </span>
       <div className="flex flex-wrap gap-2">{children}</div>
@@ -78,25 +75,19 @@ const ChipRow = ({ label, radio = false, children }: { label: string; radio?: bo
 const capitalize = (text: string): string => text.charAt(0).toUpperCase() + text.slice(1);
 
 // The filters, grouped by kind: a search box; on Today, a now / next 2 hours /
-// today switcher; then food chips and on/off switches (and, on the calendar,
-// time of day). On phones those last ones fold away behind a Filters button, so
+// today switcher; then food chips in rows by kind of food (meals, snacks &
+// sweets, drinks, other) and on/off switches (and, on the calendar, time of day). On phones those last ones fold away behind a Filters button, so
 // the events stay near the top. The page keeps them all in the URL.
 const EventFilters = ({ scope }: { scope: FilterScope }) => {
   const dispatch = useAppDispatch();
   const filters = useAppSelector(selectFilters);
   const foodTypes = useAppSelector(selectFoodTypes);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [allFood, setAllFood] = useState(false);
   const panelId = useId();
   const name = useId(); // radio group names, unique to this form
 
-  // Keep chosen food types as chips even when the loaded events have none of them.
-  const foodOptions = [...filters.foodTypes.filter((type) => !foodTypes.includes(type)), ...foodTypes];
-  // The rest wait behind "+N more", except ones already chosen.
-  const shownFood = allFood
-    ? foodOptions
-    : foodOptions.filter((type, index) => index < FOOD_CHIPS || filters.foodTypes.includes(type));
-  const moreFood = foodOptions.length - shownFood.length;
+  // By kind of food. Chosen types stay as chips even when the loaded events have none of them.
+  const foodGroups = groupFoodTypes([...new Set([...foodTypes, ...filters.foodTypes])]);
   const toggleFood = (type: string) =>
     dispatch(
       setFilters({
@@ -106,12 +97,21 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
       }),
     );
 
+  const toggleTime = (time: TimeOfDay) =>
+    dispatch(
+      setFilters({
+        timesOfDay: filters.timesOfDay.includes(time)
+          ? filters.timesOfDay.filter((chosen) => chosen !== time)
+          : TIMES_OF_DAY.filter((t) => t === time || filters.timesOfDay.includes(t)),
+      }),
+    );
+
   // What's switched on behind the phone's Filters button.
   const panelCount =
     filters.foodTypes.length +
     Number(filters.openOnly) +
     Number(filters.showLowConfidence) +
-    Number(scope === "calendar" && filters.timeOfDay !== "any");
+    (scope === "calendar" ? filters.timesOfDay.length : 0);
 
   return (
     <form role="search" aria-label="Filter events" onSubmit={(e) => e.preventDefault()} className="mb-6 space-y-3">
@@ -184,22 +184,24 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
         className={cx("space-y-3 rounded-xl bg-surface p-3 sm:block sm:bg-transparent sm:p-0", !panelOpen && "hidden")}
       >
         {scope === "calendar" && (
-          <ChipRow label="Time" radio>
+          // Any time until a time is switched on; times combine (morning and evening).
+          // Switching them all off, or choosing Any time, goes back to any time.
+          <ChipRow label="Time">
             <Chip
-              type="radio"
-              name={`${name}-time`}
-              checked={filters.timeOfDay === "any"}
-              onChange={() => dispatch(setFilters({ timeOfDay: "any" }))}
+              type="checkbox"
+              name="time"
+              checked={filters.timesOfDay.length === 0}
+              onChange={() => dispatch(setFilters({ timesOfDay: [] }))}
             >
               Any time
             </Chip>
-            {TIMES.map((time) => (
+            {TIMES_OF_DAY.map((time) => (
               <Chip
                 key={time}
-                type="radio"
-                name={`${name}-time`}
-                checked={filters.timeOfDay === time}
-                onChange={() => dispatch(setFilters({ timeOfDay: time }))}
+                type="checkbox"
+                name="time"
+                checked={filters.timesOfDay.includes(time)}
+                onChange={() => toggleTime(time)}
                 hint={TIME_OF_DAY_HOURS[time]}
               >
                 {TIME_OF_DAY_LABELS[time]}
@@ -208,34 +210,27 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
           </ChipRow>
         )}
 
-        {foodOptions.length > 0 && (
-          <ChipRow label="Food">
-            {shownFood.map((type) => (
-              <Chip
-                key={type}
-                type="checkbox"
-                name="food"
-                checked={filters.foodTypes.includes(type)}
-                onChange={() => toggleFood(type)}
-              >
-                {capitalize(type)}
-              </Chip>
+        {foodGroups.length > 0 && (
+          <div role="group" aria-label="Food" className="space-y-3">
+            {foodGroups.map((group) => (
+              <ChipRow key={group.name} label={group.name}>
+                {group.types.map((type) => (
+                  <Chip
+                    key={type}
+                    type="checkbox"
+                    name="food"
+                    checked={filters.foodTypes.includes(type)}
+                    onChange={() => toggleFood(type)}
+                  >
+                    {capitalize(type)}
+                  </Chip>
+                ))}
+              </ChipRow>
             ))}
-            {(moreFood > 0 || allFood) && (
-              <button
-                type="button"
-                aria-expanded={allFood}
-                aria-label={allFood ? "Fewer foods" : `${moreFood} more foods`}
-                onClick={() => setAllFood(!allFood)}
-                className="h-9 shrink-0 rounded-full px-2 text-[0.9375rem] font-semibold whitespace-nowrap text-ink underline underline-offset-[3px] hover:text-primary"
-              >
-                {allFood ? "Fewer" : `${moreFood} more`}
-              </button>
-            )}
-          </ChipRow>
+          </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 sm:pl-15">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 sm:pl-31">
           <Switch checked={filters.openOnly} onChange={() => dispatch(setFilters({ openOnly: !filters.openOnly }))}>
             Only events open to all
           </Switch>

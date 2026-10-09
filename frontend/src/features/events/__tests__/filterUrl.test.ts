@@ -17,7 +17,7 @@ describe("filter URLs", () => {
       openOnly: true,
       foodTypes: ["pizza", "boba"],
       window: "next2h" as const,
-      timeOfDay: "evening" as const,
+      timesOfDay: ["evening" as const, "morning" as const],
       showLowConfidence: true,
     };
     expect(Object.fromEntries(filtersToParams(filters, "today"))).toEqual({
@@ -27,7 +27,8 @@ describe("filter URLs", () => {
       possible: "1",
       when: "2h",
     });
-    expect(Object.fromEntries(filtersToParams(filters, "calendar"))).toMatchObject({ time: "evening" });
+    // Times in the day's order, whatever order they were chosen in.
+    expect(Object.fromEntries(filtersToParams(filters, "calendar"))).toMatchObject({ time: "morning,evening" });
     expect(filtersToParams(filters, "calendar").has("when")).toBe(false);
   });
 
@@ -39,7 +40,8 @@ describe("filter URLs", () => {
       showLowConfidence: true,
       window: "now",
     });
-    expect(parse("time=midday", "calendar")).toMatchObject({ timeOfDay: "midday" });
+    expect(parse("time=midday", "calendar")).toMatchObject({ timesOfDay: ["midday"] });
+    expect(parse("time=evening,morning", "calendar")).toMatchObject({ timesOfDay: ["morning", "evening"] });
   });
 
   it("resets what the URL leaves out, and ignores values it doesn't know", () => {
@@ -51,7 +53,8 @@ describe("filter URLs", () => {
       window: "today",
     });
     expect(parse("when=tomorrow&open=yes", "today")).toMatchObject({ window: "today", openOnly: false });
-    expect(parse("time=toString", "calendar")).toMatchObject({ timeOfDay: "any" });
+    expect(parse("time=toString", "calendar")).toMatchObject({ timesOfDay: [] });
+    expect(parse("time=noon,evening", "calendar")).toMatchObject({ timesOfDay: ["evening"] });
     expect(parse("food=Pizza,,pizza, boba", "today")).toMatchObject({ foodTypes: ["pizza", "boba"] });
   });
 
@@ -66,7 +69,7 @@ describe("filter URLs", () => {
 
   it("carries only the shared filters between pages", () => {
     expect(sharedFilterSearch(DEFAULT_FILTERS)).toBe("");
-    expect(sharedFilterSearch({ ...DEFAULT_FILTERS, foodTypes: ["pizza"], window: "now", timeOfDay: "evening" })).toBe(
+    expect(sharedFilterSearch({ ...DEFAULT_FILTERS, foodTypes: ["pizza"], window: "now", timesOfDay: ["evening"] })).toBe(
       "?food=pizza",
     );
   });

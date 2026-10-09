@@ -1,7 +1,7 @@
 import axios from "axios";
 import { STATIC_DATA } from "../../constants";
-import type { EventQuery, FoodEvent } from "../../types/event";
-import { parseEvent, parseEvents } from "./parseEvents";
+import type { DataStatus, EventQuery, FoodEvent } from "../../types/event";
+import { parseEvent, parseEvents, parseStatus } from "./parseEvents";
 import { loadStaticEvents, selectStaticEvents } from "./staticEvents";
 
 const API_URL = "/api/events/";
@@ -24,9 +24,17 @@ const getEvent = async (id: string, signal?: AbortSignal): Promise<FoodEvent> =>
   return parseEvent(response.data);
 };
 
+// Get when the listings last changed. The static build ships it as a file.
+const getStatus = async (signal?: AbortSignal): Promise<DataStatus> => {
+  const url = STATIC_DATA ? `${import.meta.env.BASE_URL}data/status.json` : `${API_URL}status`;
+  const response = await axios.get<unknown>(url, { signal });
+  return parseStatus(response.data);
+};
+
 const eventService = {
   getEvents,
   getEvent,
+  getStatus,
 };
 
 export default eventService;

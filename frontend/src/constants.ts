@@ -17,6 +17,9 @@ export const HOST_REMOVAL_EMAIL: string | undefined =
 // Today's sections: events starting at or after this campus hour are "Tonight".
 export const TONIGHT_START_HOUR = 17;
 
+// From this campus hour, Today also shows tomorrow, since little is left of today.
+export const TOMORROW_FROM_HOUR = 20;
+
 // Happening-now events this close to their listed end get the "ending soon" look.
 export const ENDING_SOON_MS = 30 * 60 * 1000;
 

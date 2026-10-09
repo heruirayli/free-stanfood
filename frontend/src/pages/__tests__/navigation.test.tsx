@@ -78,12 +78,67 @@ describe("Today page overnight", () => {
     const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
     const store = renderApp();
     await waitFor(() => expect(store.getState().events.isSuccess).toBe(true), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-02T07:00:00.000Z" }), expect.anything());
+    // In the evening: today and tomorrow.
+    expect(getEvents).toHaveBeenLastCalledWith(
+      expect.objectContaining({ from: "2026-10-01T07:00:00.000Z", to: "2026-10-03T07:00:00.000Z" }),
+      expect.anything(),
+    );
 
     await act(async () => {
       vi.advanceTimersByTime(10 * 60_000); // past campus midnight
     });
     await waitFor(() => expect(getEvents).toHaveBeenCalledTimes(2), SLOW);
+    expect(getEvents).toHaveBeenLastCalledWith(
+      expect.objectContaining({ from: "2026-10-02T07:00:00.000Z", to: "2026-10-03T07:00:00.000Z" }),
+      expect.anything(),
+    );
+  }, 20_000);
+
+  it("loads tomorrow too once it's 8 PM", async () => {
+    vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
+    vi.setSystemTime(new Date("2026-10-02T02:55:00Z")); // Oct 1, 7:55 PM PDT
+    const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
+    const store = renderApp();
+    await waitFor(() => expect(store.getState().events.isSuccess).toBe(true), SLOW);
+    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-02T07:00:00.000Z" }), expect.anything());
+
+    await act(async () => {
+      vi.advanceTimersByTime(6 * 60_000); // 8:01 PM
+    });
+    await waitFor(() => expect(getEvents).toHaveBeenCalledTimes(2), SLOW);
     expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-03T07:00:00.000Z" }), expect.anything());
+  }, 20_000);
+});
+
+describe("Week on a phone", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("lists the next seven days from today, not the calendar week", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-08T19:00:00Z")); // Thursday, Oct 8, noon PDT
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query.includes("max-width"),
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+    const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
+    render(
+      <Provider store={makeStore()}>
+        <MemoryRouter initialEntries={["/week"]}>
+          <Routes>
+            <Route path="/week" element={<CalendarPage view="week" />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>,
+    );
+    // The calendar's range request: Thursday through next Wednesday, not Sunday to Saturday.
+    const rangeRequests = () => getEvents.mock.calls.filter(([query]) => query.from !== undefined);
+    await waitFor(() => expect(rangeRequests()).toHaveLength(1), SLOW);
+    expect(rangeRequests()[0]![0]).toMatchObject({ from: "2026-10-08T07:00:00.000Z", to: "2026-10-15T07:00:00.000Z" });
   }, 20_000);
 });
