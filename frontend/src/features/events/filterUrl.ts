@@ -21,7 +21,7 @@ export const filtersToParams = (filters: EventFilters, scope: FilterScope): URLS
   if (scope === "today") {
     const when = WINDOW_PARAMS.get(filters.window);
     if (when) params.set("when", when);
-  } else if (filters.timesOfDay.length > 0) {
+  } else if (scope === "calendar" && filters.timesOfDay.length > 0) {
     // In the day's order, so the same choice always makes the same URL.
     params.set("time", TIMES_OF_DAY.filter((time) => filters.timesOfDay.includes(time)).join(","));
   }
@@ -39,6 +39,7 @@ export const filtersFromParams = (params: URLSearchParams, scope: FilterScope): 
     showLowConfidence: params.get("possible") === "1",
   };
   if (scope === "today") return { ...shared, window: WINDOWS.get(params.get("when") ?? "") ?? DEFAULT_FILTERS.window };
+  if (scope === "search") return shared;
   const times = new Set((params.get("time") ?? "").split(",").map((time) => time.trim()));
   return { ...shared, timesOfDay: TIMES_OF_DAY.filter((time) => times.has(time)) };
 };

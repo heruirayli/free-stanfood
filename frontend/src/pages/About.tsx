@@ -58,7 +58,8 @@ const About = () => (
         <li>
           <Term>Filters</Term> narrow things down: events open to all, what’s on now or in the next two hours, a
           kind of food, or a search like “pizza” or a building name. The page’s address keeps them, so you can
-          bookmark or share a filtered view.
+          bookmark or share a filtered view. To look through everything up to a year ahead, press Enter in the
+          search box.
         </li>
         <li>
           <Term>Subscribe</Term>, at the top of every page, adds upcoming free food to Google Calendar or Apple

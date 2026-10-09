@@ -2,6 +2,7 @@ import axios from "axios";
 import { parseISO } from "date-fns";
 import { ASSUMED_DURATION_MS } from "../../constants";
 import type { EventQuery, FoodEvent } from "../../types/event";
+import { matchesQuery } from "./filterEvents";
 import { parseEvents } from "./parseEvents";
 
 // Events on a static host (GitHub Pages), where there's no API to ask: the build
@@ -32,16 +33,14 @@ export const loadStaticEvents = (): Promise<FoodEvent[]> => {
 const effectiveEnd = (event: FoodEvent): number =>
   parseISO(event.endTime ?? event.startTime).getTime() + (event.endTime ? 0 : ASSUMED_DURATION_MS);
 
-const matchesText = (event: FoodEvent, text: string): boolean =>
-  [event.title, event.description, event.hostOrg, event.locationName, event.foodDetails].some((field) =>
-    field?.toLowerCase().includes(text),
-  );
+// Every word of the search, in any order, like the server (and the search box).
+const matchesText = (event: FoodEvent, query: string): boolean => matchesQuery(event, query);
 
 // Events overlapping [from, to), matching the optional filters, soonest first.
 export const selectStaticEvents = (events: FoodEvent[], query: EventQuery, now: Date): FoodEvent[] => {
   const from = query.from ? parseISO(query.from).getTime() : now.getTime();
   const to = query.to ? parseISO(query.to).getTime() : from + DEFAULT_WINDOW_DAYS * DAY_MS;
-  const text = query.q?.toLowerCase();
+  const text = query.q?.trim();
   return events
     .filter(
       (event) =>

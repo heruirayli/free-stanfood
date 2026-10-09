@@ -33,6 +33,8 @@ describe("selectStaticEvents (the API's filtering, in the browser)", () => {
   it("applies minConfidence, audience, and text search", () => {
     expect(ids(selectStaticEvents(events, { minConfidence: 0.45 }, NOW))).toEqual(["now", "later"]);
     expect(ids(selectStaticEvents(events, { q: "COFFEE" }, NOW))).toEqual(["weak"]);
+    // Every word, in any order, as the API does.
+    expect(ids(selectStaticEvents(events, { q: "hour coffee" }, NOW))).toEqual(["weak"]);
     const mixed = [makeEvent({ id: "rsvp", audience: "rsvp" }), makeEvent({ id: "open", audience: "open" })];
     expect(ids(selectStaticEvents(mixed, { audience: "open", from: "2026-10-01T00:00:00Z" }, NOW))).toEqual(["open"]);
   });

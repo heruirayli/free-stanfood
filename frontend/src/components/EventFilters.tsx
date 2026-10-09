@@ -1,9 +1,12 @@
 import { useId, useState, type ReactNode } from "react";
-import { FaCheck, FaSearch, FaSlidersH } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaSearch, FaSlidersH } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { clearFilters, selectFilters, selectFoodTypes, setFilters } from "../features/events/eventSlice";
 import { hasActiveFilters, type FilterScope, type TimeWindow } from "../features/events/filterEvents";
+import { sharedFilterSearch } from "../features/events/filterUrl";
 import { groupFoodTypes } from "../features/events/foodGroups";
+import { linkClass } from "../styles";
 import { cx } from "../utils/cx";
 import { TIMES_OF_DAY, TIME_OF_DAY_HOURS, TIME_OF_DAY_LABELS, type TimeOfDay } from "../utils/time";
 
@@ -80,6 +83,7 @@ const capitalize = (text: string): string => text.charAt(0).toUpperCase() + text
 // the events stay near the top. The page keeps them all in the URL.
 const EventFilters = ({ scope }: { scope: FilterScope }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const filters = useAppSelector(selectFilters);
   const foodTypes = useAppSelector(selectFoodTypes);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -106,6 +110,8 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
       }),
     );
 
+  const searchAll = scope === "search" ? "" : filters.query.trim();
+
   // What's switched on behind the phone's Filters button.
   const panelCount =
     filters.foodTypes.length +
@@ -114,7 +120,16 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
     (scope === "calendar" ? filters.timesOfDay.length : 0);
 
   return (
-    <form role="search" aria-label="Filter events" onSubmit={(e) => e.preventDefault()} className="mb-6 space-y-3">
+    <form
+      role="search"
+      aria-label="Filter events"
+      // Enter searches every upcoming event, not just this page's.
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (scope !== "search" && searchAll) navigate({ pathname: "/search", search: sharedFilterSearch(filters) });
+      }}
+      className="mb-6 space-y-3"
+    >
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <div className={cx("relative min-w-0 flex-1", scope === "calendar" && "sm:max-w-md")}>
           <label htmlFor={`${scope}-search`} className="sr-only">
@@ -130,6 +145,7 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
             value={filters.query}
             onChange={(e) => dispatch(setFilters({ query: e.target.value }))}
             placeholder="Search food, places, hosts"
+            enterKeyHint="search"
             className="h-11 w-full rounded-full border border-line-strong bg-white pr-4 pl-10 text-[0.9375rem] text-ink placeholder:text-ink-muted"
           />
         </div>
@@ -149,6 +165,19 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
             </span>
           )}
         </button>
+
+        {searchAll && (
+          // This page only searches what it shows (today, or the visible dates).
+          <p className="order-last basis-full">
+            <Link
+              to={{ pathname: "/search", search: sharedFilterSearch(filters) }}
+              className={`${linkClass} inline-flex items-center gap-1.5 text-[0.9375rem]`}
+            >
+              Search all upcoming events for “{searchAll}”
+              <FaArrowRight aria-hidden="true" className="text-[0.7rem]" />
+            </Link>
+          </p>
+        )}
 
         {scope === "today" && (
           <div
@@ -184,17 +213,8 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
         className={cx("space-y-3 rounded-xl bg-surface p-3 sm:block sm:bg-transparent sm:p-0", !panelOpen && "hidden")}
       >
         {scope === "calendar" && (
-          // Any time until a time is switched on; times combine (morning and evening).
-          // Switching them all off, or choosing Any time, goes back to any time.
+          // Toggles: none on means any time; times combine (morning and evening).
           <ChipRow label="Time">
-            <Chip
-              type="checkbox"
-              name="time"
-              checked={filters.timesOfDay.length === 0}
-              onChange={() => dispatch(setFilters({ timesOfDay: [] }))}
-            >
-              Any time
-            </Chip>
             {TIMES_OF_DAY.map((time) => (
               <Chip
                 key={time}
@@ -243,7 +263,10 @@ const EventFilters = ({ scope }: { scope: FilterScope }) => {
           {hasActiveFilters(filters, scope) && (
             <button
               type="button"
-              onClick={() => dispatch(clearFilters())}
+              // On the search page, Clear filters keeps the search.
+              onClick={() =>
+                dispatch(scope === "search" ? setFilters({ openOnly: false, foodTypes: [] }) : clearFilters())
+              }
               className="min-h-9 font-semibold text-primary underline underline-offset-[3px] hover:text-primary-hover sm:ml-auto"
             >
               Clear filters

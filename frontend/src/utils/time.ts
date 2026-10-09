@@ -58,7 +58,8 @@ export const fromCampusWallClock = (wallClock: Date): Date =>
 export const formatTime = (value: string | Date): string =>
   formatInTimeZone(toDate(value), CAMPUS_TIME_ZONE, "h:mm a");
 
-const dayKeyLabel = (key: string, now: Date): string => {
+// "Today", "Tomorrow", or "Thu, Oct 15" for a "yyyy-MM-dd" campus date.
+export const dayKeyLabel = (key: string, now: Date): string => {
   const today = campusDateKey(now);
   if (key === today) return "Today";
   if (key === addDaysToKey(today, 1)) return "Tomorrow";

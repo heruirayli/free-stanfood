@@ -208,9 +208,12 @@ describe("Today page", () => {
     renderAt("/");
     await screen.findByText("Lunch seminar");
     const search = screen.getByRole("searchbox", { name: "Search events" });
+    search.focus();
     for (const value of ["b", "bo", "bob", "boba"]) fireEvent.change(search, { target: { value } });
     await waitFor(() => expect(location()).toBe("/?q=boba"));
     expect(search).toHaveValue("boba");
+    // Rewriting the URL as you type mustn't pull focus to the page heading.
+    expect(search).toHaveFocus();
     expect(screen.getByText("Boba night")).toBeInTheDocument();
     expect(screen.queryByText("Lunch seminar")).not.toBeInTheDocument();
   });

@@ -11,6 +11,7 @@ import type { CalendarView } from "./pages/CalendarPage";
 import Contact from "./pages/Contact";
 import EventPage from "./pages/EventPage";
 import NotFound from "./pages/NotFound";
+import SearchPage from "./pages/SearchPage";
 import Today from "./pages/Today";
 import { backgroundOf } from "./utils/background";
 
@@ -44,6 +45,7 @@ export const AppRoutes = () => {
         <Route path="/week" element={<Calendar view="week" />} />
         <Route path="/month" element={<Calendar view="month" />} />
         <Route path="/calendar" element={<OldCalendar />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/events/:id" element={<EventPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

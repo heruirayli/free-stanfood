@@ -166,7 +166,7 @@ Each feed runs as its own source (`ical:<id>`), so a broken feed only affects it
 
 | Method | Route | Purpose |
 |---|---|---|
-| GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to a year out), `q`, `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`) |
+| GET | `/api/events` | Food events overlapping `[from, to)`. Query: `from`, `to` (ISO dates; default now to a year out), `q` (every word must appear in the title, description, host, place, or food, in any order; accents and curly apostrophes are ignored), `minConfidence` (0–1), `audience` (`open`, `rsvp`, `unknown`). The site's Search page uses `q` to look through everything upcoming. |
 | GET | `/api/events/calendar.ics` | The same events as an iCalendar file (`free-stanfood.ics`), for importing into Google Calendar (Settings > Import & export) or subscribing by URL once deployed. Same query params, plus `ids` (export only these) or `exclude` (all but these), comma-separated event ids. Leaves out "Food possible" matches unless `minConfidence` is given. The site's Subscribe button shows this URL. The Week and Month pages have a download button with every event selected; people can uncheck the ones they don't want. Each event's details download just that event. |
 | GET | `/api/events/status` | `{ updatedAt }`: when the published listings last changed (ISO date, or null). Shown in the site's footer. |
 | GET | `/api/events/:id` | A single event |

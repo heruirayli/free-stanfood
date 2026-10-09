@@ -57,6 +57,21 @@ describe("selectEvents", () => {
     expect(find({ q: "boba club" })).toEqual(["rsvp"]);
   });
 
+  it("matches every word of the search, in any order", () => {
+    expect(find({ q: "night pizza" })).toEqual(["upcoming"]);
+    expect(find({ q: "pizza sushi" })).toEqual([]);
+  });
+
+  it("ignores accents and curly apostrophes", () => {
+    const list = [
+      makePublished("cafe", { title: "Café night" }),
+      makePublished("dean", { title: "Dean’s lunch" }),
+    ];
+    const search = (q: string) => selectEvents(list, { q }, NOW).map((event) => event.sourceEventId);
+    expect(search("cafe")).toEqual(["cafe"]);
+    expect(search("dean's")).toEqual(["dean"]);
+  });
+
   it("treats search text literally", () => {
     expect(find({ q: ".*" })).toEqual([]);
   });

@@ -16,8 +16,9 @@ export interface EventFilters {
   showLowConfidence: boolean;
 }
 
-// The page the filters are on. Each shows the shared filters plus its own time filter.
-export type FilterScope = "today" | "calendar";
+// The page the filters are on. Today and the calendar add their own time filter
+// to the shared ones; search results have only the shared ones.
+export type FilterScope = "today" | "calendar" | "search";
 
 export const DEFAULT_FILTERS: EventFilters = {
   query: "",
@@ -56,7 +57,7 @@ const searchableText = (event: FoodEvent): string =>
     [event.title, event.description, event.hostOrg, event.locationName, event.foodDetails].filter(Boolean).join(" "),
   );
 
-const matchesQuery = (event: FoodEvent, query: string): boolean => {
+export const matchesQuery = (event: FoodEvent, query: string): boolean => {
   const words = normalizeText(query).split(/\s+/).filter(Boolean);
   if (words.length === 0) return true;
   const text = searchableText(event);
@@ -95,9 +96,11 @@ export const matchesTimeOfDay = (event: FoodEvent, times: TimeOfDay[]): boolean 
   times.length === 0 || (!event.allDay && times.includes(timeOfDay(event.startTime)));
 
 // Whether anything narrows the list on this page. The "Food possible" toggle
-// doesn't count: it widens the list, and Clear filters leaves it as it is.
+// doesn't count: it widens the list, and Clear filters leaves it as it is. On
+// the search page the search itself isn't a filter.
 export const hasActiveFilters = (filters: EventFilters, scope: FilterScope): boolean =>
-  filters.query.trim() !== "" ||
+  (scope !== "search" && filters.query.trim() !== "") ||
   filters.openOnly ||
   filters.foodTypes.length > 0 ||
-  (scope === "today" ? filters.window !== DEFAULT_FILTERS.window : filters.timesOfDay.length > 0);
+  (scope === "today" && filters.window !== DEFAULT_FILTERS.window) ||
+  (scope === "calendar" && filters.timesOfDay.length > 0);
