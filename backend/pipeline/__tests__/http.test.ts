@@ -157,6 +157,12 @@ describe("createHttpClient", () => {
     expect(calls).toHaveLength(3);
   });
 
+  it("lets a request ask for fewer retries, for hosts with a long crawl delay", async () => {
+    const { http, calls } = client([{ status: 503 }, { status: 200 }], { minIntervalMs: 0, baseBackoffMs: 1 });
+    await expect(http.getText("https://a.example/x", { retries: 0 })).rejects.toMatchObject({ status: 503 });
+    expect(calls).toHaveLength(1);
+  });
+
   it("does not retry other 4xx responses", async () => {
     const { http, calls } = client([{ status: 404, body: "missing" }]);
     await expect(http.getText("https://a.example/x")).rejects.toMatchObject({

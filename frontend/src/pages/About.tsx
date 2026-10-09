@@ -109,9 +109,10 @@ const About = () => (
     <Section title="Where Listings Come From">
       <p>
         Events come from <ExternalLink href="https://events.stanford.edu">Stanford Events</ExternalLink>, student
-        groups on <ExternalLink href="https://cardinalengage.stanford.edu">CardinalEngage</ExternalLink>, and public{" "}
-        <ExternalLink href="https://luma.com">Luma</ExternalLink> calendars of Stanford centers and clubs. They’re
-        updated every morning and go up to a year ahead.
+        groups on <ExternalLink href="https://cardinalengage.stanford.edu">CardinalEngage</ExternalLink>, public{" "}
+        <ExternalLink href="https://luma.com">Luma</ExternalLink> calendars of Stanford centers and clubs, the Law
+        School’s calendar, and the event pages of departments and offices across campus. They’re updated every
+        morning and go up to a year ahead.
       </p>
       <p>
         Only public events are included, and only information about the event itself: never who’s attending.

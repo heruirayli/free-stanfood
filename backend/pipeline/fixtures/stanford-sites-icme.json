@@ -1,0 +1,416 @@
+{
+ "jsonapi": {
+  "version": "1.1",
+  "meta": {
+   "links": {
+    "self": {
+     "href": "http://jsonapi.org/format/1.1/"
+    }
+   }
+  }
+ },
+ "data": [
+  {
+   "type": "node--stanford_event",
+   "id": "02d9e393-cfb1-4356-9a3b-814a78a32b28",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/02d9e393-cfb1-4356-9a3b-814a78a32b28?resourceVersion=id%3A61356"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/02d9e393-cfb1-4356-9a3b-814a78a32b28?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "title": "CME 299:  Engineering Your Career Path — Career Readiness Workshops for Graduate Students",
+    "path": {
+     "alias": "/events/career-forum-education/cme-299-engineering-your-career-path-career-readiness-workshops",
+     "pid": 8396,
+     "langcode": "en"
+    },
+    "body": "<p>In today's competitive economy, developing professional skills is essential for thriving in graduate school and beyond. This six-week workshop series brings together career experts, recruiters, hiring managers, Stanford alumni, and fellow students to share practical advice and strategies for navigating your career. Workshops cover resumes and interviewing, networking, navigating the hiring process, using AI in your job search, presenting with impact, salary and position negotiation, and more. Each session offers practical tools and insights you can apply to your career development and professional journey.&nbsp;<br><br>Enrollment limited to ICME and Statistics graduate students. Recommended for first-years &amp; those nearing graduation. Questions or Other Stanford SOE graduate students interested in enrolling should contact Tanya Schornack at <a href=\"mailto:contact@example.com\">contact@example.com</a>.</p>",
+    "su_event_alt_loc": "Mechanical Engineering Building Room 530-127",
+    "su_event_cta": null,
+    "su_event_date_time": {
+     "value": "2026-09-22T07:00:00+00:00",
+     "end_value": "2026-10-28T06:59:00+00:00",
+     "duration": 51839,
+     "rrule": null,
+     "rrule_index": null,
+     "timezone": "America/Los_Angeles"
+    },
+    "su_event_dek": "Every Tuesday from September 22 to October 27, 2026 - Recommended for first-years & those nearing graduation",
+    "su_event_localist_id": null,
+    "su_event_location": {
+     "langcode": null,
+     "country_code": "US",
+     "administrative_area": "CA",
+     "locality": "Stanford",
+     "dependent_locality": null,
+     "postal_code": "94305",
+     "address_line1": "440 Escondido Mall , Room 530-127",
+     "address_line2": "",
+     "address_line3": "",
+     "organization": "Stanford University - Mechanical Engineering Building"
+    },
+    "su_event_source": null,
+    "su_event_subheadline": null
+   },
+   "relationships": {
+    "su_event_audience": {
+     "data": [
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+       "meta": {
+        "drupal_internal__target_id": 131
+       }
+      }
+     ],
+     "links": {
+      "related": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/02d9e393-cfb1-4356-9a3b-814a78a32b28/su_event_audience?resourceVersion=id%3A61356"
+      },
+      "self": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/02d9e393-cfb1-4356-9a3b-814a78a32b28/relationships/su_event_audience?resourceVersion=id%3A61356"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "node--stanford_event",
+   "id": "64d25e8e-663d-43eb-b597-d94104bda2fe",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/64d25e8e-663d-43eb-b597-d94104bda2fe?resourceVersion=id%3A62146"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/64d25e8e-663d-43eb-b597-d94104bda2fe?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "title": "Industry Insider: AI & Computer Vision with Reza Zadeh, PhD ’13 (ICME alum), Founder & CEO of Matroid",
+    "path": {
+     "alias": "/events/career-forum-education/industry-insider-ai-computer-vision-reza-zadeh-phd-13-icme-alum",
+     "pid": 8681,
+     "langcode": "en"
+    },
+    "body": "<p>Get to Know Matroid at ICME! Hear from <a href=\"https://www.linkedin.com/in/rezab/\">Stanford ICME alum Reza Zadeh</a>, the founder of Matroid, who will share insights into the company's mission, culture, department focus, and the computer vision technologies powering its work.&nbsp;</p><div class=\"align-right media-entity-wrapper image\">\n  \n  \n\n\n\n\n            <div class=\"media image field-media-image label-hidden\">  <img loading=\"lazy\" src=\"/sites/g/files/sbiybj17116/files/styles/stanford_circle/public/media/image/reza_zadeh_1.jpg.png?itok=RKkRrO9U\" width=\"140\" height=\"140\" alt>\n\n\n</div>\n      \n</div>\n<p><a href=\"https://www.linkedin.com/in/rezab/\"><strong>Reza Zadeh</strong></a><strong> is the founder and CEO of Matroid, a computer vision company that enables users to build and deploy detectors without writing code. He is also an Adjunct Professor at Stanford University, where his research focuses on machine learning and distributed computing. A Stanford ICME alum, Reza previously served as a Consulting Professor at Stanford and a technical advisor to Databricks. His work bridges cutting-edge research and industry applications, with a focus on making advanced AI accessible and impactful.</strong><br><br>Learn more about <a href=\"https://www.matroid.com/\">Matroid</a>.</p><p><em>Please note that this event is for Stanford students. Snacks will be provided. If you have any questions, please get in touch with ICME Career Services:&nbsp;</em><a href=\"mailto:contact@example.com\"><em>Tanya Schornack</em></a><br><br>&nbsp;</p>",
+    "su_event_alt_loc": "The Hive ",
+    "su_event_cta": {
+     "uri": "https://forms.gle/jtgpCBvKWbnATZFY8",
+     "title": "RSVP HERE",
+     "options": [],
+     "target_uuid": null,
+     "url": "https://forms.gle/jtgpCBvKWbnATZFY8"
+    },
+    "su_event_date_time": {
+     "value": "2026-10-21T22:00:00+00:00",
+     "end_value": "2026-10-21T23:00:00+00:00",
+     "duration": 60,
+     "rrule": null,
+     "rrule_index": null,
+     "timezone": "America/Los_Angeles"
+    },
+    "su_event_dek": "Bytes & Bites",
+    "su_event_localist_id": null,
+    "su_event_location": null,
+    "su_event_source": null,
+    "su_event_subheadline": null
+   },
+   "relationships": {
+    "su_event_audience": {
+     "data": [
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+       "meta": {
+        "drupal_internal__target_id": 131
+       }
+      }
+     ],
+     "links": {
+      "related": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/64d25e8e-663d-43eb-b597-d94104bda2fe/su_event_audience?resourceVersion=id%3A62146"
+      },
+      "self": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/64d25e8e-663d-43eb-b597-d94104bda2fe/relationships/su_event_audience?resourceVersion=id%3A62146"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "node--stanford_event",
+   "id": "2437370e-a60d-4f2d-af67-033eecb8a38c",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/2437370e-a60d-4f2d-af67-033eecb8a38c?resourceVersion=id%3A62151"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/2437370e-a60d-4f2d-af67-033eecb8a38c?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "title": "Industry Insider: Mathematical Frontiers, ML & the Future of Energy with SLB",
+    "path": {
+     "alias": "/events/career-forum-education/industry-insider-mathematical-frontiers-ml-future-energy-slb",
+     "pid": 8686,
+     "langcode": "en"
+    },
+    "body": "<p>Join us for this special<strong> Industry Insider with SLB!</strong></p><ul><li>Explore the intersection of mathematics, machine learning, and fluid dynamics.</li><li>Learn how ML can accelerate optimal control and reservoir simulation.</li><li>Discover approaches to improve sample efficiency and model reliability.</li><li>See how reinforcement learning enables risk-aware control and inverse problems.</li><li>Learn about careers and opportunities at SLB.</li></ul><p>Learn more about <a href=\"https://www.slb.com/\">SLB</a>.<br><br><strong>Featured Guests:</strong></p><div class=\"align-left media-entity-wrapper image\">\n  \n  \n\n\n\n\n            <div class=\"media image field-media-image label-hidden\">  <img loading=\"lazy\" src=\"/sites/g/files/sbiybj17116/files/styles/stanford_circle/public/media/image/rodneylessard_0.jpg.png?itok=fwJrUVb0\" width=\"140\" height=\"140\" alt>\n\n\n</div>\n      \n</div>\n<p><a href=\"https://www.linkedin.com/in/lessardrw/\">Rodney Lessard</a>, Scientific Computing and Modelling Lead, SLB Software Technology Innovation Center&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><div class=\"align-left media-entity-wrapper image\">\n  \n  \n\n\n\n\n            <div class=\"media image field-media-image label-hidden\">  <img loading=\"lazy\" src=\"/sites/g/files/sbiybj17116/files/styles/stanford_circle/public/media/image/suryasathujoda_1.jpg.png?itok=EGUP2Yc8\" width=\"140\" height=\"140\" alt>\n\n\n</div>\n      \n</div>\n<p><a href=\"https://www.linkedin.com/in/suryasathujoda/\">Surya Sathujoda</a>, Data Scientist, SLB Software Technology Innovation Center&nbsp;</p><p>&nbsp;</p><p><strong>Full Title &amp; Abstract</strong><br><strong>Mathematical Frontiers in Machine Learning for Fluid Dynamics: Risk-Aware Control and Inverse Problems</strong><br>In this talk, we examine the mathematical intersection of partial differential equations (PDEs), numerical analysis, and machine learning (ML) within fluid dynamics and reservoir simulation. While classical solvers provide rigorous physical accuracy, their high evaluation cost within iterative loops for high-dimensional optimal control and history matching motivates the adoption of ML architectures. Deploying ML in these highly non-linear, multi-scale regimes introduces a new set of challenges: standard models suffer from severe sample inefficiency and lack generalization guarantees outside their training manifold. To resolve these limitations, we highlight frontiers that exploit the mathematical structure of the physics: utilizing geometric deep learning to preserve fundamental symmetries and improve sample efficiency, and deploying probabilistic frameworks for rigorous, out-of-distribution confidence bounds. Finally, we discuss how these elements enable Reinforcement Learning (RL) for robust, risk-aware control and inverse problems.</p><p><em>Please note that this event is for Stanford students.&nbsp;Lunch will be provided. If you have any questions, please get in touch with ICME Career Services:&nbsp;</em><a href=\"mailto:contact@example.com\"><em>Tanya Schornack</em></a><br><br>&nbsp;</p>",
+    "su_event_alt_loc": "The Hive ",
+    "su_event_cta": {
+     "uri": "https://forms.gle/jtgpCBvKWbnATZFY8",
+     "title": "RSVP HERE",
+     "options": [],
+     "target_uuid": null,
+     "url": "https://forms.gle/jtgpCBvKWbnATZFY8"
+    },
+    "su_event_date_time": {
+     "value": "2026-10-22T19:00:00+00:00",
+     "end_value": "2026-10-22T20:00:00+00:00",
+     "duration": 60,
+     "rrule": null,
+     "rrule_index": null,
+     "timezone": "America/Los_Angeles"
+    },
+    "su_event_dek": "Lunch & Learn",
+    "su_event_localist_id": null,
+    "su_event_location": null,
+    "su_event_source": null,
+    "su_event_subheadline": null
+   },
+   "relationships": {
+    "su_event_audience": {
+     "data": [
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+       "meta": {
+        "drupal_internal__target_id": 131
+       }
+      }
+     ],
+     "links": {
+      "related": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/2437370e-a60d-4f2d-af67-033eecb8a38c/su_event_audience?resourceVersion=id%3A62151"
+      },
+      "self": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/2437370e-a60d-4f2d-af67-033eecb8a38c/relationships/su_event_audience?resourceVersion=id%3A62151"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "node--stanford_event",
+   "id": "879c3ab4-721b-41be-8fc7-8ef32195ca49",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/879c3ab4-721b-41be-8fc7-8ef32195ca49?resourceVersion=id%3A62231"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/879c3ab4-721b-41be-8fc7-8ef32195ca49?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "title": "Industry Insider: Cerebras | Rethinking the Speed of AI",
+    "path": {
+     "alias": "/events/career-forum-education/industry-insider-cerebras-rethinking-speed-ai",
+     "pid": 8711,
+     "langcode": "en"
+    },
+    "body": "<p><strong>What happens when AI can respond almost as fast as you can think?</strong></p><p>Join <strong>Cerebras Systems</strong> for an inside look at how the company is rethinking AI computing and building technology designed to make AI dramatically faster. Learn how Cerebras is approaching the challenges of AI at scale and what faster inference could mean for the next generation of AI applications.</p><p><strong>Founded by Stanford alum Andrew Feldman</strong>, Cerebras is building the future of AI infrastructure through its innovative wafer-scale computing technology. Feldman is the company’s co-founder and CEO and holds both an MBA and BA from Stanford.</p><p>For Stanford students interested in AI, machine learning, computing, and technology, this is an opportunity to hear directly from the team building the future of AI and learn more about internship and full-time career opportunities at Cerebras.</p><p>Learn more about Cerebras Systems: <a href=\"https://www.cerebras.ai/\">https://www.cerebras.ai/</a></p><p><em>Please note that this event is for Stanford students.&nbsp;Lunch will be provided. If you have any questions, please get in touch with ICME Career Services:&nbsp;</em><a href=\"mailto:contact@example.com\"><em>Tanya Schornack</em></a><br><br>&nbsp;</p><p>&nbsp;</p><p><br><br>&nbsp;</p>",
+    "su_event_alt_loc": "The Hive ",
+    "su_event_cta": {
+     "uri": "https://forms.gle/jtgpCBvKWbnATZFY8",
+     "title": "RSVP HERE",
+     "options": [],
+     "target_uuid": null,
+     "url": "https://forms.gle/jtgpCBvKWbnATZFY8"
+    },
+    "su_event_date_time": {
+     "value": "2026-11-04T20:00:00+00:00",
+     "end_value": "2026-11-04T21:00:00+00:00",
+     "duration": 60,
+     "rrule": null,
+     "rrule_index": null,
+     "timezone": "America/Los_Angeles"
+    },
+    "su_event_dek": "Lunch & Learn",
+    "su_event_localist_id": null,
+    "su_event_location": null,
+    "su_event_source": null,
+    "su_event_subheadline": null
+   },
+   "relationships": {
+    "su_event_audience": {
+     "data": [
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+       "meta": {
+        "drupal_internal__target_id": 131
+       }
+      }
+     ],
+     "links": {
+      "related": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/879c3ab4-721b-41be-8fc7-8ef32195ca49/su_event_audience?resourceVersion=id%3A62231"
+      },
+      "self": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/879c3ab4-721b-41be-8fc7-8ef32195ca49/relationships/su_event_audience?resourceVersion=id%3A62231"
+      }
+     }
+    }
+   }
+  },
+  {
+   "type": "node--stanford_event",
+   "id": "dc0ef141-3d7b-4b11-86a8-a7fa87534f4a",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/dc0ef141-3d7b-4b11-86a8-a7fa87534f4a?resourceVersion=id%3A59906"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/dc0ef141-3d7b-4b11-86a8-a7fa87534f4a?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "title": "ICME Career Forum 2026",
+    "path": {
+     "alias": "/events/career-forum-education/icme-career-forum-2026",
+     "pid": 7976,
+     "langcode": "en"
+    },
+    "body": "<p>The <a href=\"https://icme.stanford.edu/get-involved/annual-events-icme/xtend-career-forum\">ICME Career Forum</a> is a one-of-a-kind event that brings together MS and PhD students from ICME and other related programs with our <a href=\"https://icme.stanford.edu/corporate-programs\">I</a><a href=\"https://icme.stanford.edu/Affiliate-Program\">CME Affiliates</a> from industry and national labs for a day of networking and recruiting. Unlike any other career event offered on campus, the ICME Career Forum connects students and hiring managers with each other in a relaxed and personal setting that you won't find at large-scale career fairs. <br><br><strong>EVENT DETAILS &amp; FAQS</strong><br><a href=\"https://icme.stanford.edu/icme-career-forum-information-organizations\"><strong>For Organizations</strong></a><br><a href=\"https://icme.stanford.edu/icme-career-forum-information-students\"><strong>For Students</strong></a><br><br><strong>SAMPLE AGENDA FOR THURSDAY, NOVEMBER 5, 2026</strong></p><table class=\"table\"><tbody><tr><td>Starts at 8:30 AM</td><td><strong>Check-in and Name Badge Pick-up (Huang Basement near Nvidia Auditorium)</strong></td></tr><tr><td>9:00 - 10:30 AM</td><td><strong>Morning Meet &amp; Greet: Students and Organizations</strong></td></tr><tr><td>10:30 AM - 12:30 PM </td><td><strong>Pre-Scheduled Interviews/Open Houses</strong></td></tr><tr><td>12:30 - 1:30 PM</td><td><strong>Afternoon Break</strong></td></tr><tr><td>1:30 - 4:00 PM</td><td><strong>Pre-Scheduled Interviews/Open Houses</strong></td></tr><tr><td>4:00 - 5:00 PM</td><td><strong>Bonus Interviews for Students</strong></td></tr></tbody></table><p><em>If you have any questions, please contact Tanya Schornack, ICME Program Manager of Affiliates &amp; Career Services, at </em><a href=\"mailto:tschorna@stahford.edu\"><em>contact@example.com</em></a>.<br><br> </p><p> </p>",
+    "su_event_alt_loc": null,
+    "su_event_cta": null,
+    "su_event_date_time": {
+     "value": "2026-11-05T17:00:00+00:00",
+     "end_value": "2026-11-06T01:00:00+00:00",
+     "duration": 480,
+     "rrule": null,
+     "rrule_index": null,
+     "timezone": "America/Los_Angeles"
+    },
+    "su_event_dek": "A unique event that brings together Stanford students and faculty with participating organizations from industry and national labs for a full day of interviewing and networking.",
+    "su_event_localist_id": null,
+    "su_event_location": {
+     "langcode": null,
+     "country_code": "US",
+     "administrative_area": "CA",
+     "locality": "Stanford",
+     "dependent_locality": null,
+     "postal_code": "94305",
+     "address_line1": "475 Via Ortega",
+     "address_line2": "Basement Atrium and Mackenzie Room",
+     "address_line3": "",
+     "organization": "Stanford University - Huang Engineering Center"
+    },
+    "su_event_source": null,
+    "su_event_subheadline": null
+   },
+   "relationships": {
+    "su_event_audience": {
+     "data": [
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "d6cfb1cc-5e69-4abd-8989-d3ec950d7650",
+       "meta": {
+        "drupal_internal__target_id": 8406
+       }
+      },
+      {
+       "type": "taxonomy_term--event_audience",
+       "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+       "meta": {
+        "drupal_internal__target_id": 131
+       }
+      }
+     ],
+     "links": {
+      "related": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/dc0ef141-3d7b-4b11-86a8-a7fa87534f4a/su_event_audience?resourceVersion=id%3A59906"
+      },
+      "self": {
+       "href": "https://icme.stanford.edu/jsonapi/node/stanford_event/dc0ef141-3d7b-4b11-86a8-a7fa87534f4a/relationships/su_event_audience?resourceVersion=id%3A59906"
+      }
+     }
+    }
+   }
+  }
+ ],
+ "included": [
+  {
+   "type": "taxonomy_term--event_audience",
+   "id": "6eaf9909-9f26-4e01-9121-34ecb577f0e0",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/6eaf9909-9f26-4e01-9121-34ecb577f0e0?resourceVersion=id%3A131"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/6eaf9909-9f26-4e01-9121-34ecb577f0e0?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "name": "Students"
+   }
+  },
+  {
+   "type": "taxonomy_term--event_audience",
+   "id": "d6cfb1cc-5e69-4abd-8989-d3ec950d7650",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/d6cfb1cc-5e69-4abd-8989-d3ec950d7650?resourceVersion=id%3A8406"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/d6cfb1cc-5e69-4abd-8989-d3ec950d7650?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "name": "Affiliate Members"
+   }
+  },
+  {
+   "type": "taxonomy_term--event_audience",
+   "id": "80a4d81e-8eff-4138-8529-5bff4f7952c1",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/80a4d81e-8eff-4138-8529-5bff4f7952c1?resourceVersion=id%3A126"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/80a4d81e-8eff-4138-8529-5bff4f7952c1?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "name": "Alumni"
+   }
+  },
+  {
+   "type": "taxonomy_term--event_audience",
+   "id": "f9979993-225b-4bdb-906f-daa2626332c5",
+   "links": {
+    "self": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/f9979993-225b-4bdb-906f-daa2626332c5?resourceVersion=id%3A101"
+    },
+    "working-copy": {
+     "href": "https://icme.stanford.edu/jsonapi/taxonomy_term/event_audience/f9979993-225b-4bdb-906f-daa2626332c5?resourceVersion=rel%3Aworking-copy"
+    }
+   },
+   "attributes": {
+    "name": "Faculty/Staff"
+   }
+  }
+ ],
+ "meta": {
+  "count": 5
+ },
+ "links": {
+  "self": {
+   "href": "https://icme.stanford.edu/jsonapi/node/stanford_event?fields%5Bnode--stanford_event%5D=title%2Cpath%2Cbody%2Csu_event_date_time%2Csu_event_dek%2Csu_event_subheadline%2Csu_event_alt_loc%2Csu_event_location%2Csu_event_localist_id%2Csu_event_source%2Csu_event_cta%2Csu_event_audience&fields%5Btaxonomy_term--event_audience%5D=name&filter%5Bstatus%5D=1&filter%5Bupcoming%5D%5Bcondition%5D%5Bpath%5D=su_event_date_time.end_value&filter%5Bupcoming%5D%5Bcondition%5D%5Boperator%5D=%3E%3D&filter%5Bupcoming%5D%5Bcondition%5D%5Bvalue%5D=1791442800&include=su_event_audience&page%5Blimit%5D=50&sort=su_event_date_time.value"
+  }
+ }
+}

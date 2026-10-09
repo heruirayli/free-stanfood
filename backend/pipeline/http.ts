@@ -99,8 +99,15 @@ export interface HttpResponse {
   notModified: boolean;
 }
 
+export interface RequestOptions {
+  accept?: string;
+  // Overrides the client's maxRetries, e.g. 0 for a host whose robots.txt asks
+  // for minutes between requests: a failure waits for the next run instead.
+  retries?: number;
+}
+
 export interface HttpClient {
-  getText(url: string, options?: { accept?: string }): Promise<HttpResponse>;
+  getText(url: string, options?: RequestOptions): Promise<HttpResponse>;
 }
 
 export interface HttpClientOptions {
@@ -183,7 +190,7 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
 
   const getText = async (
     url: string,
-    { accept = "application/json" }: { accept?: string } = {},
+    { accept = "application/json", retries = maxRetries }: RequestOptions = {},
   ): Promise<HttpResponse> => {
     const host = new URL(url).host;
     const cached = cache?.get(url);
@@ -206,7 +213,7 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
         }
         body = await response.text();
       } catch (error) {
-        if (attempt >= maxRetries) {
+        if (attempt >= retries) {
           throw new Error(`Request to ${url} failed after ${attempt + 1} attempts`, {
             cause: error,
           });
@@ -238,7 +245,7 @@ export const createHttpClient = (options: HttpClientOptions): HttpClient => {
       // The next attempt, and any other URL on this host, waits out the delay,
       // even when this request has used up its retries.
       limiter.defer(host, retryAfter ?? backoff(attempt));
-      if (attempt >= maxRetries) throw new HttpError(response.status, url, body);
+      if (attempt >= retries) throw new HttpError(response.status, url, body);
     }
   };
 

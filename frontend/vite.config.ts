@@ -30,5 +30,8 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/setupTests.ts"],
+    // A file's first test also pays for loading its modules into jsdom, which can
+    // pass 5 seconds when the suite runs in parallel on a busy machine.
+    testTimeout: 15_000,
   },
 });

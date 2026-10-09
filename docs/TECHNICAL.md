@@ -114,22 +114,24 @@ Each run, for every adapter registered in `backend/pipeline/run.ts`:
 | Source | Method | Notes |
 |---|---|---|
 | Stanford Events (`events.stanford.edu`) | Public Localist JSON API, `/api/2/events` | Verified 2026-09-28. robots.txt allows `/api/` (`Crawl-Delay: 1`). See the header of `adapters/localist.ts`. |
-| Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | Currently 11 public Luma calendars: Stanford centers and institutes (CEAS, The Europe Center, Precourt, IDA), found through Luma links in Stanford Events listings, and student groups (Stanford Founders, Stanford Entrepreneurs, Blockchain Club, Cardinal Ventures, GDG, Biotech Group, Climate Week), found by web search. Each was checked to be public with a feed that loads without a login. `api.luma.com` allows `/ics/get` in robots.txt (checked 2026-10-07). Luma feeds carry only the title, so food is mostly detected from it, and many club events are already on Stanford Events. |
+| Public calendar feeds (`adapters/icalFeeds.ts`) | iCalendar (`.ics`) subscription feeds | 16 public Luma calendars and Stanford Law School's calendar. The Luma calendars belong to Stanford centers and institutes (CEAS, The Europe Center, Precourt, IDA, Ho Center, the Doerr School's Access, Belonging & Community office), found through Luma links in Stanford Events listings, and to student groups (Stanford Founders, Stanford Entrepreneurs, Blockchain Club, Cardinal Ventures, GDG, Biotech Group, Climate Week, IEEE, Stanford XR, BASES), found by web search. Luma feeds carry only the title, address, and host, so for events in the next 60 days the adapter also reads the event's page on `luma.com` for its description and ticket price, from the page's schema.org JSON-LD (one request each, at most 40 per calendar per run). `api.luma.com` disallows only `/insights/` and `luma.com` limits only Googlebot (checked 2026-10-08). The Law School feed is the "Subscribe" link on law.stanford.edu/events; its robots.txt disallows `/events/*` and `/feed` (not the feed's path) and asks for `Crawl-delay: 600`, so it gets one request per run with no retries. Each Law School description ends with who the event is for; community-only and invitation-only events are restricted. |
 | CardinalEngage (`cardinalengage.stanford.edu`) | Public RSS feed, `/rss_events` | Only events clubs publish publicly (about two dozen, mostly GSB clubs). Rooms are hidden from signed-out visitors, so cards show no location. The host's "food provided" checkbox counts as an explicit offer. robots.txt (checked 2026-10-06) disallows the mobile app backend (`/mobile_ws/`), which we never use; the event pages need a login, so they aren't scraped either. See the header of `adapters/cardinalengage.ts`. |
+| Department websites on Stanford Sites (`adapters/stanfordSites.ts`) | The Drupal platform's public JSON:API, `/jsonapi/node/stanford_event` | ICME, Bing Overseas Studies, Graduate Life Office, AeroAstro, Computer Science, the Center for Teaching and Learning, and Sarafan ChEM-H. Only each site's own events: those copied from Stanford Events (`su_event_localist_id`, `su_event_source`) are skipped. One request per site per run, without retries, since robots.txt asks for `Crawl-delay: 30` (checked 2026-10-08). The request names the fields it needs, so organizer emails and phone numbers are never fetched. A weekly series entered as one span of weeks is skipped. To add a site, add it to `STANFORD_SITES` after checking its robots.txt and that its events aren't all copies. |
 
 New sources should prefer, in order: an official API, a discovered JSON endpoint, iCal/RSS, schema.org JSON-LD, and HTML parsing only as a last resort. Never add a source that requires a login.
 
 #### Adding a calendar feed
 
-Club events that never reach Stanford Events often live on a public Google Calendar or a Luma calendar. Both publish an iCal feed you can add in one line:
+Club events that never reach Stanford Events often live on a Luma calendar or a site's own calendar with a "Subscribe" (iCal) link. Either can be added in one line:
 
 1. Find the feed.
    - **Luma:** on the calendar's page, the RSS-shaped **Add iCal Subscription** button offers `webcal://api.luma.com/ics/get?entity=calendar&id=cal-…`. Use it with `https://` instead of `webcal://`.
-   - **Google Calendar:** in the calendar's settings, **Public address in iCal format**, which ends in `/public/basic.ics`. It only works if the calendar is public.
+   - **A site's calendar:** a "Subscribe", "iCal", or "Add to calendar" link on its events page.
+   - **Not Google Calendar:** `calendar.google.com/robots.txt` disallows its public `.ics` feeds.
 2. Check that the feed needs no login and that the site's robots.txt and terms allow automated access.
-3. Add an entry to `ICAL_FEEDS` in `backend/pipeline/adapters/icalFeeds.ts` with an `id`, the host `name`, the feed `url`, and a public `homepage`. Note where you found it and when you checked it.
+3. Add an entry to `ICAL_FEEDS` in `backend/pipeline/adapters/icalFeeds.ts` with an `id`, the host `name`, the feed `url`, and a public `homepage` (for Luma, use the `lumaFeed` helper). Note where you found it and when you checked it. If the site asks for a long crawl delay, set `retries: 0`; if its descriptions state the audience in fixed words, add `audienceRules`.
 
-Each feed runs as its own source (`ical:<id>`), so a broken feed only affects itself, and a calendar with nothing coming up isn't treated as a failure. One limitation: Luma feeds carry only the title, address, and host, not the event's full description, so food detection there mostly relies on the title.
+Each feed runs as its own source (`ical:<id>`), so a broken feed only affects itself, and a calendar with nothing coming up isn't treated as a failure. For Luma calendars, the adapter reads each upcoming event's page for the description the feed leaves out.
 
 ### Audience policy
 

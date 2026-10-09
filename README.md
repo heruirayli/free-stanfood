@@ -22,12 +22,14 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 ## How It Works
 
 ```
- Stanford Events ─┐
- CardinalEngage ──┼──▶  daily scrape  ──▶  find the free food  ──▶  events.json  ──▶  website
- Luma calendars ──┘    (GitHub Actions)      (rule-based)          (in the repo)
+ Stanford Events ──┐
+ CardinalEngage ───┤
+ Luma calendars ───┼──▶  daily scrape  ──▶  find the free food  ──▶  events.json  ──▶  website
+ Law School ───────┤    (GitHub Actions)      (rule-based)          (in the repo)
+ Department sites ─┘
 ```
 
-1. **Collect.** Every morning a GitHub Actions job reads the public listings on [Stanford Events](https://events.stanford.edu), student-group events on [CardinalEngage](https://cardinalengage.stanford.edu), and public Luma calendars of Stanford centers and clubs.
+1. **Collect.** Every morning a GitHub Actions job reads the public listings on [Stanford Events](https://events.stanford.edu), student-group events on [CardinalEngage](https://cardinalengage.stanford.edu), public Luma calendars of Stanford centers and clubs, the Law School's calendar, and the event pages of departments such as ICME, Overseas Studies, and the Graduate Life Office.
 2. **Read for food.** Each listing is checked sentence by sentence. "Lunch will be provided" and "join us for pizza" count; "food insecurity panel", "bring your own lunch", "$25 includes dinner", and "pizza won't be provided" don't.
 3. **Publish.** The results are saved to a single data file in the repo, and the site reads it. There's no database to run.
 
@@ -37,7 +39,7 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 - **A polite scraper.** It reads only public pages, never anything behind a login, and follows each site's robots.txt. It sends at most one request a second, backs off when a site is busy, and skips downloads that haven't changed.
 - **Privacy first.** Only details about the event are kept, never who's attending. Private and members-only events are left out, and hosts can ask for a listing to be removed.
 - **Careful with time.** Times are always shown in campus time, whatever the viewer's time zone, including all-day and multi-day events and daylight saving changes.
-- **Well tested.** About 410 automated tests cover the scraper, the food detector, the API, and the interface, using saved real data instead of live sites.
+- **Well tested.** About 430 automated tests cover the scraper, the food detector, the API, and the interface, using saved real data instead of live sites.
 
 ## Built With
 

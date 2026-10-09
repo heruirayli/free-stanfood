@@ -12,6 +12,7 @@ import { createCardinalEngageAdapter } from "./adapters/cardinalengage.js";
 import { createIcalAdapter } from "./adapters/ical.js";
 import { ICAL_FEEDS } from "./adapters/icalFeeds.js";
 import { createLocalistAdapter } from "./adapters/localist.js";
+import { STANFORD_SITES, createStanfordSiteAdapter } from "./adapters/stanfordSites.js";
 import type { SourceAdapter } from "./adapters/types.js";
 import { createHttpClient, FileResponseCache, type ResponseCache } from "./http.js";
 import { processSource, type SourceRun } from "./processSource.js";
@@ -29,6 +30,7 @@ const buildAdapters = (contactEmail: string, cache: ResponseCache): SourceAdapte
     createLocalistAdapter({ http }),
     ...ICAL_FEEDS.map((feed) => createIcalAdapter({ http, feed })),
     createCardinalEngageAdapter({ http }),
+    ...STANFORD_SITES.map((site) => createStanfordSiteAdapter({ http, site })),
   ];
 };
 

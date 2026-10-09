@@ -1,0 +1,122 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Stanford Law School - ECPv6.18.0//NONSGML v1.0//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Stanford Law School
+X-ORIGINAL-URL:https://law.stanford.edu
+X-WR-CALDESC:Events for Stanford Law School
+REFRESH-INTERVAL;VALUE=DURATION:PT1H
+X-Robots-Tag:noindex
+X-PUBLISHED-TTL:PT1H
+BEGIN:VTIMEZONE
+TZID:America/Los_Angeles
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+TZNAME:PDT
+DTSTART:20250309T100000
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+TZNAME:PST
+DTSTART:20251102T090000
+END:STANDARD
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+TZNAME:PDT
+DTSTART:20260308T100000
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+TZNAME:PST
+DTSTART:20261101T090000
+END:STANDARD
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+TZNAME:PDT
+DTSTART:20270314T100000
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+TZNAME:PST
+DTSTART:20271107T090000
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261010
+DTSTAMP:20260929T211815Z
+CREATED:20260720T181212Z
+LAST-MODIFIED:20260929T211815Z
+UID:10003101-1791158400-1791590399@law.stanford.edu
+SUMMARY:SLS Wellness Week 2026
+DESCRIPTION:Wellness Week is a great time to discover campus resources\, to build healthy habits\, and to contemplate what ‘wellness’ means to you. We hope you’ll take time this week to focus on your own wellbeing.\n\nhttps://law.stanford.edu/event/sls-wellness-week-2026/\n\nThis is a Stanford Law School community event.
+URL:https://law.stanford.edu/event/sls-wellness-week-2026/
+LOCATION:@ SLS\, Crown Quadrangle\, 559 Nathan Abbott Way\, Stanford\, CA\, 94305-8610\, United States
+CATEGORIES:Lunchtime Speakers
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Los_Angeles:20261008T124500
+DTEND;TZID=America/Los_Angeles:20261008T134500
+DTSTAMP:20260922T223203Z
+CREATED:20260918T173850Z
+LAST-MODIFIED:20260922T223203Z
+UID:10003335-1791463500-1791467100@law.stanford.edu
+SUMMARY:Private Lunch w/ Matt Botvinick [Anthropic; AI & Rule of Law]
+DESCRIPTION:A private lunch with SAILS and Matt Botvinick\, who leads the AI & Rule of Law Team at the Anthropic Institute. This team\, embedded within Anthropic\, conducts research on what AI will mean for executive power\, for courts and elections\, and for the public deliberation that constitutional democracy ultimately rests on. Matt is also a Resident Fellow at Yale Law School and previously was a Senior Director of Research at Google DeepMind and Professor in Neural Computation at Princeton.\n\nNote: attendance to this lunch is limited to 15 students from the Stanford Law School community. Space is limited\, so please only register if you are deeply interested in participating in a discussion at the intersection of artificial intelligence and the rule of law. Attendees will be chosen via a lottery system.\n\nEnter Lottery To Attend — Thursday\, October 8\, 2026\, 12:00 to 1:00pm.\n\nhttps://law.stanford.edu/event/private-lunch-w-matt-botvinick-anthropic-ai-rule-of-law/\n\nThis is a Stanford Law School community event.\n\nEnter Lottery To Attend: https://forms.gle/GDY8Q69BbM3geEom7
+URL:https://law.stanford.edu/event/private-lunch-w-matt-botvinick-anthropic-ai-rule-of-law/
+LOCATION:@ SLS: Room 272\, Crown Quadrangle\, 559 Nathan Abbott Way\, Stanford\, CA\, 94305-8610\, United States
+CATEGORIES:Lunchtime Speakers
+GEO:37.424106;-122.1660756
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=@ SLS: Room 272 Crown Quadrangle 559 Nathan Abbott Way Stanford CA 94305-8610 United States;X-APPLE-RADIUS=500;X-TITLE=Crown Quadrangle\, 559 Nathan Abbott Way:geo:-122.1660756,37.424106
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Los_Angeles:20261008T190000
+DTEND;TZID=America/Los_Angeles:20261008T210000
+DTSTAMP:20260929T164940Z
+CREATED:20260929T160011Z
+LAST-MODIFIED:20260929T164940Z
+UID:10003393-1791486000-1791493200@law.stanford.edu
+SUMMARY:JD/MBA Dinner and Professional Networking
+DESCRIPTION:We’ll be hosted by the Demarzos and accompanied by other business leaders from GSB.\n\nhttps://law.stanford.edu/event/jd-mba-dinner-and-professional-networking/\n\nThis is a Stanford Law School private/or invitation only event.
+URL:https://law.stanford.edu/event/jd-mba-dinner-and-professional-networking/
+LOCATION:Offsite/Private Location
+CATEGORIES:Student Organizations
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Los_Angeles:20261015T170000
+DTEND;TZID=America/Los_Angeles:20261015T180000
+DTSTAMP:20261007T220339Z
+CREATED:20260520T160015Z
+LAST-MODIFIED:20261007T220339Z
+UID:10003038-1792083600-1792087200@law.stanford.edu
+SUMMARY:How Americans Enforce the Law
+DESCRIPTION:Unlike most democracies that rely on government agencies for regulatory enforcement\, the United States has developed a distinctly different system–one that empowers ordinary citizens and their lawyers to enforce the law through more than 10\,000 “private rights of action” embedded in regulatory statutes. Why and how did this system develop and what are the implications for rule of law and democracy in the United States? Please join the Neukom Center and Hoover’s Center for Revitalizing American Institutions to celebrate Faculty Director Professor Diego Zambrano’s new book How Americans Enforce the Law\, the first comprehensive account of this enforcement regime. Professor Eugene Volokh will serve as the discussant.  Lights snacks will be served.\n\nhttps://law.stanford.edu/event/how-americans-enforce-the-law/\n\nThis event is open to the public.\n\nRegister: https://forms.gle/i1aaCdcGUZ6P66TN9
+URL:https://law.stanford.edu/event/how-americans-enforce-the-law/
+LOCATION:@ SLS: Room 280B\, Crown Quadrangle\, 559 Nathan Abbott Way\, Stanford\, CA\, 94305-8610\, United States
+CATEGORIES:Faculty Book Talks,Programs & Centers
+GEO:37.424106;-122.1660756
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=@ SLS: Room 280B Crown Quadrangle 559 Nathan Abbott Way Stanford CA 94305-8610 United States;X-APPLE-RADIUS=500;X-TITLE=Crown Quadrangle\, 559 Nathan Abbott Way:geo:-122.1660756,37.424106
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Los_Angeles:20261020T124500
+DTEND;TZID=America/Los_Angeles:20261020T140000
+DTSTAMP:20260929T201530Z
+CREATED:20260811T235920Z
+LAST-MODIFIED:20260929T201530Z
+UID:10003133-1792500300-1792504800@law.stanford.edu
+SUMMARY:Lunch Conversation with Kevin Roose & Ethan Mollick: The Future and Business of AI
+DESCRIPTION:Join Stanford Law School and Cravath\, Swaine & Moore LLP for a special lunch conversation with Kevin Roose\, Host of Hard Fork and Machine Gods\, and Ethan Mollick\, Associate Professor at the Wharton School of the University of Pennsylvania\, timed to the release of their new books on artificial intelligence: Roose’s The AGI Chronicles: The Inside Story of the Race to Create an Artificial Superintelligence and Mollick’s Co-Existence: The Next Phase of AI. Together\, they’ll explore where AI is headed\, what it means for work and society\, and how leaders should think about what comes next. \nRegister using the buttons below. \n\nhttps://law.stanford.edu/event/kevin-roose-ethan-mollick-the-future-and-business-of-ai/\n\nThis event is open to the Stanford community.
+URL:https://law.stanford.edu/event/kevin-roose-ethan-mollick-the-future-and-business-of-ai/
+LOCATION:@ SLS: Room 290\, 559 Nathan Abbott Way\, Stanford\, CA\, 94305-8610\, United States
+CATEGORIES:Lunchtime Speakers
+GEO:37.4135757;-122.1689284
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=@ SLS: Room 290 559 Nathan Abbott Way Stanford CA 94305-8610 United States;X-APPLE-RADIUS=500;X-TITLE=559 Nathan Abbott Way:geo:-122.1689284,37.4135757
+END:VEVENT
+END:VCALENDAR
