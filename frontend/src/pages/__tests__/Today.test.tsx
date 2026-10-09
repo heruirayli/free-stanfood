@@ -66,17 +66,38 @@ describe("Today page", () => {
     vi.restoreAllMocks();
   });
 
-  it("groups today's events into sections, leaving out ended ones", async () => {
+  it("groups today's events into sections, with what's over last", async () => {
     renderAt("/");
     await screen.findByText("Lunch seminar");
-    expect(sectionNames()).toEqual(["Happening Now1 event", "Later Today1 event", "Tonight1 event"]);
+    expect(sectionNames()).toEqual([
+      "Happening Now1 event",
+      "Later Today1 event",
+      "Tonight1 event",
+      "Earlier Today1 event",
+    ]);
     expect(screen.getByText("Ends in 20 min")).toBeInTheDocument();
-    expect(screen.queryByText("Breakfast")).not.toBeInTheDocument();
-    // Loads from now to the end of the campus day.
+    const earlier = within(screen.getByRole("region", { name: /Earlier Today/ }));
+    expect(earlier.getByText("Breakfast")).toBeInTheDocument();
+    expect(earlier.getByText("Ended")).toBeInTheDocument();
+    // Loads the whole campus day, from midnight.
     expect(eventService.getEvents).toHaveBeenCalledWith(
-      { from: NOW.toISOString(), to: "2026-10-02T07:00:00.000Z", minConfidence: 0 },
+      { from: "2026-10-01T07:00:00.000Z", to: "2026-10-02T07:00:00.000Z", minConfidence: 0 },
       expect.any(AbortSignal),
     );
+  });
+
+  it("hides what's over when filtering to now or the next two hours", async () => {
+    renderAt("/?when=2h");
+    await screen.findByText("Lunch seminar");
+    expect(screen.queryByText("Breakfast")).not.toBeInTheDocument();
+  });
+
+  it("ends with a link to the week, keeping the filters", async () => {
+    renderAt("/?food=boba&when=now");
+    await screen.findByText("Nothing matches these filters right now.");
+    expect(screen.getByRole("link", { name: "See all events" })).toHaveAttribute("href", "/week?food=boba");
+    fireEvent.click(screen.getByRole("link", { name: "See all events" }));
+    await waitFor(() => expect(location()).toBe("/week?food=boba"));
   });
 
   it("hides empty sections", async () => {
@@ -86,11 +107,13 @@ describe("Today page", () => {
     expect(sectionNames()).toEqual(["Later Today1 event"]);
   });
 
-  it("says when there's nothing, and points to the week", async () => {
+  it("says when there's nothing left, points to the week, and still shows what's over", async () => {
     vi.mocked(eventService.getEvents).mockResolvedValue([ended]);
     renderAt("/");
     expect(await screen.findByText("No free food right now. Check back around lunch.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /this week/i })).toHaveAttribute("href", "/week");
+    expect(sectionNames()).toEqual(["Earlier Today1 event"]);
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   it("shows the error and tries again", async () => {

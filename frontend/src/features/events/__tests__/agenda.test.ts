@@ -31,21 +31,33 @@ describe("buildAgenda", () => {
     expect(ids(agenda.tonight)).toEqual(["five", "late"]);
   });
 
-  it("drops ended events and other days", () => {
-    const all = ids([...agenda.happeningNow, ...agenda.laterToday, ...agenda.tonight]);
-    expect(all).not.toContain("ended");
+  it("keeps today's ended events for Earlier Today, and drops other days", () => {
+    expect(ids(agenda.earlierToday)).toEqual(["ended"]);
+    const all = ids([...agenda.happeningNow, ...agenda.laterToday, ...agenda.tonight, ...agenda.earlierToday]);
     expect(all).not.toContain("tomorrow");
   });
 
-  it("moves an event to happening now once it starts, and drops it once it ends", () => {
-    const at = (iso: string) => buildAgenda(events, new Date(iso));
-    expect(ids(at("2026-10-01T21:00:00Z").happeningNow)).toContain("later-1");
-    expect(ids(at("2026-10-01T22:00:00Z").happeningNow)).not.toContain("later-1"); // no end listed: an hour
+  it("leaves out events that ended before today", () => {
+    const yesterday = makeEvent({ id: "yesterday", startTime: "2026-09-30T19:00:00Z", endTime: "2026-09-30T20:00:00Z" });
+    // An overnight event that ended this morning counts as today's.
+    const overnight = makeEvent({ id: "overnight", startTime: "2026-10-01T05:00:00Z", endTime: "2026-10-01T09:00:00Z" });
+    expect(ids(buildAgenda([yesterday, overnight], NOW).earlierToday)).toEqual(["overnight"]);
   });
 
-  it("reports an empty agenda", () => {
+  it("moves an event to happening now once it starts, and to earlier today once it ends", () => {
+    const at = (iso: string) => buildAgenda(events, new Date(iso));
+    expect(ids(at("2026-10-01T21:00:00Z").happeningNow)).toContain("later-1");
+    const after = at("2026-10-01T22:00:00Z"); // no end listed: an hour
+    expect(ids(after.happeningNow)).not.toContain("later-1");
+    expect(ids(after.earlierToday)).toContain("later-1");
+  });
+
+  it("reports an empty agenda, not counting what's over", () => {
     expect(agendaIsEmpty(buildAgenda([], NOW))).toBe(true);
     expect(agendaIsEmpty(agenda)).toBe(false);
+    const onlyOver = buildAgenda([makeEvent({ startTime: "2026-10-01T16:00:00Z", endTime: "2026-10-01T17:00:00Z" })], NOW);
+    expect(onlyOver.earlierToday).toHaveLength(1);
+    expect(agendaIsEmpty(onlyOver)).toBe(true);
   });
 
   it("keeps multi-day all-day events on every day they cover", () => {

@@ -1,5 +1,6 @@
 import { formatInTimeZone } from "date-fns-tz";
 import { useEffect, useMemo, useState } from "react";
+import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -38,13 +39,14 @@ const Today = () => {
   const [attempt, setAttempt] = useState(0);
   const campusDay = campusDateKey(now);
 
-  // Load everything from now through the end of today (campus time). Reloads
-  // when the campus day rolls over, so a tab left open overnight shows the new day.
+  // Load all of today (campus time), including what's already over, for Earlier
+  // Today. Reloads when the campus day rolls over, so a tab left open overnight
+  // shows the new day.
   useEffect(() => {
     const start = new Date();
     const request = dispatch(
       getEvents({
-        from: start.toISOString(),
+        from: startOfCampusDay(start).toISOString(),
         to: startOfCampusDay(start, 1).toISOString(),
         minConfidence: 0,
       }),
@@ -79,28 +81,38 @@ const Today = () => {
     );
   } else if (isLoading || !isSuccess) {
     content = <AgendaSkeleton />;
-  } else if (agendaIsEmpty(agenda) && hasActiveFilters(filters, "today")) {
-    content = (
-      <StatusMessage title="Nothing matches these filters right now.">
-        <button type="button" onClick={() => dispatch(clearFilters())} className={`${secondaryButtonClass} mt-2`}>
-          Clear filters
-        </button>
-      </StatusMessage>
-    );
-  } else if (agendaIsEmpty(agenda)) {
-    content = (
-      <StatusMessage title="No free food right now. Check back around lunch.">
-        <Link to={{ pathname: "/week", search: sharedFilterSearch(filters) }} className={linkClass}>
-          See what’s coming up this week
-        </Link>
-      </StatusMessage>
-    );
   } else {
+    let upcoming;
+    if (agendaIsEmpty(agenda) && hasActiveFilters(filters, "today")) {
+      upcoming = (
+        <StatusMessage title="Nothing matches these filters right now.">
+          <button type="button" onClick={() => dispatch(clearFilters())} className={`${secondaryButtonClass} mt-2`}>
+            Clear filters
+          </button>
+        </StatusMessage>
+      );
+    } else if (agendaIsEmpty(agenda)) {
+      upcoming = (
+        <StatusMessage title="No free food right now. Check back around lunch.">
+          <Link to={{ pathname: "/week", search: sharedFilterSearch(filters) }} className={linkClass}>
+            See what’s coming up this week
+          </Link>
+        </StatusMessage>
+      );
+    } else {
+      upcoming = (
+        <>
+          <AgendaSection id="now" title="Happening Now" events={agenda.happeningNow} now={now} live />
+          <AgendaSection id="later" title="Later Today" events={agenda.laterToday} now={now} />
+          <AgendaSection id="tonight" title="Tonight" events={agenda.tonight} now={now} />
+        </>
+      );
+    }
+    // What's already over goes last, so what's still ahead stays on top.
     content = (
       <>
-        <AgendaSection id="now" title="Happening Now" events={agenda.happeningNow} now={now} live />
-        <AgendaSection id="later" title="Later Today" events={agenda.laterToday} now={now} />
-        <AgendaSection id="tonight" title="Tonight" events={agenda.tonight} now={now} />
+        <div className={agendaIsEmpty(agenda) ? "mb-7" : undefined}>{upcoming}</div>
+        <AgendaSection id="earlier" title="Earlier Today" events={agenda.earlierToday} now={now} />
       </>
     );
   }
@@ -121,6 +133,13 @@ const Today = () => {
           </button>
         </p>
       )}
+      {/* The rest of the week, like the header's Week tab (filters carried along). */}
+      <div className="mt-8 flex justify-center">
+        <Link to={{ pathname: "/week", search: sharedFilterSearch(filters) }} className={secondaryButtonClass}>
+          See all events
+          <FaArrowRight aria-hidden="true" className="text-[0.75rem]" />
+        </Link>
+      </div>
     </Page>
   );
 };

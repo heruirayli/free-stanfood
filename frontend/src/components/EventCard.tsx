@@ -5,7 +5,7 @@ import type { FoodEvent } from "../types/event";
 import type { BackgroundState } from "../utils/background";
 import { cx } from "../utils/cx";
 import { describeFood } from "../utils/food";
-import { formatTimeRange, relativeTime, type RelativeTime } from "../utils/time";
+import { formatTimeRange, hasEnded, relativeTime, type RelativeTime } from "../utils/time";
 import AudienceBadge from "./AudienceBadge";
 import FoodBadge, { BAND_STYLES, foodBand } from "./FoodBadge";
 
@@ -23,12 +23,12 @@ const Line = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
   </p>
 );
 
-const Relative = ({ relative }: { relative: RelativeTime }) =>
-  relative.endingSoon ? (
-    <span className="rounded-full bg-primary-soft px-2 py-px font-semibold text-primary">{relative.label}</span>
-  ) : (
-    <span className="font-semibold text-ink">{relative.label}</span>
-  );
+const Relative = ({ relative, ended }: { relative: RelativeTime; ended: boolean }) => {
+  if (relative.endingSoon)
+    return <span className="rounded-full bg-primary-soft px-2 py-px font-semibold text-primary">{relative.label}</span>;
+  // "Ended" stays quiet; what's still to come is the news.
+  return <span className={ended ? "text-ink-muted" : "font-semibold text-ink"}>{relative.label}</span>;
+};
 
 // One event on the Today page. The whole card opens its details, over the list.
 const EventCard = ({ event, now }: EventCardProps) => {
@@ -67,7 +67,7 @@ const EventCard = ({ event, now }: EventCardProps) => {
             {relative && (
               <>
                 <span aria-hidden="true">·</span>
-                <Relative relative={relative} />
+                <Relative relative={relative} ended={hasEnded(event, now)} />
               </>
             )}
           </span>
