@@ -5,7 +5,6 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import CalendarExport from "../components/CalendarExport";
 import EventFilters from "../components/EventFilters";
@@ -22,6 +21,7 @@ import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useNow } from "../hooks/useNow";
 import type { BackgroundState } from "../utils/background";
 import { fromCampusWallClock } from "../utils/time";
+import { notifyError } from "../utils/notify";
 
 export type CalendarView = "week" | "month";
 
@@ -66,7 +66,7 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   );
 
   useEffect(() => {
-    if (isError) toast.error(message);
+    if (isError) notifyError(message);
   }, [isError, message]);
 
   // Week ↔ Month and phone ↔ wider screen switch the view in place, keeping the date.

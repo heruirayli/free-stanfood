@@ -2,7 +2,6 @@ import { formatInTimeZone } from "date-fns-tz";
 import { useEffect, useMemo, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import AgendaSection from "../components/AgendaSection";
 import EventFilters from "../components/EventFilters";
@@ -27,6 +26,7 @@ import { useFilterUrlSync } from "../hooks/useFilterUrlSync";
 import { useNow } from "../hooks/useNow";
 import { linkClass, primaryButtonClass, secondaryButtonClass } from "../styles";
 import { campusDateKey, hasEnded, startOfCampusDay } from "../utils/time";
+import { notifyError } from "../utils/notify";
 
 const Today = () => {
   const dispatch = useAppDispatch();
@@ -59,7 +59,7 @@ const Today = () => {
   }, [dispatch, attempt, campusDay, evening]);
 
   useEffect(() => {
-    if (isError) toast.error(message);
+    if (isError) notifyError(message);
   }, [isError, message]);
 
   const agenda = useMemo(

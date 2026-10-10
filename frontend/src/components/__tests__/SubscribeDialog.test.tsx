@@ -5,10 +5,11 @@ import Header from "../Header";
 
 const FEED = `${window.location.origin}/api/events/calendar.ics`;
 
-const openSubscribe = () => {
+// The dialog's code loads when Subscribe is pressed, so wait for it.
+const openSubscribe = async () => {
   renderWithApp(<Header />);
   fireEvent.click(screen.getByRole("button", { name: /subscribe/i }));
-  return screen.getByRole("dialog", { name: "Subscribe in Your Calendar" });
+  return screen.findByRole("dialog", { name: "Subscribe in Your Calendar" });
 };
 
 describe("Subscribe", () => {
@@ -16,8 +17,8 @@ describe("Subscribe", () => {
     vi.unstubAllGlobals();
   });
 
-  it("shows the feed URL with Google and Apple instructions", () => {
-    openSubscribe();
+  it("shows the feed URL with Google and Apple instructions", async () => {
+    await openSubscribe();
     expect(screen.getByLabelText("Calendar link")).toHaveValue(FEED);
     expect(screen.getByRole("heading", { name: "Google Calendar" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Apple Calendar" })).toBeInTheDocument();
@@ -30,7 +31,7 @@ describe("Subscribe", () => {
   it("copies the URL", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
-    openSubscribe();
+    await openSubscribe();
     await act(async () => {
       fireEvent.click(screen.getByRole("button", { name: "Copy" }));
     });
@@ -40,20 +41,20 @@ describe("Subscribe", () => {
 
   it("selects the URL when copying isn't allowed", async () => {
     vi.stubGlobal("navigator", { clipboard: { writeText: vi.fn().mockRejectedValue(new Error("denied")) } });
-    openSubscribe();
+    await openSubscribe();
     await act(async () => {
       fireEvent.click(screen.getByRole("button", { name: "Copy" }));
     });
     expect(screen.getByText(/couldn’t copy automatically/i)).toBeInTheDocument();
   });
 
-  it("closes from its Close button and with Escape", () => {
-    const dialog = openSubscribe();
+  it("closes from its Close button and with Escape", async () => {
+    const dialog = await openSubscribe();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(dialog).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /subscribe/i }));
-    const again = screen.getByRole("dialog") as HTMLDialogElement;
+    const again = (await screen.findByRole("dialog")) as HTMLDialogElement;
     act(() => again.close()); // what Escape does
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });

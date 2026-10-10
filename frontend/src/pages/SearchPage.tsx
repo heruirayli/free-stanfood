@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import AgendaSection from "../components/AgendaSection";
 import EventFilters from "../components/EventFilters";
@@ -22,6 +21,7 @@ import { useNow } from "../hooks/useNow";
 import { primaryButtonClass, secondaryButtonClass } from "../styles";
 import type { FoodEvent } from "../types/event";
 import { campusDateKey, dayKeyLabel } from "../utils/time";
+import { notifyError } from "../utils/notify";
 
 // Typing pauses this long before the search goes out.
 const SEARCH_DELAY_MS = 250;
@@ -78,7 +78,7 @@ const SearchPage = () => {
   );
 
   useEffect(() => {
-    if (isError) toast.error(message);
+    if (isError) notifyError(message);
   }, [isError, message]);
 
   const days = useMemo(() => byDay(events, now), [events, now]);

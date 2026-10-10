@@ -1,12 +1,14 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { FaPizzaSlice, FaRegCalendarPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { APP_NAME } from "../constants";
 import { selectFilters } from "../features/events/eventSlice";
 import { sharedFilterSearch } from "../features/events/filterUrl";
-import SubscribeDialog from "./SubscribeDialog";
 import ViewToggle from "./ViewToggle";
+
+// Loaded when Subscribe is pressed.
+const SubscribeDialog = lazy(() => import("./SubscribeDialog"));
 
 // Publishes the header's height as --header-height, so the Today page's section
 // headings can stick right below it (it's two rows on phones, one from sm up).
@@ -53,7 +55,11 @@ const Header = () => {
           </button>
         </div>
       </header>
-      {subscribing && <SubscribeDialog onClose={() => setSubscribing(false)} />}
+      {subscribing && (
+        <Suspense fallback={null}>
+          <SubscribeDialog onClose={() => setSubscribing(false)} />
+        </Suspense>
+      )}
     </>
   );
 };

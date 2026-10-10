@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { toast } from "react-toastify";
 import { STATIC_DATA } from "../constants";
 import { saveFile, staticCalendarFile } from "../features/events/staticCalendar";
+import { notifyError } from "../utils/notify";
 
 interface CalendarFileLinkProps {
   // The API URL of the .ics file.
@@ -24,7 +24,7 @@ const CalendarFileLink = ({ href, filename, className, children }: CalendarFileL
   const download = () =>
     staticCalendarFile(href)
       .then((text) => saveFile(text, filename, "text/calendar"))
-      .catch(() => toast.error("Couldn’t make the calendar file. Try again."));
+      .catch(() => notifyError("Couldn’t make the calendar file. Try again."));
   return (
     <button type="button" onClick={() => void download()} className={className}>
       {children}
