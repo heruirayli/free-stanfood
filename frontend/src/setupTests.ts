@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
+import { cleanup, configure } from "@testing-library/react";
 import { afterEach } from "vitest";
+import { reloadSaved } from "./features/saved/savedEvents";
 
 // Run in a zone far from campus, so anything that uses the viewer's zone instead
 // of campus time fails here too, even on a Pacific machine. Node applies TZ at runtime.
@@ -16,6 +17,13 @@ HTMLDialogElement.prototype.close = function () {
   this.dispatchEvent(new Event("close"));
 };
 
+// Pages load their code on demand, which can take more than the default second
+// when the whole suite runs at once.
+configure({ asyncUtilTimeout: 3000 });
+
 afterEach(() => {
   cleanup();
+  // Saved events live in localStorage; each test starts with none.
+  localStorage.clear();
+  reloadSaved();
 });

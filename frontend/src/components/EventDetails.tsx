@@ -16,6 +16,7 @@ import { formatEventTime, relativeTime } from "../utils/time";
 import AudienceBadge from "./AudienceBadge";
 import CalendarFileLink from "./CalendarFileLink";
 import FoodBadge from "./FoodBadge";
+import SaveButton from "./SaveButton";
 
 interface EventDetailsProps {
   event: FoodEvent;
@@ -100,6 +101,7 @@ const EventDetails = ({ event, now, headingLevel: Heading, headingRef }: EventDe
           <FaRegCalendarPlus aria-hidden="true" />
           Add to calendar
         </CalendarFileLink>
+        <SaveButton event={event} variant="button" />
         <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${linkClass} inline-flex items-center gap-1.5`}>
           View original event
           <FaExternalLinkAlt aria-hidden="true" className="text-[0.7rem]" />

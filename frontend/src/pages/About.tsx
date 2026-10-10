@@ -68,7 +68,12 @@ const About = () => (
         <li>
           <Term>Add to calendar</Term>, in an event’s details, downloads just that event. To download a set of
           events once, use <Term>Add to Your Calendar</Term> at the bottom of Week and Month: everything is
-          included, and you can uncheck the events or days you don’t want.
+          included, and you can uncheck the events or days you don’t want. Downloads remind you 30 minutes
+          before each event.
+        </li>
+        <li>
+          <Term>Save</Term> an event with its star to keep it in your Saved list (the star at the top of the
+          page), and add them all to your calendar at once. Saved events stay in this browser; there’s no account.
         </li>
       </ul>
     </Section>

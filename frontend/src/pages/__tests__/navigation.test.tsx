@@ -5,11 +5,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { makeStore } from "../../app/store";
 import eventService from "../../features/events/eventService";
 import { makeEvent } from "../../testUtils";
+import type { EventQuery } from "../../types/event";
 import CalendarPage from "../CalendarPage";
 import Today from "../Today";
 
 // FullCalendar renders slowly in jsdom on a busy machine.
 const SLOW = { timeout: 5000 };
+
+type Call = [EventQuery, AbortSignal?];
+// Today's own loads: today, or today and tomorrow. Not the two-week look ahead
+// for the next free food when nothing's left.
+const isTodayLoad = ([query]: Call): boolean =>
+  query.from !== undefined && query.to !== undefined && Date.parse(query.to) - Date.parse(query.from) <= 2 * 86_400_000;
+const todayLoads = (calls: Call[]) => calls.filter(isTodayLoad).map(([query]) => query);
 
 // Rendered without StrictMode on purpose: its double effects re-send the
 // calendar's request and hid the Today -> Calendar race in development.
@@ -59,7 +67,11 @@ describe("Today -> Week navigation", () => {
       fireEvent.click(screen.getByRole("link", { name: "Week" }));
     });
     // Today's range and the calendar's range (the export list makes its own, undated request).
-    const rangeRequests = () => vi.mocked(eventService.getEvents).mock.calls.filter(([query]) => query.from !== undefined);
+    // Today's load and the calendar's week: not the export list (no dates) or
+    // Today's two-week look ahead for the next free food.
+    const days = ([query]: Call) => (Date.parse(query.to ?? "") - Date.parse(query.from ?? "")) / 86_400_000;
+    const rangeRequests = () =>
+      vi.mocked(eventService.getEvents).mock.calls.filter((call) => call[0].from !== undefined && Math.round(days(call)) !== 14);
     await waitFor(() => expect(rangeRequests()).toHaveLength(2), SLOW);
     await waitFor(() => expect(store.getState().events).toMatchObject({ isLoading: false, isSuccess: true }), SLOW);
     expect(store.getState().events.events).toHaveLength(1);
@@ -79,19 +91,18 @@ describe("Today page overnight", () => {
     const store = renderApp();
     await waitFor(() => expect(store.getState().events.isSuccess).toBe(true), SLOW);
     // In the evening: today and tomorrow.
-    expect(getEvents).toHaveBeenLastCalledWith(
+    expect(todayLoads(getEvents.mock.calls)).toEqual([
       expect.objectContaining({ from: "2026-10-01T07:00:00.000Z", to: "2026-10-03T07:00:00.000Z" }),
-      expect.anything(),
-    );
+    ]);
 
     await act(async () => {
       vi.advanceTimersByTime(10 * 60_000); // past campus midnight
     });
-    await waitFor(() => expect(getEvents).toHaveBeenCalledTimes(2), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(
-      expect.objectContaining({ from: "2026-10-02T07:00:00.000Z", to: "2026-10-03T07:00:00.000Z" }),
-      expect.anything(),
-    );
+    await waitFor(() => expect(todayLoads(getEvents.mock.calls)).toHaveLength(2), SLOW);
+    expect(todayLoads(getEvents.mock.calls)[1]).toMatchObject({
+      from: "2026-10-02T07:00:00.000Z",
+      to: "2026-10-03T07:00:00.000Z",
+    });
   }, 20_000);
 
   it("loads tomorrow too once it's 8 PM", async () => {
@@ -100,13 +111,13 @@ describe("Today page overnight", () => {
     const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
     const store = renderApp();
     await waitFor(() => expect(store.getState().events.isSuccess).toBe(true), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-02T07:00:00.000Z" }), expect.anything());
+    expect(todayLoads(getEvents.mock.calls)).toEqual([expect.objectContaining({ to: "2026-10-02T07:00:00.000Z" })]);
 
     await act(async () => {
       vi.advanceTimersByTime(6 * 60_000); // 8:01 PM
     });
-    await waitFor(() => expect(getEvents).toHaveBeenCalledTimes(2), SLOW);
-    expect(getEvents).toHaveBeenLastCalledWith(expect.objectContaining({ to: "2026-10-03T07:00:00.000Z" }), expect.anything());
+    await waitFor(() => expect(todayLoads(getEvents.mock.calls)).toHaveLength(2), SLOW);
+    expect(todayLoads(getEvents.mock.calls)[1]).toMatchObject({ to: "2026-10-03T07:00:00.000Z" });
   }, 20_000);
 });
 

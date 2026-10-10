@@ -71,9 +71,9 @@ const CalendarExport = ({ now }: { now: Date }) => {
         Add to Your Calendar
       </h2>
       <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-muted">
-        Download upcoming free food as an .ics file, choosing the events you want. In Google Calendar, open
-        Settings, then Import &amp; export, and choose the file. To get new events as they’re found, use Subscribe
-        at the top instead.
+        Download upcoming free food as an .ics file, choosing the events you want. Each one comes with a
+        reminder 30 minutes before. In Google Calendar, open Settings, then Import &amp; export, and choose the
+        file. To get new events as they’re found, use Subscribe at the top instead.
       </p>
 
       {status === "error" && <p className="mt-3 text-[0.9375rem] font-semibold text-primary">Couldn’t load the events to choose from.</p>}

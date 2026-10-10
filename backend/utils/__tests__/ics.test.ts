@@ -75,6 +75,16 @@ describe("buildCalendar", () => {
     expect(buildCalendar([open], NOW)).toContain("DTEND:20261007T200000Z");
   });
 
+  it("adds a reminder before timed events when asked, never to all-day ones", () => {
+    const text = buildCalendar([lunch, retreat], NOW, { alarmMinutes: 30 });
+    const [timed, allDay] = parsedEvents(text);
+    const alarms = (event: VEvent | undefined) => Object.values((event as { alarms?: unknown[] } | undefined)?.alarms ?? {});
+    expect(text).toContain("BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:Pizza\\, Pitch\\; & Pals\r\nTRIGGER:-PT30M\r\nEND:VALARM");
+    expect(alarms(timed)).toHaveLength(1);
+    expect(alarms(allDay)).toHaveLength(0);
+    expect(buildCalendar([lunch], NOW)).not.toContain("VALARM");
+  });
+
   it("is a valid empty calendar when there are no events", () => {
     expect(parsedEvents(buildCalendar([], NOW))).toEqual([]);
   });

@@ -20,10 +20,11 @@ import {
   selectVisibleEvents,
   setFilters,
 } from "../features/events/eventSlice";
-import { hasActiveFilters, matchesWindow } from "../features/events/filterEvents";
+import { applyFilters, hasActiveFilters, matchesWindow } from "../features/events/filterEvents";
 import { sharedFilterSearch } from "../features/events/filterUrl";
 import { useFilterUrlSync } from "../hooks/useFilterUrlSync";
 import { useNow } from "../hooks/useNow";
+import { useUpcomingEvents } from "../hooks/useUpcomingEvents";
 import { linkClass, primaryButtonClass, secondaryButtonClass } from "../styles";
 import { campusDateKey, hasEnded, startOfCampusDay } from "../utils/time";
 import { notifyError } from "../utils/notify";
@@ -70,6 +71,17 @@ const Today = () => {
     (event) => !hasEnded(event, now) && matchesWindow(event, filters.window, now),
   ).length;
 
+  // When nothing's left to show, look past what's loaded for the next free food
+  // (that matches the filters): somewhere to go instead of an empty page.
+  const nothingAhead = isSuccess && agendaIsEmpty(agenda) && agenda.tomorrow.length === 0;
+  const loadedUntil = startOfCampusDay(now, evening ? 2 : 1).toISOString();
+  const upcoming = useUpcomingEvents(nothingAhead ? loadedUntil : null);
+  // undefined while looking, null when there's none in the next two weeks.
+  const next = useMemo(
+    () => (upcoming ? (applyFilters(upcoming, filters)[0] ?? null) : undefined),
+    [upcoming, filters],
+  );
+
   let content;
   if (isError) {
     content = (
@@ -83,9 +95,9 @@ const Today = () => {
   } else if (isLoading || !isSuccess) {
     content = <AgendaSkeleton />;
   } else {
-    let upcoming;
+    let ahead;
     if (agendaIsEmpty(agenda) && hasActiveFilters(filters, "today")) {
-      upcoming = (
+      ahead = (
         <StatusMessage title="Nothing matches these filters right now.">
           <button type="button" onClick={() => dispatch(clearFilters())} className={`${secondaryButtonClass} mt-2`}>
             Clear filters
@@ -93,9 +105,11 @@ const Today = () => {
         </StatusMessage>
       );
     } else if (agendaIsEmpty(agenda) && agenda.tomorrow.length > 0) {
-      upcoming = <StatusMessage title="No more free food today. Here’s what’s on tomorrow." />;
+      ahead = <StatusMessage title="No more free food today. Here’s what’s on tomorrow." />;
+    } else if (agendaIsEmpty(agenda) && next !== null) {
+      ahead = <StatusMessage title="No more free food today." />;
     } else if (agendaIsEmpty(agenda)) {
-      upcoming = (
+      ahead = (
         <StatusMessage title="No free food right now. Check back around lunch.">
           <Link to={{ pathname: "/week", search: sharedFilterSearch(filters) }} className={linkClass}>
             See what’s coming up this week
@@ -103,7 +117,7 @@ const Today = () => {
         </StatusMessage>
       );
     } else {
-      upcoming = (
+      ahead = (
         <>
           <AgendaSection id="now" title="Happening Now" events={agenda.happeningNow} now={now} live />
           <AgendaSection id="later" title="Later Today" events={agenda.laterToday} now={now} />
@@ -114,7 +128,10 @@ const Today = () => {
     // What's already over goes last, so what's still ahead stays on top.
     content = (
       <>
-        <div className={agendaIsEmpty(agenda) ? "mb-7" : undefined}>{upcoming}</div>
+        <div className={agendaIsEmpty(agenda) ? "mb-7" : undefined}>{ahead}</div>
+        {nothingAhead && next && (
+          <AgendaSection id="next" title="Next Free Food" events={[next]} now={now} count={false} />
+        )}
         <AgendaSection id="tomorrow" title="Tomorrow" events={agenda.tomorrow} now={now} />
         <AgendaSection id="earlier" title="Earlier Today" events={agenda.earlierToday} now={now} />
       </>

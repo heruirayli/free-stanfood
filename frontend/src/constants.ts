@@ -29,6 +29,10 @@ export const NEXT_HOURS_MS = 2 * 60 * 60 * 1000;
 // The iCal feed of upcoming food events (Subscribe, Add to Your Calendar).
 export const CALENDAR_FEED_PATH = "/api/events/calendar.ics";
 
+// Downloaded calendar files remind you this long before each event, so you get
+// there. The subscription feed has no reminders: it would ping you for everything.
+export const REMINDER_MINUTES = 30;
+
 // The static build (GitHub Pages) has no API: events come from a file written at
 // build time (data/events.json), and calendar files are made in the browser.
 export const STATIC_DATA = import.meta.env.STATIC_DATA === true;

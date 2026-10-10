@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FaMapMarkerAlt, FaRegClock, FaUsers } from "react-icons/fa";
+import { FaMapMarkerAlt, FaRedoAlt, FaRegClock, FaUsers } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import type { FoodEvent } from "../types/event";
 import type { BackgroundState } from "../utils/background";
@@ -8,10 +8,13 @@ import { describeFood } from "../utils/food";
 import { formatTimeRange, hasEnded, relativeTime, type RelativeTime } from "../utils/time";
 import AudienceBadge from "./AudienceBadge";
 import FoodBadge, { BAND_STYLES, foodBand } from "./FoodBadge";
+import SaveButton from "./SaveButton";
 
 interface EventCardProps {
   event: FoodEvent;
   now: Date;
+  // For the next date of a repeating event: when it meets, e.g. "Wednesdays · 10:30 AM · 44 dates".
+  repeats?: string | null;
 }
 
 const Line = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
@@ -31,7 +34,7 @@ const Relative = ({ relative, ended }: { relative: RelativeTime; ended: boolean 
 };
 
 // One event on the Today page. The whole card opens its details, over the list.
-const EventCard = ({ event, now }: EventCardProps) => {
+const EventCard = ({ event, now, repeats = null }: EventCardProps) => {
   const location = useLocation();
   const titleId = `event-${event.id}-title`;
   const relative = relativeTime(event, now);
@@ -49,8 +52,11 @@ const EventCard = ({ event, now }: EventCardProps) => {
       {/* The food band's color, as in the calendar. */}
       <span aria-hidden="true" className={cx("absolute inset-y-0 left-0 w-1", band.stripe)} />
 
-      <p className="text-[1.0625rem] leading-snug font-bold text-ink">{describeFood(event.foodDetails)}</p>
-      <h3 id={titleId} className="mt-0.5 leading-snug text-ink">
+      {/* Above the card's link, which covers the rest of the card. */}
+      <SaveButton event={event} variant="icon" className="absolute top-2 right-2 z-10" />
+
+      <p className="pr-9 text-[1.0625rem] leading-snug font-bold text-ink">{describeFood(event.foodDetails)}</p>
+      <h3 id={titleId} className="mt-0.5 pr-9 leading-snug text-ink">
         <Link
           to={`/events/${event.id}`}
           state={state}
@@ -72,6 +78,7 @@ const EventCard = ({ event, now }: EventCardProps) => {
             )}
           </span>
         </Line>
+        {repeats && <Line icon={<FaRedoAlt />}>{repeats}</Line>}
         {event.locationName && <Line icon={<FaMapMarkerAlt />}>{event.locationName}</Line>}
         {event.hostOrg && <Line icon={<FaUsers />}>{event.hostOrg}</Line>}
       </div>

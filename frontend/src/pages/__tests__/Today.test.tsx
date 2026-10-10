@@ -137,6 +137,36 @@ describe("Today page", () => {
     expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
+  it("points to the next free food when nothing's left today", async () => {
+    const nextLunch = makeEvent({ id: "next".padEnd(24, "0"), title: "Monday lunch talk", foodDetails: "lunch", startTime: "2026-10-05T19:00:00Z", endTime: null });
+    const nextBoba = makeEvent({ id: "nextboba".padEnd(24, "0"), title: "Boba study break", foodDetails: "boba", startTime: "2026-10-07T01:00:00Z", endTime: null });
+    // Today's own load has only what's over; the look ahead (from tonight's midnight) has more.
+    vi.mocked(eventService.getEvents).mockImplementation(async (query) =>
+      query.from === "2026-10-02T07:00:00.000Z" ? [nextLunch, nextBoba] : [ended],
+    );
+    renderAt("/");
+    expect(await screen.findByText("Monday lunch talk")).toBeInTheDocument();
+    expect(screen.getByText("No more free food today.")).toBeInTheDocument();
+    expect(sectionNames()).toEqual(["Next Free Food", "Earlier Today1 event"]);
+    expect(screen.getByText("Mon, Oct 5 · 12:00 PM")).toBeInTheDocument();
+    expect(eventService.getEvents).toHaveBeenCalledWith(
+      { from: "2026-10-02T07:00:00.000Z", to: "2026-10-16T07:00:00.000Z", minConfidence: 0 },
+      expect.any(AbortSignal),
+    );
+  });
+
+  it("finds the next match for the filters", async () => {
+    const nextLunch = makeEvent({ id: "next".padEnd(24, "0"), title: "Monday lunch talk", foodDetails: "lunch", startTime: "2026-10-05T19:00:00Z", endTime: null });
+    const nextBoba = makeEvent({ id: "nextboba".padEnd(24, "0"), title: "Boba study break", foodDetails: "boba", startTime: "2026-10-07T01:00:00Z", endTime: null });
+    vi.mocked(eventService.getEvents).mockImplementation(async (query) =>
+      query.from === "2026-10-02T07:00:00.000Z" ? [nextLunch, nextBoba] : [lunch],
+    );
+    renderAt("/?food=boba");
+    expect(await screen.findByText("Boba study break")).toBeInTheDocument();
+    expect(screen.getByText("Nothing matches these filters right now.")).toBeInTheDocument();
+    expect(screen.queryByText("Monday lunch talk")).not.toBeInTheDocument();
+  });
+
   it("shows the error and tries again", async () => {
     vi.mocked(eventService.getEvents).mockRejectedValueOnce(new Error("Network Error"));
     renderAt("/");

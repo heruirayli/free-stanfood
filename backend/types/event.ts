@@ -93,6 +93,8 @@ export const eventIdSchema = z.string().regex(/^[a-f0-9]{24}$/, "Invalid event i
 
 // Extra params for GET /api/events/calendar.ics: export only `ids`, or everything
 // except `exclude` (comma-separated event ids). The app sends whichever is shorter.
+// `alarm` adds a reminder that many minutes before each timed event (downloads
+// ask for one; the subscription feed doesn't).
 const idList = z
   .string()
   .transform((value) => value.split(",").filter(Boolean))
@@ -101,5 +103,6 @@ const idList = z
 export const calendarSelectionSchema = z.object({
   ids: idList.optional(),
   exclude: idList.optional(),
+  alarm: z.coerce.number().int().min(1).max(1440).optional(),
 });
 export type CalendarSelection = z.infer<typeof calendarSelectionSchema>;

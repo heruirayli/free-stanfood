@@ -19,16 +19,17 @@ const NOW = new Date("2026-10-06T12:00:00Z");
 
 describe("export URLs", () => {
   it("exports everything with no list by default", () => {
-    expect(exportUrl([a, b, c], {}, false)).toBe("/api/events/calendar.ics");
+    // With a reminder before each event.
+    expect(exportUrl([a, b, c], {}, false)).toBe("/api/events/calendar.ics?alarm=30");
   });
 
   it("sends whichever list is shorter", () => {
-    expect(exportUrl([a, b, c], { [a.id]: true }, false)).toBe(`/api/events/calendar.ics?exclude=${a.id}`);
-    expect(exportUrl([a, b, c], { [a.id]: true, [b.id]: true }, false)).toBe(`/api/events/calendar.ics?ids=${c.id}`);
+    expect(exportUrl([a, b, c], { [a.id]: true }, false)).toBe(`/api/events/calendar.ics?alarm=30&exclude=${a.id}`);
+    expect(exportUrl([a, b, c], { [a.id]: true, [b.id]: true }, false)).toBe(`/api/events/calendar.ics?alarm=30&ids=${c.id}`);
   });
 
   it("asks for 'Food possible' matches when they're shown", () => {
-    expect(exportUrl([a], {}, true)).toBe("/api/events/calendar.ics?minConfidence=0");
+    expect(exportUrl([a], {}, true)).toBe("/api/events/calendar.ics?minConfidence=0&alarm=30");
   });
 
   it("builds a one-event file for any date", () => {
@@ -39,6 +40,7 @@ describe("export URLs", () => {
       from: "2028-01-20T03:00:00.000Z",
       to: "2028-01-20T03:00:00.001Z",
       minConfidence: "0",
+      alarm: "30",
     });
   });
 });
@@ -76,7 +78,7 @@ describe("CalendarExport", () => {
   it("renders the event list only while 'Choose events' is open", async () => {
     await renderExport(undefined, { open: false });
     expect(section().queryAllByRole("checkbox")).toHaveLength(0);
-    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics");
+    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?alarm=30");
     act(() => openDetails(screen.getByText(/of 4 selected/)));
     expect(section().getAllByRole("checkbox", { name: /^All events on/ })).toHaveLength(3);
   });
@@ -84,14 +86,14 @@ describe("CalendarExport", () => {
   it("selects every event by default", async () => {
     await renderExport();
     expect(section().getAllByRole("checkbox").every((box) => (box as HTMLInputElement).checked)).toBe(true);
-    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics");
+    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?alarm=30");
   });
 
   it("leaves out events the user unchecks", async () => {
     await renderExport();
     fireEvent.click(section().getByRole("checkbox", { name: /boba social/i }));
     expect(section().getByText(/3 of 4 selected/)).toBeInTheDocument();
-    expect(downloadLink()).toHaveAttribute("href", `/api/events/calendar.ics?exclude=${b.id}`);
+    expect(downloadLink()).toHaveAttribute("href", `/api/events/calendar.ics?alarm=30&exclude=${b.id}`);
     expect(downloadLink()).toHaveTextContent("Download 3 events (.ics)");
   });
 
@@ -120,7 +122,7 @@ describe("CalendarExport", () => {
     expect(section().queryByRole("link", { name: /download/i })).not.toBeInTheDocument();
     expect(section().getByText("Select at least one event to download.")).toBeInTheDocument();
     fireEvent.click(section().getByRole("button", { name: "Select all" }));
-    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics");
+    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?alarm=30");
   });
 
   it("reloads the choices when 'Food possible' matches are turned on", async () => {
@@ -130,7 +132,7 @@ describe("CalendarExport", () => {
     });
     await screen.findByText(/4 of 4 selected/);
     expect(eventService.getEvents).toHaveBeenLastCalledWith({ minConfidence: 0 }, expect.any(AbortSignal));
-    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?minConfidence=0");
+    expect(downloadLink()).toHaveAttribute("href", "/api/events/calendar.ics?minConfidence=0&alarm=30");
   });
 
   it("frees the list when the calendar closes", async () => {

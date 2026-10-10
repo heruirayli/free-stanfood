@@ -20,7 +20,8 @@ export const staticCalendarFile = async (apiUrl: string, now = new Date()): Prom
     },
     now,
   ).filter((event) => (!ids || ids.includes(event.id)) && !exclude.has(event.id));
-  return buildCalendar(events, now);
+  const alarm = Number(params.get("alarm"));
+  return buildCalendar(events, now, { alarmMinutes: Number.isInteger(alarm) && alarm > 0 ? alarm : undefined });
 };
 
 // Hands `text` to the browser as a file download.

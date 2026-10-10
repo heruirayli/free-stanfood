@@ -1,11 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "../../App";
 import { makeStore } from "../../app/store";
 import eventService from "../../features/events/eventService";
-import { makeEvent } from "../../testUtils";
+import { makeEvent, openDetails } from "../../testUtils";
 
 const NOW = new Date("2026-10-01T19:10:00Z"); // Thursday, Oct 1, 12:10 PM PDT
 
@@ -56,6 +56,34 @@ describe("Search page", () => {
     expect(headings()).toEqual(["Today1 event", "Tomorrow1 event", "Thu, Nov 121 event"]);
     expect(screen.getByText("3 upcoming events")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1, name: "Search" })).toBeInTheDocument();
+  });
+
+  it("folds a repeating event into one card at its next date", async () => {
+    // Wednesdays at 10:30 AM PDT.
+    const coffee = ["2026-10-07", "2026-10-14", "2026-10-21"].map((day, i) =>
+      makeEvent({
+        id: `${i}`.repeat(24),
+        title: "International Spouse Coffee",
+        hostOrg: "Bechtel International Center",
+        foodDetails: "coffee",
+        startTime: `${day}T17:30:00Z`,
+        endTime: null,
+      }),
+    );
+    vi.mocked(eventService.getEvents).mockResolvedValue([todayPizza, ...coffee]);
+    renderAt("/search?q=coffee");
+    await screen.findByText("International Spouse Coffee");
+    expect(screen.getAllByText("International Spouse Coffee")).toHaveLength(1);
+    // Pizza talk doesn't match "coffee", so one event is left: the series.
+    expect(screen.getByText("1 upcoming event, 3 dates in all")).toBeInTheDocument();
+    // Under its next date, saying when it meets.
+    const day = within(screen.getByRole("region", { name: /^Wed, Oct 7/ }));
+    expect(day.getByText("Wednesdays · 10:30 AM · 3 dates")).toBeInTheDocument();
+
+    act(() => openDetails(day.getByText("Show all 3 dates")));
+    const dates = day.getAllByRole("link", { name: /^Wed, Oct/ });
+    expect(dates.map((link) => link.textContent)).toEqual(["Wed, Oct 7", "Wed, Oct 14", "Wed, Oct 21"]);
+    expect(dates[2]).toHaveAttribute("href", `/events/${coffee[2]!.id}`);
   });
 
   it("invites a search before there is one, without asking the API", () => {

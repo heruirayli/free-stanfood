@@ -14,6 +14,7 @@ import { useToastsWanted } from "./utils/notify";
 // to show what's on today.
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
+const SavedPage = lazy(() => import("./pages/SavedPage"));
 const EventPage = lazy(() => import("./pages/EventPage"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -60,6 +61,7 @@ export const AppRoutes = () => {
           <Route path="/month" element={<Calendar view="month" />} />
           <Route path="/calendar" element={<OldCalendar />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/saved" element={<SavedPage />} />
           <Route path="/events/:id" element={<EventPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

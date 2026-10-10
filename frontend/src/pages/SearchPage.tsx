@@ -15,34 +15,17 @@ import {
   selectVisibleEvents,
   setFilters,
 } from "../features/events/eventSlice";
+import { byDay } from "../features/events/byDay";
 import { hasActiveFilters } from "../features/events/filterEvents";
+import { foldSeries } from "../features/events/series";
 import { useFilterUrlSync } from "../hooks/useFilterUrlSync";
 import { useNow } from "../hooks/useNow";
 import { primaryButtonClass, secondaryButtonClass } from "../styles";
-import type { FoodEvent } from "../types/event";
-import { campusDateKey, dayKeyLabel } from "../utils/time";
+import { dayKeyLabel } from "../utils/time";
 import { notifyError } from "../utils/notify";
 
 // Typing pauses this long before the search goes out.
 const SEARCH_DELAY_MS = 250;
-
-interface Day {
-  key: string;
-  events: FoodEvent[];
-}
-
-// Results by campus day, soonest first. Events that started on an earlier day
-// and are still on count as today's.
-const byDay = (events: FoodEvent[], now: Date): Day[] => {
-  const today = campusDateKey(now);
-  const days = new Map<string, FoodEvent[]>();
-  for (const event of events) {
-    const start = campusDateKey(event.startTime);
-    const key = start < today ? today : start;
-    days.set(key, [...(days.get(key) ?? []), event]);
-  }
-  return [...days].map(([key, list]) => ({ key, events: list })).sort((a, b) => a.key.localeCompare(b.key));
-};
 
 // Every upcoming event, up to a year ahead, that matches the search, by day. The
 // other pages search only what they show; this one asks the API (`q`).
@@ -81,7 +64,13 @@ const SearchPage = () => {
     if (isError) notifyError(message);
   }, [isError, message]);
 
-  const days = useMemo(() => byDay(events, now), [events, now]);
+  // A weekly coffee hour is one result (at its next date), not one per week.
+  const folded = useMemo(() => foldSeries(events), [events]);
+  const days = useMemo(() => byDay(folded.map((item) => item.event), now), [folded, now]);
+  const series = useMemo(
+    () => new Map(folded.filter((item) => item.dates.length > 1).map((item) => [item.event.id, item.dates])),
+    [folded],
+  );
 
   let content;
   if (!query) {
@@ -121,10 +110,18 @@ const SearchPage = () => {
     content = (
       <>
         <p role="status" className="mb-2 text-ink-muted">
-          {events.length} upcoming {events.length === 1 ? "event" : "events"}
+          {folded.length} upcoming {folded.length === 1 ? "event" : "events"}
+          {folded.length < events.length && `, ${events.length} dates in all`}
         </p>
         {days.map((day) => (
-          <AgendaSection key={day.key} id={`day-${day.key}`} title={dayKeyLabel(day.key, now)} events={day.events} now={now} />
+          <AgendaSection
+            key={day.key}
+            id={`day-${day.key}`}
+            title={dayKeyLabel(day.key, now)}
+            events={day.events}
+            now={now}
+            series={series}
+          />
         ))}
       </>
     );

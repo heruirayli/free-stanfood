@@ -102,8 +102,16 @@ describe("GET /api/events/calendar.ics", () => {
     expect(sneaky).not.toContain("BEGIN:VEVENT");
   });
 
+  it("adds reminders when asked", async () => {
+    const range = "from=2099-09-30&to=2099-10-03";
+    expect(await (await fetch(`${base}/api/events/calendar.ics?${range}&alarm=30`)).text()).toContain("TRIGGER:-PT30M");
+    expect(await (await fetch(`${base}/api/events/calendar.ics?${range}`)).text()).not.toContain("VALARM");
+  });
+
   it("rejects bad query params with a JSON 400", async () => {
     expect((await fetch(`${base}/api/events/calendar.ics?from=soon`)).status).toBe(400);
+    expect((await fetch(`${base}/api/events/calendar.ics?alarm=soon`)).status).toBe(400);
+    expect((await fetch(`${base}/api/events/calendar.ics?alarm=5000`)).status).toBe(400);
     expect((await fetch(`${base}/api/events/calendar.ics?ids=not-an-id`)).status).toBe(400);
   });
 });

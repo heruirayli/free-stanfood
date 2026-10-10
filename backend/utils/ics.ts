@@ -94,7 +94,18 @@ const descriptionOf = (event: Event): string => {
     .join("\n");
 };
 
-const eventLines = (event: Event, stamp: string): string[] => [
+export interface CalendarOptions {
+  // A reminder this many minutes before each timed event. All-day events get
+  // none: half an hour before midnight helps no one.
+  alarmMinutes?: number;
+}
+
+const alarmLines = (event: Event, minutes: number | undefined): string[] =>
+  minutes && !event.allDay
+    ? ["BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${escapeText(event.title)}`, `TRIGGER:-PT${minutes}M`, "END:VALARM"]
+    : [];
+
+const eventLines = (event: Event, stamp: string, options: CalendarOptions): string[] => [
   "BEGIN:VEVENT",
   `UID:${event.id}@free-stanfood`,
   `DTSTAMP:${stamp}`,
@@ -103,10 +114,11 @@ const eventLines = (event: Event, stamp: string): string[] => [
   ...(event.locationName ? [`LOCATION:${escapeText(event.locationName)}`] : []),
   `DESCRIPTION:${escapeText(descriptionOf(event))}`,
   `URL:${event.sourceUrl}`,
+  ...alarmLines(event, options.alarmMinutes),
   "END:VEVENT",
 ];
 
-export const buildCalendar = (events: Event[], now: Date): string => {
+export const buildCalendar = (events: Event[], now: Date, options: CalendarOptions = {}): string => {
   const stamp = utcStamp(now);
   const lines = [
     "BEGIN:VCALENDAR",
@@ -116,7 +128,7 @@ export const buildCalendar = (events: Event[], now: Date): string => {
     "METHOD:PUBLISH",
     "X-WR-CALNAME:Free Stanfood",
     `X-WR-TIMEZONE:${CAMPUS_TIME_ZONE}`,
-    ...events.flatMap((event) => eventLines(event, stamp)),
+    ...events.flatMap((event) => eventLines(event, stamp, options)),
     "END:VCALENDAR",
   ];
   return `${lines.map(foldLine).join("\r\n")}\r\n`;

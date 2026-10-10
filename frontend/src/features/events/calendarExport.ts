@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { CALENDAR_FEED_PATH } from "../../constants";
+import { CALENDAR_FEED_PATH, REMINDER_MINUTES } from "../../constants";
 import type { FoodEvent } from "../../types/event";
 import { selectFilters } from "./eventSlice";
 import {
@@ -18,8 +18,9 @@ const withQuery = (params: URLSearchParams): string => {
   return query ? `${CALENDAR_FEED_PATH}?${query}` : CALENDAR_FEED_PATH;
 };
 
-// The download URL for the chosen events. Everything is the default (no list at
-// all); otherwise send whichever list is shorter: the chosen ids or the dropped ones.
+// The download URL for the chosen events, with reminders. Everything is the
+// default (no list at all); otherwise send whichever list is shorter: the chosen
+// ids or the dropped ones.
 export const exportUrl = (
   events: ExportItem[],
   deselected: Readonly<Record<string, true>>,
@@ -27,6 +28,7 @@ export const exportUrl = (
 ): string => {
   const params = new URLSearchParams();
   if (includeLow) params.set("minConfidence", "0");
+  params.set("alarm", String(REMINDER_MINUTES));
   const dropped = events.filter((event) => event.id in deselected).map((event) => event.id);
   if (dropped.length > 0) {
     const chosen = events.filter((event) => !(event.id in deselected)).map((event) => event.id);
@@ -46,6 +48,7 @@ export const eventExportUrl = (event: FoodEvent): string => {
       from: start.toISOString(),
       to: new Date(start.getTime() + 1).toISOString(),
       minConfidence: "0",
+      alarm: String(REMINDER_MINUTES),
     }),
   );
 };

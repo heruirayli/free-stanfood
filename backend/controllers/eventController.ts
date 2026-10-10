@@ -52,7 +52,7 @@ export const getCalendar = asyncHandler(async (req: Request, res: Response) => {
 
   const { events } = await snapshotFor(req);
   const now = new Date();
-  const { ids, exclude } = selection.data;
+  const { ids, exclude, alarm } = selection.data;
   const only = ids && new Set(ids);
   const skip = new Set(exclude ?? []);
   const selected = selectEvents(events, { minConfidence: CALENDAR_MIN_CONFIDENCE, ...query.data }, now).filter(
@@ -62,7 +62,7 @@ export const getCalendar = asyncHandler(async (req: Request, res: Response) => {
     .status(200)
     .type("text/calendar; charset=utf-8")
     .attachment("free-stanfood.ics")
-    .send(buildCalendar(selected, now));
+    .send(buildCalendar(selected, now, { alarmMinutes: alarm }));
 });
 
 // @desc    When the listings last changed

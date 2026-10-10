@@ -18,7 +18,8 @@ Campus is full of free food: lunch at a seminar, pizza at a club meeting, boba a
 - **Browse the calendar.** Week and month views of everything with food, up to a year ahead.
 - **Know what to expect.** Every event says what food there is, how sure the listing is ("Food listed", "Food likely", "Food possible"), and who can come.
 - **Filter.** By food, by what's on now or in the next two hours, by events open to all, or by searching for "pizza", a building, or a host. Search covers everything up to a year ahead. Filters stay in the address, so a filtered view can be shared.
-- **Add events to your calendar.** Subscribe once in Google Calendar or Apple Calendar and new events show up on their own, or download a calendar file of just the events you pick.
+- **Add events to your calendar.** Subscribe once in Google Calendar or Apple Calendar and new events show up on their own, or download a calendar file of just the events you pick, with a reminder 30 minutes before each.
+- **Save events.** Star the ones you like to keep a Saved list in your browser, no account needed, and add them all to your calendar at once.
 - **Use it on your phone.** Designed for small screens first, and usable by keyboard and screen reader.
 
 ## How It Works

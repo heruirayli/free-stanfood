@@ -1,5 +1,7 @@
+import { describeRepeats } from "../features/events/series";
 import type { FoodEvent } from "../types/event";
 import EventCard from "./EventCard";
+import SeriesDates from "./SeriesDates";
 
 interface AgendaSectionProps {
   id: string;
@@ -8,11 +10,15 @@ interface AgendaSectionProps {
   now: Date;
   // Marks the section that's happening now with a live dot.
   live?: boolean;
+  // Repeating events folded into their next date: every date, by that date's id.
+  series?: ReadonlyMap<string, FoodEvent[]>;
+  // Show "3 events" after the title.
+  count?: boolean;
 }
 
 // One of the Today page's sections. Its heading sticks below the header while its
 // events scroll past, as in a calendar's agenda. Hidden when empty.
-const AgendaSection = ({ id, title, events, now, live = false }: AgendaSectionProps) => {
+const AgendaSection = ({ id, title, events, now, live = false, series, count = true }: AgendaSectionProps) => {
   if (events.length === 0) return null;
   const headingId = `${id}-heading`;
 
@@ -24,16 +30,22 @@ const AgendaSection = ({ id, title, events, now, live = false }: AgendaSectionPr
       >
         {live && <span aria-hidden="true" className="size-2 rounded-full bg-primary" />}
         {title}
-        <span className="text-sm font-normal text-ink-muted">
-          {events.length} {events.length === 1 ? "event" : "events"}
-        </span>
+        {count && (
+          <span className="text-sm font-normal text-ink-muted">
+            {events.length} {events.length === 1 ? "event" : "events"}
+          </span>
+        )}
       </h2>
       <ul className="space-y-3">
-        {events.map((event) => (
-          <li key={event.id}>
-            <EventCard event={event} now={now} />
-          </li>
-        ))}
+        {events.map((event) => {
+          const dates = series?.get(event.id) ?? [];
+          return (
+            <li key={event.id}>
+              <EventCard event={event} now={now} repeats={describeRepeats(dates)} />
+              {dates.length > 1 && <SeriesDates dates={dates} now={now} />}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

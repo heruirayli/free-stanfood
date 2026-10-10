@@ -76,6 +76,13 @@ describe("calendar files in the browser", () => {
     expect(one.match(/BEGIN:VEVENT/g)).toHaveLength(1);
     expect(one).toContain("SUMMARY:Coffee hour");
 
+    // A reminder when the URL asks for one, as the API does.
+    expect(one).not.toContain("VALARM");
+    const reminded = await staticCalendarFile("/api/events/calendar.ics?ids=later&alarm=30", NOW);
+    expect(reminded).toContain(
+      "BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:Pizza and pitch night\r\nTRIGGER:-PT30M\r\nEND:VALARM",
+    );
+
     const allBut = await staticCalendarFile("/api/events/calendar.ics?exclude=later", NOW);
     expect(allBut.match(/BEGIN:VEVENT/g)).toHaveLength(1);
   });
