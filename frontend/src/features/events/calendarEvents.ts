@@ -20,3 +20,18 @@ export const toCalendarEvent = (event: FoodEvent): EventInput => ({
 
 // "Now" for the calendar's today highlight and now indicator, in the same form.
 export const campusNow = (): string => toCampusWallClock(new Date());
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// The calendar's dates are campus dates at UTC midnight, so UTC fields read them.
+const dateOnly = (date: Date): string => date.toISOString().slice(0, 10);
+
+// Where Week's back and forward buttons go from a week starting at `start`. It
+// opens on today; from there each step lands on a Sunday-to-Saturday week:
+// forward to the Sunday after `start` (so no day is skipped), back to the Sunday
+// on or before it, or a week before that when `start` is already a Sunday.
+export const weekStep = (start: Date, direction: 1 | -1): string => {
+  const sunday = start.getTime() - start.getUTCDay() * DAY_MS;
+  if (direction === 1) return dateOnly(new Date(sunday + 7 * DAY_MS));
+  return dateOnly(new Date(start.getUTCDay() === 0 ? sunday - 7 * DAY_MS : sunday));
+};

@@ -121,6 +121,51 @@ describe("Today page overnight", () => {
   }, 20_000);
 });
 
+describe("Week's back and forward", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("opens on today, then steps through Sunday-to-Saturday weeks", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-08T19:00:00Z")); // Thursday, Oct 8, noon PDT
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+    const getEvents = vi.spyOn(eventService, "getEvents").mockImplementation(async () => []);
+    const { container } = render(
+      <Provider store={makeStore()}>
+        <MemoryRouter initialEntries={["/week"]}>
+          <Routes>
+            <Route path="/week" element={<CalendarPage view="week" />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>,
+    );
+    const lastRange = () => getEvents.mock.calls.filter(([query]) => query.from !== undefined).at(-1)?.[0];
+    const button = (name: string) => container.querySelector<HTMLButtonElement>(`.fc-${name}-button`)!;
+    const campusMidnight = (date: string) => `${date}T07:00:00.000Z`; // PDT
+
+    await waitFor(() => expect(lastRange()).toMatchObject({ from: campusMidnight("2026-10-08"), to: campusMidnight("2026-10-15") }), SLOW);
+    expect(container.querySelector(".week-from-today")).not.toBeNull(); // Today hides
+
+    fireEvent.click(button("weekForward"));
+    await waitFor(() => expect(lastRange()).toMatchObject({ from: campusMidnight("2026-10-11"), to: campusMidnight("2026-10-18") }), SLOW);
+    expect(container.querySelector(".week-from-today")).toBeNull();
+
+    fireEvent.click(button("weekBack"));
+    await waitFor(() => expect(lastRange()).toMatchObject({ from: campusMidnight("2026-10-04"), to: campusMidnight("2026-10-11") }), SLOW);
+
+    fireEvent.click(button("weekToday"));
+    await waitFor(() => expect(lastRange()).toMatchObject({ from: campusMidnight("2026-10-08") }), SLOW);
+  }, 20_000);
+});
+
 describe("Week on a phone", () => {
   afterEach(() => {
     vi.useRealTimers();

@@ -79,7 +79,7 @@ const SavedPage = () => {
     content = (
       <>
         {upcoming.length > 0 ? (
-          <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="mb-6">
             <CalendarFileLink
               href={savedCalendarUrl(upcoming.map((event) => event.id))}
               filename="free-stanfood-saved.ics"
@@ -88,7 +88,6 @@ const SavedPage = () => {
               <FaRegCalendarPlus aria-hidden="true" />
               Add {upcoming.length === 1 ? "it" : `all ${upcoming.length}`} to calendar
             </CalendarFileLink>
-            <p className="text-[0.9375rem] text-ink-muted">With a reminder 30 minutes before each.</p>
           </div>
         ) : (
           <div className="mb-7">

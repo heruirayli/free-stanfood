@@ -124,8 +124,10 @@
 }
 
 /* FullCalendar disables "Today" while today is in view; hide it until then. It
-   keeps its space, so the date title doesn't shift when it appears. */
-.fc .fc-today-button:disabled {
+   keeps its space, so the date title doesn't shift when it appears. Week's own
+   Today button hides while the week already starts today. */
+.fc .fc-today-button:disabled,
+.week-from-today .fc .fc-weekToday-button {
   visibility: hidden;
 }
 

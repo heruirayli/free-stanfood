@@ -3,7 +3,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import CalendarExport from "../components/CalendarExport";
@@ -13,14 +13,15 @@ import Page from "../components/Page";
 import Spinner from "../components/Spinner";
 import StatusMessage from "../components/StatusMessage";
 import { useLoadCalendarExport } from "../features/events/calendarExport";
-import { campusNow, toCalendarEvent } from "../features/events/calendarEvents";
+import { campusNow, toCalendarEvent, weekStep } from "../features/events/calendarEvents";
 import { getEvents, reset, selectEventState, selectFilters, selectVisibleEvents } from "../features/events/eventSlice";
 import { matchesTimeOfDay } from "../features/events/filterEvents";
 import { useFilterUrlSync } from "../hooks/useFilterUrlSync";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useNow } from "../hooks/useNow";
 import type { BackgroundState } from "../utils/background";
-import { fromCampusWallClock } from "../utils/time";
+import { campusDateKey, fromCampusWallClock } from "../utils/time";
+import { cx } from "../utils/cx";
 import { notifyError } from "../utils/notify";
 
 export type CalendarView = "week" | "month";
@@ -53,9 +54,12 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   const isNarrow = useMediaQuery("(max-width: 639px)");
   const request = useRef<{ abort: () => void } | null>(null);
   const calendar = useRef<FullCalendar>(null);
-  // Phones get a list of the next seven days, from today: a Sunday-to-Saturday
-  // list would open on days that are already over.
-  const viewType = view === "month" ? "dayGridMonth" : isNarrow ? "listNextSevenDays" : "timeGridWeek";
+  // Week opens on today, not on a Sunday that's already over: seven days from
+  // today, as a list on phones and a time grid from sm up. Its own buttons then
+  // step through Sunday-to-Saturday weeks (see weekStep).
+  const viewType = view === "month" ? "dayGridMonth" : isNarrow ? "listNextSevenDays" : "timeGridSevenDays";
+  // Whether Week is showing the days from today (its Today button hides then).
+  const [fromToday, setFromToday] = useState(true);
 
   useEffect(
     () => () => {
@@ -79,6 +83,7 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
   // range is in campus wall-clock form (see calendarEvents.ts), so convert it back.
   const onDatesSet = useCallback(
     (range: DatesSetArg) => {
+      setFromToday(range.start.toISOString().slice(0, 10) === campusDateKey(new Date()));
       request.current?.abort();
       request.current = dispatch(
         getEvents({
@@ -101,6 +106,20 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
     [navigate, location],
   );
 
+  // Week's own back, forward and Today buttons, in place of FullCalendar's.
+  const weekButtons = useMemo(() => {
+    const go = (date: string) => calendar.current?.getApi().gotoDate(date);
+    const step = (direction: 1 | -1) => {
+      const api = calendar.current?.getApi();
+      if (api) go(weekStep(api.view.currentStart, direction));
+    };
+    return {
+      weekBack: { icon: "chevron-left", hint: "Previous week", click: () => step(-1) },
+      weekForward: { icon: "chevron-right", hint: "Next week", click: () => step(1) },
+      weekToday: { text: "Today", hint: "The next seven days", click: () => go(campusDateKey(new Date())) },
+    };
+  }, []);
+
   const calendarEvents = useMemo(
     () => events.filter((event) => matchesTimeOfDay(event, timesOfDay)).map(toCalendarEvent),
     [events, timesOfDay],
@@ -121,7 +140,7 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
           </StatusMessage>
         </div>
       )}
-      <div className="relative rounded-xl border border-line bg-white p-2 sm:p-5">
+      <div className={cx("relative rounded-xl border border-line bg-white p-2 sm:p-5", fromToday && "week-from-today")}>
         {isLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/70">
             <Spinner />
@@ -133,7 +152,12 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
           timeZone="UTC"
           now={campusNow}
           initialView={viewType}
-          headerToolbar={{ left: "prev,next", center: "title", right: "today" }}
+          customButtons={weekButtons}
+          headerToolbar={
+            view === "week"
+              ? { left: "weekBack,weekForward", center: "title", right: "weekToday" }
+              : { left: "prev,next", center: "title", right: "today" }
+          }
           buttonText={{ today: "Today" }}
           events={calendarEvents}
           datesSet={onDatesSet}
@@ -141,14 +165,18 @@ const CalendarPage = ({ view }: { view: CalendarView }) => {
           // Events are links for keyboards too: Tab to one, Enter to open it.
           eventInteractive
           // The week grid scrolls inside a fixed height, starting at 8 AM.
-          height={viewType === "timeGridWeek" ? 760 : "auto"}
+          height={viewType === "timeGridSevenDays" ? 760 : "auto"}
           scrollTime="08:00:00"
           dayMaxEvents={3}
           views={{
             // Phones: month cells are ~46px wide, so drop the event times (they spill
             // into the next day) and leave the room for the colored dot and title.
             dayGridMonth: { displayEventTime: !isNarrow },
-            timeGridWeek: { dayHeaderFormat: { weekday: "short", day: "numeric" } },
+            timeGridSevenDays: {
+              type: "timeGrid",
+              duration: { days: 7 },
+              dayHeaderFormat: { weekday: "short", day: "numeric" },
+            },
             // The list has room for times as the cards write them: "12:00 PM".
             listNextSevenDays: {
               type: "list",
