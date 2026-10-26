@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T16:20:41.482Z",
+  "updatedAt": "2026-10-26T18:46:03.997Z",
   "events": [
     {
       "source": "site:icme",
@@ -387,6 +387,30 @@
     },
     {
       "source": "localist",
+      "sourceEventId": "54346479668461",
+      "sourceUrl": "https://events.stanford.edu/event/lunch-club-series-from-the-field",
+      "title": "Lunch Club Series | From the Field",
+      "description": "Lunch Club provides affiliates of the Stanford Archaeology Center with a community-oriented forum for engagement with current issues in archaeology. On Oct 28, 2026, we will host four of our undergraduate students At'siri Gonzalez, Alex Turner, René Nerio Martínez and Wei Lee and they will talk about their summer research.\n\nAt'siri Gonzalez (Archaeology Major)\n\nUsing Indigenous Memory in Restorative Practices: Exploring Wahi kūpuna Kahaluʻu Field Systems in Kahaluʻu Kūāhewa\n\nAlex Turner (Archaeology Major)\n\nSearching for the Stables at Rosewell Plantation\n\nWei Lee (Archaeology and Medical Anthropology Major)\n\nSummer Fieldwork: The Yangguzanzhai Archaeological Site\n\nRené Nerio Martínez (Neurobiology Major, Archaeology and Classics Minor)\n\nLiving Systems, Living Culture",
+      "startTime": "2026-10-28T19:00:00.000Z",
+      "endTime": "2026-10-28T20:00:00.000Z",
+      "allDay": false,
+      "locationName": "Building 500, Archaeology Center, Room 106",
+      "lat": 37.425892,
+      "lng": -122.16938,
+      "hostOrg": "Archaeology Center",
+      "audience": "open",
+      "audienceNote": null,
+      "cost": null,
+      "isVirtual": false,
+      "id": "b2e83ba00d01f9ab1e47f32e",
+      "hasFreeFood": true,
+      "foodConfidence": 0.6,
+      "foodDetails": "lunch",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-10-26T18:46:03.997Z"
+    },
+    {
+      "source": "localist",
       "sourceEventId": "53550015046251",
       "sourceUrl": "https://events.stanford.edu/event/quick-bytes-research-data-management",
       "title": "Quick Bytes: Research Data Management",
@@ -504,6 +528,30 @@
       "foodDetails": "coffee, cookies, lunch, dinner",
       "classifiedBy": "keywords",
       "firstSeenAt": "2026-09-29T05:25:01.401Z"
+    },
+    {
+      "source": "localist",
+      "sourceEventId": "54346848286023",
+      "sourceUrl": "https://events.stanford.edu/event/challenging-the-archives-reconstructing-the-lives-and-networks-of-sex-workers-in-early-modern-venice-through-digital-tools",
+      "title": "Challenging the Archives: Reconstructing the Lives and Networks of Sex Workers in Early Modern Venice through Digital Tools",
+      "description": "In early modern Venice, sex workers were frequently accused of practicing magic and witchcraft, subsequently facing trial before the Holy Office. Drawing upon this empirical evidence, this project examines hundreds of Inquisition files spanning the years 1580 to 1630 to reconstruct these women's social networks. The objective is to contextualize and interpret the complex interrelationships between magic, sex work, and gender dynamics in early modern society. Adopting a microhistorical approach that integrates close reading with social network analysis and Gephi visualizations, this paper presents preliminary findings and discusses the methodological challenges of translating archival sources into digital data—particularly when researching the lives of marginalized, working-class women.\n\nAbout the Speaker\n\nAlessandra Celati is a research fellow in Early Modern History at the University of Turin, Italy. She earned her PhD from the University of Pisa and was a Marie Curie Global Fellow between Stanford University and the University of Verona, where she conducted research for several years. She is currently working on a project focused on \"Love Magic and Sex Work in Early Modern Venice: A Network of Women in the Inquisition Records.\" For years, her research has focused on religious dissent, heretical movements, and witchcraft in the early modern period. She has integrated these topics using an interdisciplinary approach that combines religious history, women's history and the application of Digital Humanities tools. She has published numerous articles on these subjects in both Italian and international peer-reviewed journals.\n\nHer first book, The World of Girolamo Donzellini: A Network of Heterodox Physicians in Sixteenth-Century Venice, was published by Routledge in 2023. In 2025, her second book, Donne che creano disordine. Storia di Caterina ed altre eretiche nel Cinquecento (Women Creating Disorder: The Story of Caterina and Other Heretics in the Sixteenth Century), was published in Einaudi's history series. The book is currently being translated into English, and this English version is under evaluation by Stanford University press.\n\nLunch at 11:45 a.m. for in-person attendees\n\nRegister to join online",
+      "startTime": "2026-10-29T19:15:00.000Z",
+      "endTime": "2026-10-29T20:15:00.000Z",
+      "allDay": false,
+      "locationName": "Building 160, Wallenberg Hall, Room 433A",
+      "lat": 37.427405,
+      "lng": -122.1697,
+      "hostOrg": "Center for Spatial and Textual Analysis (CESTA)",
+      "audience": "unknown",
+      "audienceNote": "Students, Faculty, Staff",
+      "cost": null,
+      "isVirtual": false,
+      "id": "f83230e25c2d5050a4ead7ee",
+      "hasFreeFood": true,
+      "foodConfidence": 0.9,
+      "foodDetails": "lunch",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-10-26T18:46:03.997Z"
     },
     {
       "source": "ical:stanford-law",
@@ -2284,7 +2332,7 @@
     {
       "source": "localist",
       "sourceEventId": "54310887037929",
-      "sourceUrl": "https://events.stanford.edu/event/deans-lecture-series-frontiers-of-climate-science-part-ii",
+      "sourceUrl": "https://events.stanford.edu/event/deans-lecture-series-frontiers-in-climate-science-part-ii",
       "title": "Dean’s Lecture Series: Frontiers in Climate Science Part II",
       "description": "The Stanford Doerr School of Sustainability Dean's Lecture Series is a forum that brings together scholars and thought leaders to discuss the frontiers of research, education, practice, and impact related to an area or theme in sustainability. The series aims to deepen our understanding of the topic and inspire us to do more.\n\nJoin us for the Dean’s Lecture Series featuring Frontiers in Climate Science, featuring Scientists Tiffany Shaw, Gabriel Vecchi, and Adam Sobel.\n\nFrontiers in Climate Science is part two of a two-part series focused on climate science featuring renowned scientists working in the field.\n\nFriday, November 20, 2026\n\n3:00 p.m. Lecture\n\nReception to follow\n\nHuang 300, Mackenzie Room\n\n475 Via Ortega, Stanford Campus\n\nTo attend in person, please register here.",
       "startTime": "2026-11-20T23:00:00.000Z",
