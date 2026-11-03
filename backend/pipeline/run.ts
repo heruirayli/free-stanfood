@@ -106,7 +106,9 @@ const main = async (): Promise<void> => {
 
   let unhealthy = false;
   for (const run of runs) {
-    if (run.error) {
+    if (run.error && run.minorFailure) {
+      report("warning", `${run.source} failed, kept its previous events: ${run.error}`);
+    } else if (run.error) {
       report("error", `${run.source} failed: ${run.error}`);
       unhealthy = true;
     }

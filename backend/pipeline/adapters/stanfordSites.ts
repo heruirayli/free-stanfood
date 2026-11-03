@@ -8,6 +8,12 @@
 // crawlers and asks for Crawl-delay: 30, so each run makes one request per site
 // (its next PAGE_LIMIT events) and doesn't retry: a failure waits for the next run.
 //
+// Since 2026-10-30 several sites (cs, ctl, chemh, glo, icme) answer 502 for any page
+// holding certain events, even with only `title` requested: those nodes fail on the
+// site's side, and most upcoming events are affected. Stepping around them took
+// 11-24 requests per site at the Crawl-delay and still lost events, so a 5xx is
+// reported as a warning instead: the site's previous events stay up and the run passes.
+//
 // Verified against icme.stanford.edu on 2026-10-08 (see fixtures/stanford-sites-icme.json):
 // - Events copied in from Stanford Events carry su_event_localist_id or
 //   su_event_source. Those are skipped here, since Stanford Events is read directly.
@@ -22,7 +28,7 @@
 import { formatInTimeZone } from "date-fns-tz";
 import { z } from "zod";
 import type { Audience, NormalizedEvent } from "../../types/event.js";
-import type { HttpClient } from "../http.js";
+import { HttpError, type HttpClient } from "../http.js";
 import {
   SOURCE_TIME_ZONE,
   cleanInlineText,
@@ -259,6 +265,8 @@ export const createStanfordSiteAdapter = ({ http, site, now = () => new Date() }
   name: siteSourceName(site),
   // A department can go weeks without events of its own.
   allowEmpty: true,
+  // The site erroring on its own events (see the header); anything else is still an error.
+  isMinorFailure: (error) => error instanceof HttpError && error.status >= 500,
 
   async fetch(): Promise<RawEvent[]> {
     const url = eventsUrl(site, startOfCampusDay(now()));
