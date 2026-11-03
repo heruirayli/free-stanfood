@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-03T01:56:50.895Z",
+  "updatedAt": "2026-11-03T19:33:44.236Z",
   "events": [
     {
       "source": "site:icme",
@@ -1800,6 +1800,30 @@
       "foodDetails": "snacks",
       "classifiedBy": "keywords",
       "firstSeenAt": "2026-09-29T05:25:01.401Z"
+    },
+    {
+      "source": "cardinalengage",
+      "sourceEventId": "2266682",
+      "sourceUrl": "https://cardinalengage.stanford.edu/GSBSMC/rsvp?id=2266682",
+      "title": "Fireside Chat: Dan Grunfeld (GM, Stanford Basketball) & Sam Fisher (Assoc. GM, Stanford Football)",
+      "description": "Join GSB's Sports Management Club for a fireside chat with Sam Fisher ('14, MBA '19), Stanford Football's Associate GM, and Dan Grunfeld ('06, MBA '17), Stanford Men's Basketball's GM. Lunch will be provided.\n\nPost-GSB (and pre-pivot back into sports), Sam worked for Oracle as a Principal Product Manager and Dan worked for Lightspeed as VP of Biz Dec",
+      "startTime": "2026-11-16T20:00:00.000Z",
+      "endTime": "2026-11-16T21:00:00.000Z",
+      "allDay": false,
+      "locationName": null,
+      "lat": null,
+      "lng": null,
+      "hostOrg": "GSB Sports Management Club",
+      "audience": "unknown",
+      "audienceNote": null,
+      "cost": null,
+      "isVirtual": false,
+      "id": "f3457ad6e6c66aff0024f84f",
+      "hasFreeFood": true,
+      "foodConfidence": 0.9,
+      "foodDetails": "lunch",
+      "classifiedBy": "keywords",
+      "firstSeenAt": "2026-11-03T19:33:44.236Z"
     },
     {
       "source": "localist",
