@@ -9,6 +9,9 @@ export interface SourceAdapter {
   // Small calendars are often legitimately empty. When true, zero events is not
   // treated as a failure (errors and big drops are still reported).
   allowEmpty?: boolean;
+  // Failures this returns true for are reported as warnings, not errors: the
+  // source's previous events are kept as for any failure, but the run still passes.
+  isMinorFailure?(error: unknown): boolean;
   fetch(): Promise<RawEvent[]>;
   // Returns null (and logs why) for records that are invalid or must not be shown,
   // such as private or cancelled events.

@@ -9,7 +9,7 @@ import {
   type StanfordSite,
 } from "../adapters/stanfordSites.js";
 import { SourceFetchError } from "../adapters/types.js";
-import type { HttpClient } from "../http.js";
+import { HttpError, type HttpClient } from "../http.js";
 import type { NormalizedEvent } from "../../types/event.js";
 import { readFixture } from "./helpers.js";
 
@@ -120,6 +120,13 @@ describe("Stanford Sites fetching", () => {
     await expect(html.fetch()).rejects.toBeInstanceOf(SourceFetchError);
     const wrong = createStanfordSiteAdapter({ http: fakeHttp('{"errors":[{"title":"Forbidden"}]}'), site: ICME, now: SAVED });
     await expect(wrong.fetch()).rejects.toBeInstanceOf(SourceFetchError);
+  });
+
+  it("treats only the site's own 5xx errors as minor failures", () => {
+    const adapter = createStanfordSiteAdapter({ http: fakeHttp(""), site: ICME, now: SAVED });
+    expect(adapter.isMinorFailure?.(new HttpError(502, "https://icme.stanford.edu/jsonapi", ""))).toBe(true);
+    expect(adapter.isMinorFailure?.(new HttpError(403, "https://icme.stanford.edu/jsonapi", ""))).toBe(false);
+    expect(adapter.isMinorFailure?.(new SourceFetchError("did not return JSON"))).toBe(false);
   });
 
   it("gives every site its own source name and an https URL", () => {

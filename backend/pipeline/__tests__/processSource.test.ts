@@ -60,8 +60,21 @@ describe("processSource", () => {
     };
 
     const run = await processSource(adapter, { saveDebug, now });
-    expect(run).toMatchObject({ ok: false, error: "Page 1 is not valid JSON", events: [] });
+    expect(run).toMatchObject({ ok: false, error: "Page 1 is not valid JSON", minorFailure: false, events: [] });
     expect(saveDebug).toHaveBeenCalledWith("localist", "<html>oops</html>");
+  });
+
+  it("marks a failure minor when the adapter says so", async () => {
+    const adapter: SourceAdapter = {
+      name: "site:test",
+      isMinorFailure: (error) => error instanceof Error && error.message === "flaky",
+      fetch: async () => {
+        throw new Error("flaky");
+      },
+      normalize: () => null,
+    };
+    const run = await processSource(adapter, { saveDebug: async () => "", now });
+    expect(run).toMatchObject({ ok: false, error: "flaky", minorFailure: true });
   });
 
   it("skips records whose normalize throws or returns invalid data", async () => {

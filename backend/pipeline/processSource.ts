@@ -17,6 +17,8 @@ export interface SourceRun extends SourceResult {
   skipped: number;
   foodEvents: number;
   error: string | null;
+  // See SourceAdapter.isMinorFailure.
+  minorFailure: boolean;
 }
 
 const errorMessage = (error: unknown): string =>
@@ -45,6 +47,7 @@ export const processSource = async (
     skipped: 0,
     foodEvents: 0,
     error: null,
+    minorFailure: false,
     events: [],
   };
 
@@ -78,6 +81,7 @@ export const processSource = async (
     run.ok = true;
   } catch (error) {
     run.error = errorMessage(error);
+    run.minorFailure = adapter.isMinorFailure?.(error) ?? false;
     console.error(`[${adapter.name}] failed: ${run.error}`);
     const body = rawBodyOf(error);
     if (body !== undefined) {
